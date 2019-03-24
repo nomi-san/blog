@@ -1,0 +1,439 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
+	<title>Học Lua trong... 15 phút!</title>
+	<link href="/static/logo.png" rel="icon" type="image/png"/>
+	
+	<meta name="description" content="Bạn nghĩ Lua khó học? 15 phút là đủ."/>
+    <meta name="author" content="wuuyi"/>
+
+    <meta property="og:title" content="Học Lua trong... 15 phút!"/>
+    <meta property="og:url" content="http://wy3.space/lua-in-15m"/>
+    <meta property="og:description" content="Bạn nghĩ Lua khó học? 15 phút là đủ."/>
+    <meta property="og:image" content="http://wy3.space/static/yi.png"/>
+	
+	<link href="/static/style.css" rel="stylesheet">
+	<script src="/static/js/showdown.min.js" type="text/javascript"></script>
+	<script src="/static/js/highlight.pack.js" type="text/javascript"></script>
+	<script src="/static/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<header>
+		<nav>
+			<a class="logo" href="/">Yi</a>
+		</nav>
+		<div class="empty"></div>
+		<nav>
+			<section>
+				<a href="/about">about</a>
+				<a href="mailto:wuuyi123@gmail.com" target="_blank">@me</a>
+				<a href="https://github.com/wy3" target="_blank">&frasl;me</a>
+			</section>
+		</nav>
+	</header>
+	
+	<div id="post">	</div>
+	<a id="scrollup"></a>
+	
+	<footer></footer>
+</body>
+</html>
+
+<!--content>
+title: Học Lua trong... 15 phút!;
+descript: Bạn nghĩ Lua khó học? 15 phút là đủ.;
+tags: learn|lua;
+date: Jul 1st 2018;
+-+-+-
+<p align="center">
+<img src="http://i.imgur.com/Mo5lv.jpg" height="256px">
+</p>
+Post này sẽ hướng dẫn về những thứ cơ bản nhất trong Lua, nếu muốn đạt 15p thì bạn phải có kiến thức về lập trình trước hoặc đã biết qua một ngôn ngữ nào đó. 
+Mình không nói về cách setup Lua nhé, chỉ nói code thôi, bạn có thể tham khảo link sau:
+- [Cách setup Lua đơn giản](https://www.tutorialspoint.com/lua/lua_environment.htm)
+- [Lua Studio for Windows](https://github.com/rjpcomputing/luaforwindows/releases)
+Bạn nên copy đoạn code block bên dưới vào một file rồi chạy. Mình có viết tiếng Việt nên hãy sử dụng editor có hỗ trợ unicode, nếu chạy code Lua thì đừng set UTF-8 with BOM nhé, lỗi đấy.
+```lua
+------------------------------------------------------------------
+-- 1. Cú pháp & biến (syntax & variable)
+------------------------------------------------------------------
+-- Hai dấu trừ đánh dấu comment trên một dòng.
+--[[
+Thêm hai cặp ngoặc vuông vào để
+comment trên nhiều dòng.
+--]]
+local a -- local là từ khóa (keyword)
+-- Khai báo biến a, nếu không gán gì thì nó là nil.
+-- nil có thể hiểu là chưa định nghĩa, không mang giá trị nào.
+-- Một biến gán = nil sẽ bị Lua dọn dẹp ngay.
+a = 4 -- Gán giá trị cho biến.
+-- Số trong Lua đều là số thực double (64bit), nhưng biến a vẫn được hiểu là số nguyên.
+A = 4.0 -- Số thực.
+-- Trong Lua phân biệt giữa chữ in hoa và chữ thường.
+print(a, b) -- print để in giá trị ra console.
+-- Biến b chưa được khai báo sẽ là nil, trường hợp này không lỗi.
+a = 5 b = 6 
+-- Viết trên một dòng, cách nhau bằng khoảng trắng (space).
+b = 11; print(b) 
+-- Nên dùng chấm phẩy (semi-colon) cho an toàn hơn.
+local x, y, z = 1, 2, 3, 4
+-- Khai báo & gán giá trị lần lượt cho nhiều biến.
+-- Tất nhiên 4 sẽ thừa.
+s = 'dấu nháy đơn' -- Chuỗi thuần, không phải là pointer phức tạp như C đâu.
+n = "dấu nháy kép cũng được"
+u = [[
+chuỗi trên 
+nhiều dòng bằng 
+hai hai cặp ngoặc vuông
+]]
+p = print -- Tuy print là một hàm, nhưng cũng là kiểu dữ liệu.
+print = 20 -- Tất cả các biến đều thay đổi giá trị được.
+p(print) -- > In ra 20.
+print = p -- Trả lại như cũ.
+
+----------------------------------------------------------------
+-- 2. Rẻ nhánh, câu điều kiện (if condition)
+----------------------------------------------------------------
+
+b = true -- Kiểu đúng/sai boolean.
+
+if b then
+	print('yes')
+else
+	print('no')
+end -- > 'yes'
+-- Kết thúc một code-block đều là end.
+
+x = 123
+if x == 456 then -- bằng
+	print('false')
+elseif x ~= 9 then -- khác
+	print('true')
+else
+	print('not')
+end -- > 'true'
+
+-- Vài logic: =))
+print(false and nil) 	-- > false
+print(0 and nil) 		-- > nil
+print(true and nil) 	-- > nil
+print(false and 0) 		-- > false
+print(true and false) 	-- > false
+print(1 and 0) 			-- > 1
+
+-- if trên một dòng (inline)
+print(1 > 6 and 4 or 3) 		-- > 3
+print(0 and 'true' or 'false') 	-- > 'true', 0 vẫn là đúng nhé.
+
+-----------------------------------------------------------------
+-- 3. Vòng lặp (loop)
+-----------------------------------------------------------------
+
+for i = 1, 10 do -- Phạm vi từ 1 đến 10, i sẽ tăng 1.
+	print(i)
+end
+
+-- Cú pháp range: < start [= x], end, step >
+
+for i = 20, 10, -1 do -- i giảm 1.
+	print(i)
+end
+
+n = 0
+while (n < 5) do
+	n = n + 1 -- Không có ++ hay += nhé.
+end
+
+repeat
+	n = n + 1
+until n > 5
+
+
+------------------------------------------------------------------
+-- 4. Hàm (function)
+------------------------------------------------------------------
+
+-- Khai báo hàm.
+function foo()
+	print('Hello World!')
+end
+-- Gọi hàm
+foo() -- > 'Hello World!'
+
+-- Giống Javascript
+fib = function(n) -- fibonacci
+	if n < 2 then return 1 end
+	return fib(n - 2) + fib(n - 1) -- Không lỗi đâu, vì đã khai báo rồi
+end
+
+function mulret(a, b, c)
+	print(a, b, c)
+	return 4, 5, 6, 7, 8 -- Trả về nhiều kết quả.
+end
+
+x, y, z = mulret(5) -- > 5 nil nil ; tham số b, c là nil, không lỗi.
+-- Hàm trả về chỉ gán 4, 5, 6 vào x, y, z; 7 và 8 thừa.
+print (x, y, z) -- > 4 5 6 - kiểm chứng
+
+local function g(x) print(x) end
+local g; g = function (x) print(x) end
+g((((((1)))))) -- > 1 =))
+g 'qwerty' -- > 'qwerty' ; vẫn được.
+
+-- Trường hợp gọi hàm không cần cặp ngoặc tròn khi tham số
+-- được cách tên hàm bằng các kí tự cú pháp như 
+-- ngoặc nhọn { (table), dấu nháy " hoặc ' (chuỗi).
+
+
+-----------------------------------------------------------------
+-- 5. Bảng (tables)
+-----------------------------------------------------------------
+
+-- Đây là kiểu cấu trúc phức hợp của Lua;
+-- tương tự như arrays trong PHP hay objects trong Javascript vậy.
+
+t = {key1 = 'value1', key2 = false}
+
+-- Sử dụng dấu chấm để tham chiếu đến phần tử con.
+print(t.key1) -- > 'value1'. 
+t.newKey = {} -- Thêm newKey, giá trị là một table. 
+t.key2 = nil  -- Xóa key2
+
+-- Sử dụng giá trị để đánh dấu phần tử con
+u = {['@!#'] = 'qbert', [{}] = 1729, [6.28] = 'tau'}
+print(u[6.28]) -- prints "tau"
+
+a = u['@!#'] -- a = 'qbert'
+b = u[{}] -- b = nil, không phải 1729 nhé
+-- Vì key này là table rỗng,
+-- cần phải sử dụng table giống nhau.
+
+-- Sử dụng table cho tham số của hàm.
+function h(x)  print(x.key1) end 
+h {key1 = 'Sonmi~451'} -- > 'Sonmi~451'.
+
+-- Mảng (list / arrays):
+v = {'value1', 'value2', 1.21, 'gigawatts'} 
+for i = 1, #v do  -- #v để lấy độ dài, dùng được cho cả chuỗi.  
+	print(v[i]) -- Array trong Lua "start at 1" nhé! =))
+end
+
+-----------------------------------------------------------------
+-- 5.1 Metatables, metamethods
+-----------------------------------------------------------------
+
+-- Một table có thể có metatable, 
+-- nó sẽ nhận nạp chồng một table khác.
+
+f1 = {a = 1, b = 2}
+f2 = {a = 2, b = 3}
+
+-- Sẽ sinh lỗi nếu:  
+-- s = f1 + f2
+
+metafraction = {} 
+function metafraction.__add(f1, f2) 
+	sum = {} sum.b = f1.b * f2.b 
+	sum.a = f1.a * f2.b + f2.a * f1.b 
+	return sum 
+end
+
+setmetatable(f1, metafraction)
+setmetatable(f2, metafraction)
+
+s = f1 + f2 -- gọi __add(f1, f2) trong metable của f1.
+
+-- Hiểu đơn giản hơn thì một table bình thường,
+-- chỉ để chứa dữ liệu mà thôi;
+-- Metatable thêm vào sẽ là bộ tiền xử lý cho nó.
+
+-- Thêm table vào table thông qua key __index
+defaultFavs = {animal = 'dog', food = 'donuts'} 
+myFavs = {food = 'pizza'} 
+setmetatable(myFavs, {__index = defaultFavs}) 
+eatenBy = myFavs.animal -- > 'dog'
+
+-- Giá trị của __index,__add, .. được gọi là metamethods.
+-- Full list, ở đây a là một table với một metamethod.
+--[[
+	__add(a, b)  				cho	a + b
+	__sub(a, b) 				cho	a - b
+	__mul(a, b) 				cho	a * b
+	__div(a, b) 				cho	a / b
+	__mod(a, b) 				cho	a % b
+	__pow(a, b) 				cho	a ^ b
+	__unm(a) 				cho	-a
+	__concat(a, b) 				cho	a .. b
+	__len(a) 				cho	#a
+	__eq(a, b) 				cho	a == b
+	__lt(a, b) 				cho	a < b
+	__le(a, b) 				cho	a <= b
+	__index(a, b) 				<hàm hoặc một table> cho a.b
+	__newindex(a, b, c) 			cho	a.b = c
+	__call(a, ...) 				cho	a(...)
+--]]
+
+----------------------------------------------------
+-- 3.2 Lớp (class tables) & kế thừa (inheritance)
+----------------------------------------------------
+
+-- Class không được tích hợp sẵn (không như C++, Java) 
+-- Có nhiều cách khác nhau để tạo thông qua việc sử dụng
+-- tables và metatables.
+
+Dog = {} 							-- 1.
+function Dog:new() 						-- 2.
+	newObj = {sound = 'woof'} 				-- 3.
+	self.__index = self 					-- 4.
+	return setmetatable(newObj, self) 			-- 5.
+end
+
+function Dog:makeSound() 					-- 6.
+	print('I say ' .. self.sound)
+end
+
+mrDog = Dog:new() 						-- 7.
+mrDog:makeSound() -- 'I say woof' 				-- 8.
+
+
+-- 1. Dog giống như một class, nhưng thực chất là table.
+
+-- 2. Hàm tablename:func(...) được hiểu như
+-- hàm tablename.func(self, ...)
+-- dấu hai chấm : thêm self (tablename) vào
+-- thành tham số thứ nhất.
+-- Đọc 7 & 8 bên dưới để hiểu nó thêm như nào.
+
+-- 3. newObj sẽ là instance mới cho class Dog.
+
+-- 4. self = class mới tạo ra. Thông thường
+-- self = Dog, nhưng phần kế thừa sẽ thay đổi nó.
+-- newObj get các hàm từ chính nó nhưng set
+-- metatable của newObj và __index của nó
+-- vào chính nó (Dog). Cứ nhìn code, đừng hiểu sâu
+-- cho rối não. =))
+
+-- 5. Nên nhớ: setmetatable sẽ return tham số đầu.
+
+-- 6. Dấu hai chấm : như trong mục 2, nhưng self này
+-- có thể sử dụng cho lớp con kế thừa thông qua Dog.new().
+
+-- 7. Giống như Dog.new(Dog), self = Dog trong new().
+-- 8. Giống như mrDog.makeSound(mrDog); self = mrDog.
+
+----------------------------------------------------
+
+-- Ví dụ kế thừa:
+
+LoudDog = Dog:new() 						-- 1.
+
+function LoudDog:makeSound()
+	s = self.sound .. ' ' 					-- 2.
+	print(s .. s .. s)
+end
+
+seymour = LoudDog:new() 					-- 3.
+seymour:makeSound() -- 'woof woof woof' 			-- 4.
+
+-- 1. LoudDog lấy method & property từ Dog.
+
+-- 2. Bản thân nó có key 'sound' từ hàm new().
+
+-- 3. Giống như LoudDog.new(LoudDog), và được chuyển đổi đến
+-- Dog.new(LoudDog), LoudDog không có key 'new',
+-- nhưng nó có __index = Dog trong metatable của nó (LoudDog).
+-- Kết quả: metatable của seymour là LoudDog, và
+-- LoudDog.__index = LoudDog. Nên seymour.key sẽ
+-- = seymour.key, LoudDog.key, Dog.key, bất kỳ
+-- table nào cũng là cái đầu tiên với key nhận được.
+
+-- 4. Key 'makeSound' có sẵn trong LoudDog, seymour kế thừa; 
+-- nó giống như LoudDog.makeSound(seymour).
+-- Nếu cần tạo thêm class con mới, cấu trúc sẽ như sau:
+
+function LoudDog:new()
+	newObj = {} -- tạo newObj
+	self.__index = self
+	return setmetatable(newObj, self)
+end
+```
+
+### Module
+Do sử dụng nhiều file nên mình sẽ viết riêng ra ngoài.
+
+Module giống như một thư viện riêng, và người dùng có thể sử dụng nó thông qua từ khóa __require__. Có 2 loại module bao gồm: 
+- Lua module: viết bằng Lua, được xem như một hàm.
+- C module: có thể bằng các ngôn ngữ khác nhau, nhưng biên dịch về C. Module này phức tạp hơn & cho hiệu năng tốt hơn (mình sẽ nói sau). 
+
+Đầu tiên, bạn tạo một file có tên là __module.lua__:
+
+```lua
+-- module.lua
+local M = {} -- Khởi tạo tables M
+-- Đây là biến cục bộ, chỉ sử dụng được trong file này.
+
+M.a = 1
+M.b = true
+M.c = 'Hello'
+
+M.foo = function(self)
+	print(self.c)
+end
+
+return M -- Trả về M
+```
+
+Tiếp tục tạo một file mới là __main.lua__, gán code rồi chạy nó.
+
+```lua
+-- main.lua
+mod = require('module') -- Load module ở trên, lưu ý tên file.
+-- Nếu file module.lua nằm trong thư mục con thì
+-- require('folder.module') có thể thay '.' thành '/' hoặc '\\'
+
+print(mod.a) -- > 1
+print(mod.b) -- > true
+mod.foo() -- > 'Hello'
+```
+
+Nên nhớ, biến __local__ trong __main.lua__ sẽ không dùng được trong __module.lua__.
+Nếu quy về hàm hoặc sử dụng cho cùng một file thì sẽ như này:
+```lua
+local function module()
+	local M = {}
+	-- ...
+	return M
+end
+
+mod = module()
+```
+
+Ngoài ra có thể chạy file Lua khác ngay trong chương trình.
+```lua
+dofile('abc.lua') -- Chạy abc.lua, 
+-- tất nhiên là không lưu các biến từ file đó,
+-- không giống như require đâu.
+
+f = loadfile('abc.lua')  
+-- loadfile sẽ load một file nhưng không chạy ngay mà lưu vào hàm.
+-- Sử dụng f() để chạy file.
+```
+
+### Thư viện chuẩn
+
+Lua cung cấp một số thư viện chuẩn dành cho các nhu cầu cơ bản, tất nhiên là không cần dùng __require__ đâu, trừ khi biến của thư viện được bạn gán cho một giá trị nào đó...
+
+Tham khảo tại đây nhé:
+- [string library](http://lua-users.org/wiki/StringLibraryTutorial)
+- [table library](http://lua-users.org/wiki/TableLibraryTutorial)
+- [math library](http://lua-users.org/wiki/MathLibraryTutorial)
+- [io library](http://lua-users.org/wiki/IoLibraryTutorial)
+- [os library](http://lua-users.org/wiki/OsLibraryTutorial)
+
+Xin nói thêm là Lua rất đơn giản, đến cả thư viện hay những thứ mà nhà phát triển ngôn ngữ này cung cấp cũng rất ít. Nhưng nhà phát triển sử dụng Lua lại biến nó trở nên đa dạng hơn & bạn cũng không phải học lại ngôn ngữ này!
+
+Đến đây là hết rồi, chắc có thể là hơn 15p phải không. =))
+</content-->

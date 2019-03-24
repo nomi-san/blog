@@ -1,0 +1,145 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
+	<title>MessageBox trong Rust</title>
+	<link href="/static/logo.png" rel="icon" type="image/png"/>
+	
+	<meta name="description" content="Cách tạo hộp thoại thông báo trên Windows trong Rust."/>
+    <meta name="author" content="wuuyi"/>
+
+    <meta property="og:title" content="MessageBox trong Rust"/>
+    <meta property="og:url" content="http://wy3.space/rust-messagebox"/>
+    <meta property="og:description" content="Cách tạo hộp thoại thông báo trên Windows trong Rust."/>
+    <meta property="og:image" content="http://wy3.space/static/yi.png"/>
+	
+	<link href="/static/style.css" rel="stylesheet">
+	<script src="/static/js/showdown.min.js" type="text/javascript"></script>
+	<script src="/static/js/highlight.pack.js" type="text/javascript"></script>
+	<script src="/static/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<header>
+		<nav>
+			<a class="logo" href="/">Yi</a>
+		</nav>
+		<div class="empty"></div>
+		<nav>
+			<section>
+				<a href="/about">about</a>
+				<a href="mailto:wuuyi123@gmail.com" target="_blank">@me</a>
+				<a href="https://github.com/wy3" target="_blank">&frasl;me</a>
+			</section>
+		</nav>
+	</header>
+	
+	<div id="post"></div>
+	<a id="scrollup"></a>
+	
+	<footer></footer>
+</body>
+</html>
+
+<!--content>
+title: MessageBox trong Rust;
+descript: Cách tạo hộp thoại thông báo trên Windows trong Rust.;
+tags: rust|message-box;
+date: Dec 28th 2017;
+-+-+-
+Trong bài này, mình sẽ hướng dẫn sử dụng `crate winapi` để tạo một hộp thoại thông báo đơn giản trên Windows.
+
+Đầu tiên là tạo một project mới bằng cách sử dụng [Cargo](http://doc.crates.io/guide.html).
+```batch
+$ cargo new --bin hello_world
+```
+
+Dòng lệnh trên sẽ tạo một thư mục mới có tên là `hello_world` trong thư mục làm việc hiện tại. `--bin` cho phép Cargo biên dịch ra chương trình có thể thực thi được (executable).
+Để tạo hộp thoại thông báo thì ta có lệnh `MessageBox` và gọi nó thông qua file `user32.dll`. Tương ứng trong Rust, mình sẽ sử dụng `winapi` đi kèm với `user32-sys`. Để cấu hình cho project, bạn tìm đến file `Cargo.toml` (thực chất thì nó cũng thuộc dạng `ini configuration`), thêm 2 dòng sau vào key `[dependencies]`:
+```ini
+winapi = "0.2.7"
+user32-sys = "0.2.0"
+```
+
+Khai báo cho Cargo biết là bạn sẽ sử dụng carte winapi v0.2.7 và user32-sys v0.2.0. Khi build project, Cargo sẽ tự động tải những gì đã thiết lập sẵn.
+Sau khi thiết lập xong project, bắt đầu code thôi! Mở file `src/main.rs` bằng một editor bất kỳ. Bạn sẽ thấy bên trong như này:
+```rust
+fn main() {
+    println!("Hello, world!");
+}
+```
+
+Để sử dụng crate winapi và user32-sys, ta khai báo như sau:
+```rust
+extern crate user32;
+extern crate winapi;
+```
+Tiếp tục với hàm tạo hộp thoại thông báo, mẫu code C/C++ trên [MSDN](https://msdn.microsoft.com/en-us/library/windows/desktop/ms645505(v=vs.85).aspx) như sau:
+```c
+int WINAPI MessageBox(
+    _In_opt_  HWND     hWnd,
+    _In_opt_  LPCTSTR  lpText,
+    _In_opt_  LPCTSTR  lpCaption,
+    _In_      UINT     uType
+);
+```
+Nếu bạn không biết gì về lập trình Windows thì chắc hẳn sẽ thấy rất lạ lẫm =)) Để đơn giản hơn, bạn chỉ cần nghĩ `WINAPI`, `_In_opt_` và `_In_` chỉ là các thuộc tính mô tả cách sử dụng hàm mà thôi. Bỏ qua hết, ta được:
+```c
+int MessageBox(
+    HWND     hWnd,
+    LPCTSTR  lpText,
+    LPCTSTR  lpCaption,
+    UINT     uType
+);
+```
+Và nó trở thành kiểu khai báo hàm trrong C/C++, mình sẽ giải thích các kiểu dữ liệu luôn. 
+- `HWND` là một con trỏ (pointer) đến một cửa sổ (thường gọi là handle của một window).
+- `LPCTSTR` là một `const` con trỏ thô (raw pointer) của chuỗi.
+- `UINT` tất nhiên là một số nguyên không dấu. 
+Một câu hỏi đặt ra, "Chuỗi `LPCTSTR` thuộc loại gì? ASCII hay Unicode?” Và câu trả lời hơi phức tạp. 
+Trong lập trình Windows C/C++, có một tiền xử lý được gọi là `UNICODE` xác định xem một `LPCTSTR` thuộc chuỗi Unicode hay ASCII. Tiền xử lý này cũng chịu trách nhiệm xác định hàm `MessageBox` nào được gọi (bạn có thể tìm hiểu thêm [tại đây](https://msdn.microsoft.com/en-us/library/windows/desktop/ff381407(v=vs.85).aspx) ). 
+Lăn xuống cuối trang [MSDN](https://msdn.microsoft.com/en-us/library/windows/desktop/ms645505(v=vs.85).aspx), ta thấy rằng tên Unicode và ASCII cho hàm này tương ứng là `MessageBoxW` và `MessageBoxA`. Điều này quan trọng bởi vì ta cần phải gọi chính xác để hộp thoại mới có thể hiển thị đúng với nội dung cho trước. Trong bài viết này, mình sẽ chọn ASCII (`MessageBoxA`).
+Trong một ví dụ trên MSDN, param thứ nhất nếu không có một cửa sổ nào thì ta sẽ truyền vào giá trị `NULL`  (đơn giản vì `_In_opt_`). Param thứ hai và ba sẽ là chuỗi ASCII lần lượt cho nội dung và tiêu đề của hộp thoại. Param cuối cùng sẽ là flag bit để kiểm soát các nút lệnh của hộp thoại. Theo ví dụ này thì ta chọn `MB_OK` để có một nút OK và `MB_ICONINFORMATION` để hiển thị một biểu tượng thông báo trên hộp thoại. Ta sẽ kết hợp chúng lại bằng toán tử [biwise OR](https://vi.wikipedia.org/wiki/Ph%C3%A9p_to%C3%A1n_thao_t%C3%A1c_bit#OR) để đưa ra một giá trị đơn.
+```c
+MessageBoxA(
+    NULL,
+    "Hello, world!",
+    "MessageBox Example",
+    MB_OK | MB_ICONINFORMATION
+);
+```
+Đến đây, cần phải tìm ra cách để chuyển code trên sang Rust, ta có một số câu hỏi như sau:
+1.  `MessageBoxA`, `MB_OK` và `MB_ICONINFORMATION` có ở đâu? Ta cần phải xác định được vị trí của nó để gọi.
+2.  Tương tự với `NULL` cái gì? Trong Rust chỉ có `None` nhưng ta cần một draw pointer. Bạn cũng có thể tham khảo cách sử dụng `NULL` trong [bài này](https://thefullsnack.com/posts/rust-has-no-null.html?t=1524943801604).
+3.  Làm cách nào để truyền chuỗi trong **Rust** vào **C**?
+Để tìm câu trả lời cho #1, mình mở [docs winapi](https://retep998.github.io/doc/winapi/index.html) và sử dụng thanh tìm kiếm ở trên cùng. Tìm thấy chúng trong `user32` (cho  [`MessageBoxA`](https://retep998.github.io/doc/user32/fn.MessageBoxA.html)) và `winapi::winuser`(cho [`MB_OK`](https://retep998.github.io/doc/user32/fn.MessageBoxA.html), [`MB_ICONINFORMATION`](https://retep998.github.io/doc/winapi/winuser/constant.MB_ICONINFORMATION.html)). Thêm lệnh `use` vào sau phần `extern crate` trên cùng:
+```rust
+use user32::MessageBoxA;
+use winapi::winuser::{MB_OK, MB_ICONINFORMATION};
+```
+- Lệnh trên giúp sử dụng trực tiếp các hàm mà không cần phải thêm namespace vào trước chúng.
+Đến #2, mình tìm trên **Google** thì thấy một hướng dẫn lấy `NULL` bằng module `std::ptr`, ta sử dụng hàm [`std::ptr::null_mut()`](https://doc.rust-lang.org/std/ptr/fn.null_mut.html).
+Và cuối cùng là #3, module `ffi` trong standard library có [`CString`](https://doc.rust-lang.org/std/ffi/struct.CString.html) giúp tạo ra chuỗi. Chúng ta chỉ cần tạo một giá trị mới của kiểu này và sử dụng [`.as_ptr()`](https://doc.rust-lang.org/std/ffi/struct.CString.html#method.as_ptr) để tạo được một raw pointer và chuyển đến CAPI.
+Gom tất cả lại, thêm `use` cho `CString` và block `unsafe` để gọi hàm `MessageBoxA` vì nó trả về kết quả `unsafe` :
+```rust
+extern crate user32;
+extern crate winapi;
+use std::ffi::CString;
+use user32::MessageBoxA;
+use winapi::winuser::{MB_OK, MB_ICONINFORMATION};
+fn main() {
+    let lp_text = CString::new("Hello, world!").unwrap();
+    let lp_caption = CString::new("MessageBox Example").unwrap();
+    unsafe {
+        MessageBoxA(
+            std::ptr::null_mut(),
+            lp_text.as_ptr(),
+            lp_caption.as_ptr(),
+            MB_OK | MB_ICONINFORMATION
+        );
+    }
+}
+```
+**Good luck!** :)
+</content-->
