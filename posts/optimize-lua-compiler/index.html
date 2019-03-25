@@ -1,0 +1,185 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    <title>Tối ưu Lua Compiler trên Windows</title>
+    <link href="/static/logo.png" rel="icon" type="image/png"/>
+    
+    <meta name="description" content="Biến trình biên dịch Lua trở nên cực nhỏ gọn."/>
+    <meta name="author" content="wuuyi"/>
+
+    <meta property="og:title" content="Tối ưu Lua Compiler trên Windows"/>
+    <meta property="og:url" content="http://wy3.space/optimize-lua-compiler"/>
+    <meta property="og:description" content="Biến trình biên dịch Lua trở nên cực nhỏ gọn."/>
+    <meta property="og:image" content="http://wy3.space/static/yi.png"/>
+    
+    <link href="/static/style.css" rel="stylesheet">
+    <script src="/static/js/showdown.min.js" type="text/javascript"></script>
+    <script src="/static/js/highlight.pack.js" type="text/javascript"></script>
+    <script src="/static/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a id="logo">Yi</a>
+        </nav>
+        <div class="empty"></div>
+        <nav>
+            <section>
+                <a href="/">home</a>
+                <a href="/about">about</a>
+                <a href="mailto:wuuyi123@gmail.com" target="_blank">@me</a>
+                <a href="https://github.com/wy3" target="_blank">&frasl;me</a>
+            </section>
+        </nav>
+    </header>
+    
+    <div id="post"> </div>
+    <a id="scrollup"></a>
+    
+    <footer></footer>
+</body>
+</html>
+
+<!--content>
+title: Tối ưu Lua Compiler trên Windows;
+descript: Biến trình biên dịch Lua trở nên cực nhỏ gọn.;
+tags: lua|compiler|optimize;
+date: Aug 6th 2018;
+-+-+-
+<p align='center'>
+    <img src='https://embedded-app-server.info/images/development-flow.jpg'>
+</p>
+
+Lua được viết theo chuẩn C 89/90, nên hoàn toàn có thể sử dụng [**Tiny C Compiler**](https://bellard.org/tcc/) (TCC) để build Lua. Nói thêm tí, TCC là trình biên dịch C vô cùng nhỏ gọn trên Windows, khi build code C có linking với bất kỳ DLL nào thì nó hoàn toàn có thể sử dụng exports symbol chứa sẵn trong file text (thường là .def) để link với program, không nhất thiết phải sử dụng static library .a .lib... chống tăng thêm kích thước.
+Cấu trúc thư mục source code Lua như sau:
+
+```
+---lua-xxx/
+        |---doc/...
+        |---etc/...
+        |---src/
+        |    |---makefile
+        |    |---*.c
+        |    |---*.h
+        |---makefile
+        |...
+```
+
+Việc build cũng khá đơn giản, nếu bạn đọc **Makefile** sẽ thấy như sau:
+- Compile từng file source .c với option `-c` để xuất ra file **object**.
+- Link tất cả các file object thành **static lib**, **dynamic lib**.
+- Sử dụng static library để link cho **lua.exe**, **luac.exe**.
+Đầu tiên là tải [**TCC 0.9.27**](http://download.savannah.gnu.org/releases/tinycc/) về, sau đó thêm đường dẫn vào **PATH** trong **Enviroment Vriables...**
+Do mình lười viết **makefile** nên làm luôn **batch** nhé. Tiếp tục, tạo một file **.bat** và chèn đoạn code sau vào:
+
+```batch
+@echo off
+set cc=tcc
+set src=./src
+set lua=lua51
+```
+
+> **cc** là đường dẫn đến TCC, ở trên đã set PATH rồi nên chỉ cần **tcc** là đủ. <br>
+> **src** là đường dẫn đến thư mục chứa source. <br>
+> **lua** là phiên bản hiện tại của source Lua, mình sử dụng  v5.1.5.
+<br>
+Tất cả file source đều cùng chung một thư mục, ta sử dụng code sau để tạo list chứa tên file:
+
+```batch
+:append (
+    if defined list (
+        set list=%list% %1
+    ) else (
+        set list=%1
+    )
+    goto :eof
+)
+```
+
+> Hàm :**append** giúp tạo **list** & chèn thêm các phần tử mới thành list.
+<br>
+Tương tự, tạo thêm một hàm **:main** để chứa code chính:
+
+```batch
+:main (
+    :: code here
+    goto :eof
+)
+```
+
+> Không sử dụng **goto :eof** vẫn được nhé, nếu **:main** ở cuối cùng.
+<br>
+Thêm đoạn code sau vào **:main** để lấy tên file  và biên dịch.
+
+```batch
+:main (
+    for /r %%i in (%src%/*.c) do (
+        if not %%~ni==lua (
+            if not %%~ni==luac (
+                echo %%~ni.o
+                %cc% -DLUA_BUILD_AS_DLL -c -o %%~ni.o %src%/%%~ni.c
+                call :append %%~ni.o
+            )
+        )
+    )
+    ...
+```
+
+> Vòng lặp for sẽ lấy đường dẫn của tất cả file trong source, dùng **%%~ni** để parse tên file. <br>
+> 2 điều kiện **if** sẽ loại bỏ **lua** và **luac**, 2 thằng này không cần thiết. <br>
+> Dòng **%cc%** sẽ compile từng file .c <br>
+> **call  :append...** để add file .o vào **list**, tiện cho tạo static library.
+<br>
+Compile những file cần thiết và xóa file không cần thiết.
+
+```batch
+    ...
+    %cc% -shared -o %lua%.dll %list%        :: dynamic lib
+    %cc% -ar liblua.a %list%                :: static lib
+    %cc% -o lua.exe %src%/lua.c liblua.a    :: lua.exe
+    %cc% -o luac.exe %src%/luac.c liblua.a  :: luac.exe
+    if exist *.o del *.o
+    if exist *.def del *.def
+    ...
+```
+
+> Nếu bạn muốn giữ lại file .def để link thì hãy bỏ dòng **if** cuối.
+<br>
+Vậy là xong, ta trở lại sau phần khai báo và thêm dòng sau rồi chạy:
+
+```batch
+call :main
+```
+
+<br>
+Bạn có thể tải file .bat ở trên [tại đây](https://github.com/wy3/blog/blob/master/resources/build.bat).
+Sau khi build hoàn tất thì có thể bạn sẽ thấy file **lua.exe** có size lớn hơn khi build bằng **GCC** hoặc **MSVC**. Đừng vội, lúc nãy đã thêm static lib vào nên có thể chạy hoàn toàn độc lập mà không cần phải kèm dll vào.
+Nếu muốn link thêm dll thì ta làm như sau:
+- `$ tcc -impdef lua51.dll` để xuất ra link .def hoặc sử dụng file lúc nãy.
+-  Thay vì sử dụng **liblua.a** thì bạn thay vào đó là file .def vừa xuất ra:
+    - thay `%cc% -o lua.exe %src%/lua.c liblua.a`
+    - thành `%cc% -o lua.exe %src%/lua.c lua51.def`, tương tự với luac nhé
+- Tất nhiên **lua.exe** sau khi build cũng chỉ vài KB thôi, nhớ phải luôn mang theo dll đi kèm nhé. Có thể nhiều bạn sẽ thắc mắc tại sao khi link dll mà không cần thêm dll, lý do là đã set PATH cho thư mục chứa dll rồi đấy.
+<br>
+Để Lua nhỏ gọn hơn nữa, mình sẽ sử dụng [**upx**](https://upx.github.io/) (bản WinPE) để pack nó lại. Sử dụng option `--brute` để đạt hiệu quả tối đa.
+
+```batch
+upx --brute lua.exe
+upx --brute luac.exe
+upx --brute lua51.dll
+```
+
+<br>
+Thành quả thu được khá bất ngờ
+Tên file|Size ban đầu|Size sau khi pack
+
+:--|:--:|:--:|
+lua.exe| 176KB | 50KB
+luac.exe| 128KB | 39KB
+lua51.dll| 177KB | 53KB
+
+Tuy nhỏ gọn nhưng cũng có cái hại, nếu share file **lua.exe** trực tiếp thì đường nào cũng bị nói là virus. Muốn an toàn hơn thì bạn nên thêm resources, sign number, icon, details... vào trong khi biên dịch để thêm phần an toàn hơn.
+</content-->
