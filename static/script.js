@@ -1,6 +1,7 @@
 var posts = [
 	'rust-messagebox',
-	'lua-in-15m'
+	'lua-in-15m',
+	'optimize-lua-compiler'
 ];
 
 var labelTemp =
