@@ -1,11 +1,20 @@
 @import url("css/normalize.css");
 @import url("css/hybrid.css");
 
-html {
-	display: block;
+* {
+	transition: background-color 0.5s ease;
 }
 
 body {
+	--text: #111;
+	--text-back: #fff;
+	
+	--select: #f0f0f0;
+	--select-back: #303030;
+	
+	--code: #0009;
+	--code-back: rgba(68, 68, 102, 0.2);
+	
     margin: 40px auto;
     padding: 0 10px;
     max-width: 650px;
@@ -15,6 +24,20 @@ body {
     color: rgba(0, 0, 0, 0.87);
     -webkit-font-smoothing: antialiased;
     font-weight: 300;
+	
+	color: var(--text);
+	background: var(--text-back);
+}
+
+body.dark {
+	--text: #f0f0f0;
+	--text-back: #111;
+	
+	--select: #101010;
+	--select-back: #f0f0f0;
+	
+	--code: #fff9;
+	--code-back: rgba(68, 68, 102, 0.5);
 }
 
 h1,
@@ -51,7 +74,7 @@ p {
 
 a {
     color: #0076df;
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 a:hover {
@@ -106,7 +129,7 @@ header a {
 header nav,
 header section,
 header a,
-header .logo,
+header #logo,
 header .empty {
     display: flex;
     justify-content: center;
@@ -122,15 +145,17 @@ header .empty {
     flex: 1 0 0;
 }
 
-header .logo {
-    background-color: rgba(0, 0, 0, 0.87);
-    color: #fff;
+header #logo {
     min-width: 48px;
     min-height: 48px;
-	font-family: monospace;
     font-size: 30px;
-    border-radius: 2px;
 	font-weight: 800;
+	cursor: pointer;
+	border-radius: 5px;
+	
+	text-decoration: none;
+	background-color: var(--text);
+    color: var(--text-back);
 }
 
 header a {
@@ -164,21 +189,6 @@ footer {
 	display: block;
 	text-align: center;
 	width: 100%;
-}
-
-.wf-active body {
-    font-family: "PT Serif", serif;
-}
-
-.wf-active h1,
-h2,
-3 {
-    font-family: "Roboto", sans-serif;
-}
-
-.wf-active pre code,
-.wf-active code {
-    font-family: "Roboto Mono", monospace;
 }
 
 /* list posts
@@ -348,7 +358,8 @@ a code,
 p code,
 table td code,
 li code {
-    background: rgba(68, 68, 102, 0.1);
+	color: var(--code);
+    background: var(--code-back);
     padding: 1px 5px;
     border-radius: 2px;
     word-wrap: break-word;
@@ -436,7 +447,7 @@ li.L1,li.L3,li.L5,li.L7,li.L9 { }
 }
 
 ::-webkit-scrollbar-track {
-    background: #fff; 
+    background: var(--text-back); 
 }
 
 ::-webkit-scrollbar-thumb {
@@ -448,11 +459,11 @@ li.L1,li.L3,li.L5,li.L7,li.L9 { }
 }
 
 ::-moz-selection {
-    color: #f0f0f0;
-    background: #303030;
+    color: var(--select);
+    background: var(--select-back);
 }
 
 ::selection {
-    color: #f0f0f0;
-    background: #303030;
+    color: var(--select);
+    background: var(--select-back);
 }
