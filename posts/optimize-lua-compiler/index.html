@@ -72,6 +72,7 @@ Việc build cũng khá đơn giản, nếu bạn đọc **Makefile** sẽ thấ
 - Compile từng file source .c với option `-c` để xuất ra file **object**.
 - Link tất cả các file object thành **static lib**, **dynamic lib**.
 - Sử dụng static library để link cho **lua.exe**, **luac.exe**.
+
 Đầu tiên là tải [**TCC 0.9.27**](http://download.savannah.gnu.org/releases/tinycc/) về, sau đó thêm đường dẫn vào **PATH** trong **Enviroment Vriables...**
 Do mình lười viết **makefile** nên làm luôn **batch** nhé. Tiếp tục, tạo một file **.bat** và chèn đoạn code sau vào:
 
@@ -82,10 +83,10 @@ set src=./src
 set lua=lua51
 ```
 
-> **cc** là đường dẫn đến TCC, ở trên đã set PATH rồi nên chỉ cần **tcc** là đủ. <br>
-> **src** là đường dẫn đến thư mục chứa source. <br>
-> **lua** là phiên bản hiện tại của source Lua, mình sử dụng  v5.1.5.
-<br>
+- **cc** là đường dẫn đến TCC, ở trên đã set PATH rồi nên chỉ cần **tcc** là đủ. <br>
+- **src** là đường dẫn đến thư mục chứa source. <br>
+- **lua** là phiên bản hiện tại của source Lua, mình sử dụng  v5.1.5.
+
 Tất cả file source đều cùng chung một thư mục, ta sử dụng code sau để tạo list chứa tên file:
 
 ```batch
@@ -99,8 +100,8 @@ Tất cả file source đều cùng chung một thư mục, ta sử dụng code 
 )
 ```
 
-> Hàm :**append** giúp tạo **list** & chèn thêm các phần tử mới thành list.
-<br>
+- Hàm :**append** giúp tạo **list** & chèn thêm các phần tử mới thành list.
+
 Tương tự, tạo thêm một hàm **:main** để chứa code chính:
 
 ```batch
@@ -110,8 +111,8 @@ Tương tự, tạo thêm một hàm **:main** để chứa code chính:
 )
 ```
 
-> Không sử dụng **goto :eof** vẫn được nhé, nếu **:main** ở cuối cùng.
-<br>
+- Không sử dụng **goto :eof** vẫn được nhé, nếu **:main** ở cuối cùng.
+
 Thêm đoạn code sau vào **:main** để lấy tên file  và biên dịch.
 
 ```batch
@@ -128,11 +129,11 @@ Thêm đoạn code sau vào **:main** để lấy tên file  và biên dịch.
     ...
 ```
 
-> Vòng lặp for sẽ lấy đường dẫn của tất cả file trong source, dùng **%%~ni** để parse tên file. <br>
-> 2 điều kiện **if** sẽ loại bỏ **lua** và **luac**, 2 thằng này không cần thiết. <br>
-> Dòng **%cc%** sẽ compile từng file .c <br>
-> **call  :append...** để add file .o vào **list**, tiện cho tạo static library.
-<br>
+- Vòng lặp for sẽ lấy đường dẫn của tất cả file trong source, dùng **%%~ni** để parse tên file. <br>
+- 2 điều kiện **if** sẽ loại bỏ **lua** và **luac**, 2 thằng này không cần thiết. <br>
+- Dòng **%cc%** sẽ compile từng file .c <br>
+- **call  :append...** để add file .o vào **list**, tiện cho tạo static library.
+
 Compile những file cần thiết và xóa file không cần thiết.
 
 ```batch
@@ -146,16 +147,14 @@ Compile những file cần thiết và xóa file không cần thiết.
     ...
 ```
 
-> Nếu bạn muốn giữ lại file .def để link thì hãy bỏ dòng **if** cuối.
-<br>
+- Nếu bạn muốn giữ lại file .def để link thì hãy bỏ dòng **if** cuối.
+
 Vậy là xong, ta trở lại sau phần khai báo và thêm dòng sau rồi chạy:
 
 ```batch
 call :main
 ```
 
-<br>
-Bạn có thể tải file .bat ở trên [tại đây](https://github.com/wy3/blog/blob/master/resources/build.bat).
 Sau khi build hoàn tất thì có thể bạn sẽ thấy file **lua.exe** có size lớn hơn khi build bằng **GCC** hoặc **MSVC**. Đừng vội, lúc nãy đã thêm static lib vào nên có thể chạy hoàn toàn độc lập mà không cần phải kèm dll vào.
 Nếu muốn link thêm dll thì ta làm như sau:
 - `$ tcc -impdef lua51.dll` để xuất ra link .def hoặc sử dụng file lúc nãy.
@@ -163,7 +162,7 @@ Nếu muốn link thêm dll thì ta làm như sau:
     - thay `%cc% -o lua.exe %src%/lua.c liblua.a`
     - thành `%cc% -o lua.exe %src%/lua.c lua51.def`, tương tự với luac nhé
 - Tất nhiên **lua.exe** sau khi build cũng chỉ vài KB thôi, nhớ phải luôn mang theo dll đi kèm nhé. Có thể nhiều bạn sẽ thắc mắc tại sao khi link dll mà không cần thêm dll, lý do là đã set PATH cho thư mục chứa dll rồi đấy.
-<br>
+
 Để Lua nhỏ gọn hơn nữa, mình sẽ sử dụng [**upx**](https://upx.github.io/) (bản WinPE) để pack nó lại. Sử dụng option `--brute` để đạt hiệu quả tối đa.
 
 ```batch
@@ -172,7 +171,6 @@ upx --brute luac.exe
 upx --brute lua51.dll
 ```
 
-<br>
 Thành quả thu được khá bất ngờ
 
 Tên file|Size ban đầu|Size sau khi pack

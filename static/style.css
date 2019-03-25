@@ -78,7 +78,11 @@ a {
 }
 
 a:hover {
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--text);
+}
+
+a.here {
+	color: var(--text);
 }
 
 ul,
@@ -229,6 +233,7 @@ footer {
 	font-size: 30px;
 	font-weight: 800;
 	margin: 20px 0;
+	text-transform: none;
 }
 
 #post .date {
@@ -308,19 +313,19 @@ p > img {
 table {
     display: table;
     vertical-align: middle;
-    margin: 20px 0;
+    margin: 10px 0;
     border: 1px;
     border-style: solid;
     border-color: #3335;
+	font-size: 15px; 
 }
 
 table th,
 table td {
+	border: 1px;
     padding: 4px 10px;
-    border-bottom: 1px;
-    border-right: 1px;
     border-style: solid;
-    border-color: #3335;
+    border-color: #3338;
 }
 
 td, th {
