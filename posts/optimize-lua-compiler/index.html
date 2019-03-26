@@ -49,9 +49,6 @@ descript: Biến trình biên dịch Lua trở nên cực nhỏ gọn.;
 tags: lua|compiler|optimize;
 date: Aug 6th 2018;
 -+-+-
-<p align='center'>
-    <img src='https://embedded-app-server.info/images/development-flow.jpg'>
-</p>
 
 Lua được viết theo chuẩn C 89/90, nên hoàn toàn có thể sử dụng [**Tiny C Compiler**](https://bellard.org/tcc/) (TCC) để build Lua. Nói thêm tí, TCC là trình biên dịch C vô cùng nhỏ gọn trên Windows, khi build code C có linking với bất kỳ DLL nào thì nó hoàn toàn có thể sử dụng exports symbol chứa sẵn trong file text (thường là .def) để link với program, không nhất thiết phải sử dụng static library .a .lib... chống tăng thêm kích thước.
 Cấu trúc thư mục source code Lua như sau:

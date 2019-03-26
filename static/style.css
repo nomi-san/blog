@@ -257,9 +257,9 @@ p {
 
 pre {
 	margin: 1em 0;
-	padding: 1em 1.5em !important;
+	padding: 12px;
 	overflow: auto;
-	border-radius: 5px;
+	border-radius: 3px;
 }
 
 ul, ol {
@@ -289,8 +289,7 @@ hr {
 }
 
 pre {
-	background: #f8f8f8;
-    padding: 16px 24px;
+	background: #faf8f5;
     border-radius: 3px; 
     /*@scroll-behavior: auto;*/
 }
