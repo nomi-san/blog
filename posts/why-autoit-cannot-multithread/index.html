@@ -1,0 +1,370 @@
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	
+	<title>Tại sao AutoIt không thể đa luồng?</title>
+	<link href="/static/logo.png" rel="icon" type="image/png"/>
+	
+	<meta name="description" content="Cùng tìm hiểu tại sao AutoIt không hỗ trợ chạy đa luồng."/>
+    <meta name="author" content="wuuyi"/>
+
+    <meta property="og:title" content="Tại sao AutoIt không thể đa luồng?"/>
+    <meta property="og:url" content="http://wy3.space/why-autoit-cannot-multithread"/>
+    <meta property="og:description" content="Cùng tìm hiểu tại sao AutoIt không hỗ trợ chạy đa luồng."/>
+    <meta property="og:image" content="http://wy3.space/static/yi.png"/>
+	
+	<link href="/static/style.css" rel="stylesheet">
+	<script src="/static/js/showdown.min.js" type="text/javascript"></script>
+	<script src="/static/js/highlight.pack.js" type="text/javascript"></script>
+	<script src="/static/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<header>
+		<nav>
+			<a id="logo">Yi</a>
+		</nav>
+		<div class="empty"></div>
+		<nav>
+			<section>
+				<a href="/">home</a>
+				<a href="/about">about</a>
+				<a href="mailto:wuuyi123@gmail.com" target="_blank">@me</a>
+				<a href="https://github.com/wy3" target="_blank">&frasl;me</a>
+			</section>
+		</nav>
+	</header>
+	
+	<div id="post">	</div>
+	<a id="scrollup"></a>
+	
+	<footer></footer>
+</body>
+</html>
+
+<!--content>
+title: Tại sao AutoIt không thể đa luồng?;
+descript: Cùng tìm hiểu tại sao AutoIt không hỗ trợ chạy đa luồng.;
+tags: autoit|multithread;
+date: Mar 27th 2019;
+-+-+-
+
+<p align='center'>
+    <img src='https://www.saashub.com/images/app/service_logos/14/440080a69b68/large.png?1536835245'>
+</p>
+
+### AutoIt là gì?
+
+**AutoIt** là một ngôn ngữ lập trình kịch bản với cú pháp giống **BASIC**, chỉ hỗ trợ nền tảng **Windows**. Mục dich ra đời của ngôn ngữ này là hỗ trợ việc tự động hóa các tác vụ trên **Windows**, ngoài ra nó cũng cung cấp nhiều tính năng khác trong việc viết ứng dụng với giao diện người dùng cơ bản và các hàm cho tính toán, xử lý chuỗi...
+
+Không hỗ trợ chạy đa luồng và closed source khiến ngôn ngữ này càng lộ rõ nhiều mặt hạn chế và dần chết đi.
+
+### Vì sao không hỗ trợ đa luồng?
+
+Có lẽ đây là câu hỏi mà rất nhiều người đang thắc mắc, tại sao các ngôn ngữ kịch bản đi trước như **Lua**, **Ruby** hay **Python** đều có hỗ trợ đa luồng, nhưng ra đời sau và đã gần 20 năm rồi mà ngôn ngữ này vẫn không?
+
+Trước khi vào vấn đề, mình sẽ bắt đầu với **4** bài test nho nhỏ… để thực hiện 2 nhiệm vụ sau trên một luồng mới:
+- Tạo một *hộp thoại thông báo*
+- Tạo một vòng lặp *in ra console 10 lần*, mỗi lần *cách nhau 100ms*
+
+Note: bạn có thể tải [**các test này tại đây**]() để theo dõi dễ hơn.
+
+Trong lập trình **Windows**, để tạo một luồng chỉ cần sử dụng hàm [CreateThread](https://docs.microsoft.com/en-us/windows/desktop/api/processthreadsapi/nf-processthreadsapi-createthread) từ **WinAPI** trong library **kernel32.dll** (ngoài ra còn có thể dùng **pthread**).
+
+Hàm **CreateThread** trên **MSDN** có mẫu syntax (**C**/**C++**) như sau:
+
+```c++
+HANDLE CreateThread(
+    LPSECURITY_ATTRIBUTES lpThreadAttributes,
+    SIZE_T dwStackSize,
+    LPTHREAD_START_ROUTINE lpStartAddress,
+    __drv_aliasesMem LPVOID lpParameter,
+    DWORD dwCreationFlags,
+    LPDWORD lpThreadId
+);
+```
+- #1 là con trỏ (pointer) đến thuộc tính bảo mật gì gì đấy, cái này không quan trọng nên cứ gán là `null`
+- #2 là stack size, cứ gán là `0` thì hệ thống sẽ tự tính toán
+- #3 là pointer hàm cần nạp vào luồng
+- #4 là pointer tham số để nạp vào hàm
+- #5 là flag bit cho luồng mới chạy ngay (nếu gán 0) hoặc chờ đến khi có lệnh
+- #6 là pointer đến một số để lấy về thread id
+- Hàm này sẽ trả về handle của thread mới tạo, nếu lỗi sẽ là `null`
+
+Theo tham số thứ #3 thì hàm nạp vào luồng phải theo cấu trúc của type [ThreadProc]([https://msdn.microsoft.com/vi-vn/f0dc203f-200e-42f1-940c-24e3fe080175](https://msdn.microsoft.com/vi-vn/f0dc203f-200e-42f1-940c-24e3fe080175)):
+
+```c++
+DWORD WINAPI ThreadProc(
+    _In_ LPVOID lpParameter
+);
+```
+- Hàm phải trả về kiểu `DWORD` (`unsigned int`/`uint32_t` - số nguyên không dấu `32bit`)
+- Hàm phải mang thuộc tính WINAPI (tức `__stdcall` - standard call)
+- Hàm phải có một tham số là pointer để trỏ đến tham số khi nạp lúc tạo thread (`LPVOID`/`void*`)
+
+#### 1. Tạo một luồng từ phía AutoIt
+
+Mình sẽ convert hàm **ThreadCreate** sang **AutoIt** như sau:
+
+```autoit
+func CreateThread($lpFunc, $lpParam, byref $threadId)
+    local $id = DllStructCreate('dword value;') ; tạo một dword để lấy thread id
+    local $ret = DllCall('kernel32.dll', 'ptr', 'CreateThread', _
+        'ptr', null, _ ; optional
+        'ptr', 0, _ ; tuy là kiểu SIZE_T nhưng vẫn dùng được ptr
+        'ptr', $lpFunc, _
+        'ptr', $lpParam, _
+        'dword', 0, _ ; thread sẽ chạy ngay sau khi tạo
+        'ptr', DllStructGetPtr($id, 1) _ ; lấy pointer của dword lúc nãy
+    )
+    if (@error or not isArray($ret)) then return null ; check lỗi
+    $threadId = $id.value ; ref thread id
+    return $ret[0] ; trả về thread handle
+endfunc
+```
+- Do một số tham số không quan trọng nên mình sẽ đơn giản còn 3 tham số là pointer đến hàm, poiter đến tham số và ref thread id
+
+Như đã nói ở trên kết hợp với **ThreadProc**, thì hàm **test** sẽ như sau:
+
+```autoit
+func test($param)
+    MsgBox(0, '', 'Hello') ; một hộp thoại
+    for $i = 1 to 10 ; in ra console 10 dòng
+        ConsoleWrite('Hello console ' & $i & @crlf)
+        Sleep(100) ; delay mỗi 100ms
+    next
+    return 0
+endfunc
+```
+
+Để lấy pointer đến hàm, mình sẽ sử dụng các hàm DllCallback...
+
+```autoit
+; reg callback cho hàm theo type ThreadProc
+$idFn = DllCallbackRegister(test, 'dword', 'ptr') ; trả về dword và một param là ptr
+; lấy pointer
+$lpFn = DllCallbackGetPtr($idFn)
+```
+
+Tiếp tục phần test sẽ là tạo thread:
+```autoit
+$thrID = 0
+$hThread = CreateThread($lpFn, null, $thrID)
+; check lỗi
+if (($hThread == null) or ($thrID == 0)) then
+    MsgBox(0, 'Lỗi', 'Không thể tạo thread.')
+    exit
+endif
+```
+
+Okay, đến đây chạy code thử xem nào.
+Ta sẽ thấy một điều là vừa run thì nó biến mất ngay, nguyên nhân là không có gì giữ main thread và main thread sẽ thoát khiến các thread khác thoát theo. Hay là do AutoIt không thể đa luồng nên chẳng có gì xảy ra?
+
+Tiếp tục, mình sẽ cho một loop giữ chương trình lại
+```autoit
+while true
+    ConsoleWrite('autoit' & @crlf)
+wend
+```
+
+**F5** sẽ thấy một hộp thoại `'hello'` trong hàm **test** xuất hiện, song song đó là dòng chữ `'autoit'` cứ liên tục in ra trên console. Sau đấy ta nhấn nút **OK** trên hộp thoại và chờ khoảng vài giây sẽ thấy chương trình tự thoát (mặc dù xét theo code thì nó không bao giờ thoát).
+
+Kết quả trên console như sau:
+
+```bash
+... rất nhiều 'autoit'
+autoit
+autoit
+autoit
+Hello console 1
+Hello console 2
+```
+
+Đến đây là xong bài **test #1**, ghi lại kết quả và tiếp tục.
+
+#### 2. Tạo luồng từ phía C nhưng dùng code AutoIt
+Bài test này có thể nói là giống như trên, nhưng chỉ khác là không call trực thiếp hàm **ThreadCreate** từ **AutoIt** mà là gián tiếp thông qua **C** dll.
+
+```c
+DWORD _createThread(ThreadProc lpFunc, LPVOID lpParam, LPDWORD threadId)
+{
+    return CreateThread(NULL, 0, lpFunc, lpParam, 0, threadId);
+}
+```
+
+Thay thế chỗ hàm **CreateThread** trong **AutoIt** lúc nãy, ta được:
+```autoit
+func CreateThread($lpFunc, $lpParam, byref $threadId)
+    local $id = DllStructCreate('dword value;') ; tạo một dword để lấy thread id
+    local $ret = DllCall('dll.dll', 'ptr:cdecl', '_createThread', _ ; ... :cdecl là do mình không dùng stdcall cho hàm api trong dll
+        'ptr', $lpFunc, _
+        'ptr', $lpParam, _
+        'ptr', DllStructGetPtr($id, 1) _ ; lấy pointer của dword lúc nãy
+    )
+    if (@error or not isArray($ret)) then return null ; check lỗi
+    $threadId = $id.value ; ref thread id
+    return $ret[0] ; trả về thread handle
+endfunc
+```
+
+Và kết quả... chẳng khác gì bài **test #1** phải không?
+
+
+#### 3.  Tạo luồng từ AutoIt và nạp hàm từ C
+
+Bài test này có nghĩa là hàm **test** sẽ lấy từ **C** (thông qua dll) rồi nạp vào luồng.
+
+```c
+DWORD WINAPI test(LPVOID param) {
+    MessageBoxA(NULL, "hello", "", 0);
+    for (int i = 1; i <= 10; i++) {
+        printf("hello, %d\n", i);
+        Sleep(100);
+    }
+}
+
+void *get_test() {
+    return &test;
+}
+```
+Phần này mình không giải thích về code, bạn xem trong folder **test_3**.
+Output: 
+
+```bash'
+...
+autoit
+hello, 4
+...
+autoit
+hello, 5
+...
+```
+Ta có thể thấy được, sau khi nhấn **OK** trên hộp thoại và nhấn phím **A** ngay để thoát. Check output sẽ thấy các dòng in ra trên console xen lẻ nhau, đồng nghĩa là 2 luồng này chạy song song với nhau => test thành công.
+Nhưng đừng vội, vì hàm **test** viết từ **C** nên sẽ không thể chứng minh cho việc **AutoIt** có thể đa luồng.
+
+#### 4. Nạp và gọi hàm AutoIt trong luồng C
+
+Bài test này chính là sự kết hợp giữa **test #1**, **#2** và **#3**.
+
+Trong **C**, để gọi một hàm thì ta chỉ cần có địa chỉ (pointer) của hàm đó và cấu trúc khai báo của hàm là có thể gọi được. Tương tự như vậy, mình sẽ tiếp tục dùng các hàm **DllCallback**... để lấy pointer của hàm trong **AutoIt** và nạp vào **C**.
+
+Mình cần một biến global để lưu lại hàm:
+```c
+static ThreadProc lpFunc = NULL;
+```
+Tiếp theo là hàm nạp và hàm gọi test thử:
+
+```c
+void set_func(ThreadProc lpFn) { // export
+	lpFunc = lpFn;
+}
+
+void call_func() { // export
+    if (lpFunc != NULL) lpFunc(NULL);
+}
+```
+
+Và cuối cùng là hàm tạo một thread để call hàm vừa nạp trên thread mới:
+```c
+static DWORD WINAPI __proc(LPVOID param) {
+    call_func();
+    return 0;
+}
+
+void start_test() { // export
+    HANDLE hThrd = CreateThread(NULL, 0, __proc, NULL, 0, NULL);
+    if (hThrd == NULL) MessageBoxW(NULL, L"Lỗi", L"Không thể tạo thread.", 0);
+}
+```
+
+Thêm các thư viện cần thiết, đặt thuộc tính export cho 3 trên hàm và build thành dll.
+
+Chuyển qua AutoIt, tiếp tục với hàm **test** cũ, đầu tiên là lấy pointer của nó:
+
+```autoit
+$idFn = DllCallbackRegister(test, 'dword', 'ptr')
+$lpFn = DllCallbackGetPtr($idFn)
+```
+
+Các hàm api từ dll lúc nãy:
+
+```autoit
+global $__dll = DllOpen('dll.dll')
+
+func set_func($lpFunc)
+	DllCall($__dll, 'none:cdecl', 'set_func', 'ptr', $lpFunc)
+endfunc
+
+func call_func()
+    DllCall($__dll, 'none:cdecl', 'call_func')
+endfunc
+
+func start_test()
+	DllCall($__dll, 'none:cdecl', 'start_test')
+endfunc
+```
+
+
+
+Bắt đầu test:
+```autoit
+global $__dll = DllOpen('dll.dll')
+
+$idFn = DllCallbackRegister(test, 'dword', 'ptr')
+$lpFn = DllCallbackGetPtr($idFn)
+
+set_func($lpFn)
+call_func()
+MsgBox(0, 'OK', 'call_func() đã xong!')
+
+start_test();
+
+while true
+    ConsoleWrite('autoit' & @crlf)
+wend
+```
+- Đầu tiên là nạp hàm **test** trong **AutoIt** rồi lưu vào dll **C**
+- `call_func()` để gọi hàm đó ngay trong **C**, mọi thứ chạy bình thường.
+- `start_test()` sẽ bắt đầu tạo một luồng ngay trong **C**, luồng đó sẽ gọi hàm ta vừa nạp vào
+- Và kết quả... tương tự **test #1** và **#2**.
+
+#### Kết luận
+
+Qua các **test #1**, **#2** và **#4** cho thấy rằng, **AutoIt** hoàn toàn có thể tạo ra nhiều thread chạy song song với nhau, nhưng khi hai thread cùng sử dụng vòng lặp thì lại sinh ra lỗi, nguyên nhân do đâu?
+
+Hầu hết các ngôn ngữ lập trình kịch bản đều sử dụng chung một trong hai phương pháp sau:
+ 1. **Thông dịch**: code được thông dịch và thực thi trực tiếp.
+ 2. **Sử dụng máy ảo**: chuyển code thành một dạng mã gọi là bytecode, sau đó đưa lên cho máy ảo đọc và thực thi.
+
+
+Đối với **AutoIt** có thể là sử dụng **method 1** (vì **Exe2Aut** có thể dịch ngược nguyên vẹn code). 
+Điểm chung của **2 method** này đều sử dụng ngăn xếp ảo (**virtual stack**) để đẩy các giá trị lên (**push**) hoặc lấy giá trị xuống (**pop**).
+
+Ví dụ `print(4 + 5)`, sẽ là:
+```
+instruction  |  stack
+push 4          [4] [ ] [ ] [ ]
+push 5          [4] [5] [ ] [ ]
+pop             [4] [ ] [ ] [ ]
+pop             [ ] [ ] [ ] [ ]
+4 + 5           [9] [ ] [ ] [ ]
+print           [ ] [ ] [ ] [ ]
+```
+
+Qua tìm hiểu source của nhiều ngôn ngữ kịch bản khác nhau, chẳng hạn như **Lua** và **Python**, phần đa luồng đều có công thức như sau:
+- Đầu tiên là tạo thêm một **core** mới trên một luồng mới, có liên hệ với **core** cũ (**core** - có thể hiểu là một trình thông dịch mới hoặc một phần thực thi của máy ảo và một stack độc lập với **core** cũ nằm ở luồng chính - main thread)
+- Chuyển hóa code nạp vào (code trong hàm) và thực thi trên **core** vừa tạo. Do hai **core** này đang chạy song song nhau nên ***không ảnh hưởng gì đến nhau***, biến global được ghi trên một thanh gi chung nên cả hai có thể truy cập.
+- Khi luồng thoát thì **core** đó cũng sẽ bị xóa và dọn dẹp những thứ không cần thiết, chẳng hạn biến cục bộ.
+
+Trong **AutoIt**, nhà phát triển đã ghi rõ là không hỗ trợ đa luồng, đồng nghĩa là từ đầu đến cuối chỉ có một **core** duy nhất. Nên khi nạp một hàm vào luồng khác để thực thi, thì chỉ có một core và stack nên sẽ bị xung đột và sinh ra lỗi.
+
+Trong các **test** trên, hai luồng đều có **while** loop và liên tục spam stack (nối chuỗi, gọi hàm...) nên chỉ chạy được khoảng vài giây là crash.
+
+Nói một cách dễ hiểu hơn, giả sử bạn có một sợi xích - tượng trưng cho **core**, một chiếc bánh răng tượng trưng cho **main thread**, khi kết nối chúng lại có thể không có vấn đề gì xảy ra. Khi cho thêm một bánh răng nữa, có kích thước khác bánh răng **main** và có chiều quay ngược lại, cùng liên kết với nhau thì sẽ xung đột và crash. Khi thêm một xích mới (thêm core) để gắn cho bánh răng phụ thì chúng là một cặp song song và hoạt động độc lập (ví dụ có lẽ bị ngược).
+
+Làm thế nào để cho **AutoIt** có thể chạy đa luồng an toàn? Hiện tại thì có thể là không có cách nào cả, trừ khi ngôn ngữ này open source hoặc nhà phát triển thêm tính năng này. Một ngôn ngữ bạn của nó là **AutoHotKey** (hoàn toàn không hỗ trợ đa luồng), mặc dù cũng đang open source nhưng có lẽ do source quá rắc rối nên cũng ít ai để ý đến.
+
+Post đến đây là kết thúc rồi, hi vọng có thể giải đáp phần nào thắc mắc của bạn ngay trong tiêu đề. Thân!
+
+</content-->
