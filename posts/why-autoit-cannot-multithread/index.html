@@ -348,7 +348,7 @@ push 4          [4] [ ] [ ] [ ]
 push 5          [4] [5] [ ] [ ]
 pop             [4] [ ] [ ] [ ]
 pop             [ ] [ ] [ ] [ ]
-4 + 5           [9] [ ] [ ] [ ]
+add             [9] [ ] [ ] [ ]
 print           [ ] [ ] [ ] [ ]
 ```
 
@@ -362,6 +362,18 @@ Trong **AutoIt**, nhà phát triển đã ghi rõ là không hỗ trợ đa lu�
 Trong các **test** trên, hai luồng đều có **while** loop và liên tục spam stack (nối chuỗi, gọi hàm...) nên chỉ chạy được khoảng vài giây là crash.
 
 Nói một cách dễ hiểu hơn, giả sử bạn có một sợi xích - tượng trưng cho **core**, một chiếc bánh răng tượng trưng cho **main thread**, khi kết nối chúng lại có thể không có vấn đề gì xảy ra. Khi cho thêm một bánh răng nữa, có kích thước khác bánh răng **main** và có chiều quay ngược lại, cùng liên kết với nhau thì sẽ xung đột và crash. Khi thêm một xích mới (thêm core) để gắn cho bánh răng phụ thì chúng là một cặp song song và hoạt động độc lập (ví dụ có lẽ bị ngược).
+
+Và khi thực thi hai lệnh này song song này hai luồng `print(4 + 5)` và `print(7 - 3)`, cùng một stack, cùng một thời điểm có thể sẽ như sau:
+```
+instruction  |  stack
+push 4          [4] [ ] [ ] [ ]
+push 7          [4] [7] [ ] [ ]
+push 5          [4] [7] [5] [ ]
+pop             [4] [7] [ ] [ ] -> 5
+sub             [4] [7] [ ] [ ] 5 - ???
+=> crash tại đây
+...             [ ] [ ] [ ] [ ]
+```
 
 Làm thế nào để cho **AutoIt** có thể chạy đa luồng an toàn? Hiện tại thì có thể là không có cách nào cả, trừ khi ngôn ngữ này open source hoặc nhà phát triển thêm tính năng này. Một ngôn ngữ bạn của nó là **AutoHotKey** (hoàn toàn không hỗ trợ đa luồng), mặc dù cũng đang open source nhưng có lẽ do source quá rắc rối nên cũng ít ai để ý đến.
 
