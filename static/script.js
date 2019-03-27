@@ -1,7 +1,8 @@
 var posts = [
 	'rust-messagebox',
 	'lua-in-15m',
-	'optimize-lua-compiler'
+	'optimize-lua-compiler',
+	'why-autoit-cannot-multithread'
 ];
 
 var labelTemp =
