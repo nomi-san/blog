@@ -1,6 +1,6 @@
 # my personal blog
 
-### [demo here](https://wy3.space)
+### [demo here](http://wy3.space)
 
 ### deps
 
@@ -32,4 +32,19 @@ var posts = [
 window.onload = function() {
     // parse + show post's content
 };
+```
+### post's content
+
+```html
+<html>
+    ...
+</html>
+<!--content>
+title: Title;
+descript: Description;
+date: Month Day Year;
+-+-+-
+markdown content
+...
+</content-->
 ```
