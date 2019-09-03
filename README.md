@@ -1,6 +1,6 @@
 # my personal blog
 
-### [demo here](http://wy3.space)
+### [demo here](http://wy3.github.io)
 
 ### deps
 
