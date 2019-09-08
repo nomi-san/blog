@@ -380,9 +380,9 @@ $ clang -w -O3  # Clang LLVM Compiler
 ```
 
 platforms|gcc *-O3*|msvc */O2*|clang *-O3*
--|:-:|:-:|:-:
-Linux x64 (WLS) | <u>2.49s</u> \ 2.60s | |  2.71s \ <u>1.85s</u>
-Windows 32bit   | <u>2.90s</u> \ 3.27s | <u>2.36s</u> \ 2.75s
+:--|:--:|:--:|:--:
+Linux x64 (WLS) | <u>2.49s</u> \ 2.60s | _ |  2.71s \ <u>1.85s</u>
+Windows 32bit   | <u>2.90s</u> \ 3.27s | <u>2.36s</u> \ 2.75s | _
 Windows 64bit   | 2.96s \ <u>2.95s</u> | 2.39s \ <u>2.15s</u> |  <u>2.27s</u> \ 2.37s
 
 Kết quả trên cho thấy rằng, 2 phương pháp bytecode không hơn kém nhau bao nhiêu, mà còn phụ thuộc khá nhiều vào compiler.
@@ -511,5 +511,7 @@ Và đây là cách mà mình thực hiện trên kiến trúc *x86*
 #endif
 #endif
 ```
+
+> Mọi code trên bạn có thể xem [tại đây](https://github.com/wy3/wy3.github.io/blob/master/posts/optimize-bytecode-virtual-machine/main.c)
 
 Đến đây là kết thúc rồi, hẹn gặp lại vào các post sau nhé!
