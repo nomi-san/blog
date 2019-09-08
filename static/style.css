@@ -77,12 +77,8 @@ a {
     text-decoration: underline;
 }
 
-a:hover {
+a:hover, a>h1, a>h2, a.here {
     color: var(--text);
-}
-
-a.here {
-	color: var(--text);
 }
 
 ul,
