@@ -1,13 +1,13 @@
 # my personal blog
 
-### [demo here](http://wy3.github.io)
+### [demo here](https://wuuyi.pw)
 
 ### deps
 
-- [showdown.js](http://showdownjs.com/) :: build markdown content
-- [highlight.js](https://highlightjs.org/) :: code highlignt
+- [showdown.js](http://showdownjs.com/) :: building markdown contents
+- [highlight.js](https://highlightjs.org/) :: code highlighting
 
-### dir
+### directory
 
 ```
 ./repo/
@@ -26,6 +26,8 @@
 
 ```js
 var posts = [
+    'post-1',
+    'post-2',
     // list of post's link-name
 ];
 
@@ -33,6 +35,7 @@ window.onload = function() {
     // parse + show post's content
 };
 ```
+
 ### post's content
 
 ```html
@@ -44,7 +47,7 @@ title: Title;
 descript: Description;
 date: Month Day Year;
 -+-+-
-markdown content
+markdown contents
 ...
 </content-->
 ```
