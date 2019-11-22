@@ -1,24 +1,31 @@
-# my personal blog
+## blog
 
-### [demo here](https://wuuyi.pw)
+### features
+- For personal blog or document
+- Fast and lightweight
+- Static, fully frontend
+- Supports markdown content 
 
-### deps
-
+### used
 - [showdown.js](http://showdownjs.com/) :: building markdown contents
 - [highlight.js](https://highlightjs.org/) :: code highlighting
 
 ### directory
-
 ```
-./repo/
-    |____posts/                          # list posts
-    .      |____post-1/index.html        # post index + content
-    .      |____post-2/index.html
-    .      ...
-    |____static/                         # static resources
-    .      |____script.js                # main script
-    .      ...
-    |____index.html                      # index
+./blog/
+    |____assets/                    # static assets
+    .    |____css/
+    .    .    |____style.css        # main style sheet
+    .    |____img/...
+    .    |____js/
+    .    .    |____script.js        # main script
+    .    ...
+    |____posts/                     # list posts
+    .    |____post-1/index.html     # post-1
+    .    |____post-2/index.html     # post-2
+    .    ...
+    |____about/index.html           # about
+    |____index.html                 # home
     ...
 ```
 
@@ -26,9 +33,13 @@
 
 ```js
 var posts = [
-    'post-1',
-    'post-2',
-    // list of post's link-name
+    [2017, [
+        ["May 04", "The First post", "post-1"],
+        ["Nov 11", "The Second post", "post-2"]
+    ]],
+    [2018, [
+        ["Jan 07", "The Third post", "post-3"],
+    ]]
 ];
 
 window.onload = function() {
@@ -40,13 +51,12 @@ window.onload = function() {
 
 ```html
 <html>
+    <tags ...
     ...
 </html>
+
 <!--content>
-title: Title;
-descript: Description;
-date: Month Day Year;
--+-+-
+...
 markdown contents
 ...
 </content-->
