@@ -2,6 +2,11 @@
 
 Demo: [nomi-blog-demo.vercel.app](https://nomi-blog-demo.vercel.app)
 
+- Fast and lightweight SPA
+- High performance
+- For building personal blog/docs
+- Markdown supported
+
 ## Dependencies
 - react.js
 - next.js
@@ -18,6 +23,22 @@ cd blog
 Install dependencies:
 ```
 npm install
+```
+
+Develop:
+```
+npm run dev
+```
+
+Build production & serve:
+```
+npm run build
+npm run start
+```
+
+Or export static page:
+```
+npm run export
 ```
 
 ### Config
@@ -59,22 +80,4 @@ Push it on `config.json`:
         }
     ...
     ]
-```
-
-### Build
-
-Develop:
-```
-npm run dev
-```
-
-Build production & serve:
-```
-npm run build
-npm run start
-```
-
-Or export static page:
-```
-npm run export
 ```
