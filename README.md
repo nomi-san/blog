@@ -1,6 +1,6 @@
 ## blog
 
-Demo: [nomi-blog-demo.vercel.app](nomi-blog-demo.vercel.app)
+Demo: [nomi-blog-demo.vercel.app](https://nomi-blog-demo.vercel.app)
 
 ## Dependencies
 - react.js
