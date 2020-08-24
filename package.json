@@ -1,0 +1,21 @@
+{
+  "name": "nomi-blog",
+  "version": "0.1.0",
+  "author": "nomi-san",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "next": "9.5.1",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-showdown": "^2.1.0",
+    "showdown": "^1.9.1",
+    "styled-jsx": "^3.3.0",
+    "yaml": "^1.10.0"
+  }
+}

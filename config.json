@@ -1,0 +1,23 @@
+{
+    "blog": {
+        "lang": "en",
+        "intl": "en",
+        "author": "Nomi",
+        "title": "Nomi's blog",
+        "description": "Your description...",
+        "image": "meta-image",
+        "url": "your-domain.com",
+        "profile": "github-or-social-profile",
+        "email": "email@domain.com",
+        "ga": "UA-XXXXXXXXX-Y"
+    },
+    "posts": [
+        {
+            "id": "the-first-post",
+            "date": "2017-05-04",
+            "title": "The first post",
+            "description": "Test, test and test...",
+            "tags": ["markdown", "test"]
+        }
+    ]
+}
