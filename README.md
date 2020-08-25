@@ -3,7 +3,6 @@
 Demo: [nomi-blog-demo.vercel.app](https://nomi-blog-demo.vercel.app)
 
 - Fast and lightweight SPA
-- High performance
 - For building personal blog/docs
 - Markdown supported
 
@@ -43,7 +42,7 @@ npm run export
 
 ### Config
 
-For general configuration, please edit `congif.json`.
+For general configuration, please edit `congifg.json`:
 ```
 "blog": {
         "lang": "en",
@@ -63,7 +62,7 @@ For general configuration, please edit `congif.json`.
 
 Add your markdown content:
 ```
-$(repo)/_posts/[post-id].md
+_posts/[post-id].md
 ```
 
 Push it on `config.json`:
