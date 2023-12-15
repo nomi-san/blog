@@ -1,7 +1,7 @@
 {
   "tasks": {
-    "dev": "deno run -A --watch=static/,src/ main.ts --dev",
-    "start": "deno run --allow-net --allow-read main.ts"
+    "dev": "deno run -A --unstable --watch=static/,src/ main.ts --dev",
+    "start": "deno run --unstable --allow-net --allow-read main.ts"
   },
   "imports": {
     "marked": "npm:marked@11.1.0",
@@ -21,7 +21,8 @@
       "dom",
       "dom.iterable",
       "dom.asynciterable",
-      "deno.ns"
+      "deno.ns",
+      "deno.unstable"
     ],
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
