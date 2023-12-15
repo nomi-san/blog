@@ -10,7 +10,7 @@ function island(window: Window, id: string) {
   const gs = document.createElement('script')
   gs.src = `https://www.googletagmanager.com/gtag/js?id=${id}`
   gs.addEventListener('load', () => {
-    const dataLayer = Array<any>()
+    const dataLayer = window['dataLayer'] || []
     const gtag = function (..._) {
       dataLayer.push(arguments)
     }
@@ -19,7 +19,7 @@ function island(window: Window, id: string) {
     window['gtag'] = gtag
 
     gtag('js', new Date())
-    gtag('config', '${id}')
+    gtag('config', id)
   })
   document.body.appendChild(gs)
 }
