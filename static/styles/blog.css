@@ -1,0 +1,174 @@
+/* Blog */
+
+.blog-header {
+  line-height: 1.2;
+}
+
+.markdown-body p,
+.markdown-body ul {
+  color: rgb(76 78 103);
+  line-height: 1.5;
+  /* font-size: 1.125rem; */
+  font-size: 1.0625rem;
+}
+
+@media (min-width: 75rem) {
+
+  .markdown-body p,
+  .markdown-body ul {
+    /* font-size: 1.25rem; */
+  }
+}
+
+.markdown-body blockquote {
+  background-color: rgb(241 242 249);
+  padding: 1.5em;
+  margin: 2em 0;
+}
+
+.markdown-body table {
+  display: table;
+  width: 100%;
+}
+
+.markdown-body .highlights {
+  background-color: #f6f8fa;
+  padding: 16px;
+}
+
+.markdown-body .highlights h4 {
+  padding: 0 0 10px;
+  margin: 0;
+  border-bottom: 1px solid #d8dee4;
+}
+
+.markdown-body .highlights ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.4em;
+  font-size: 1em;
+}
+
+.markdown-body .highlights ul li {
+  display: flex;
+  padding: 0;
+  margin: 10px 0 0 0;
+  gap: 10px;
+}
+
+.markdown-body .highlights ul li span:first-child {
+  flex-basis: 16px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.markdown-body .highlights ul li a {
+  flex-basis: 30%;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+  .markdown-body .highlights ul li span:first-child {
+    display: none;
+  }
+
+  .markdown-body .highlights ul li {
+    flex-direction: column;
+  }
+}
+
+.markdown-body li+li {
+  margin-top: 0.5rem;
+}
+
+.markdown-body video {
+  width: 100%;
+}
+
+.markdown-body div.highlight pre {
+  border-radius: 0;
+}
+
+.markdown-body details {
+  border: 1px solid #89CFF0;
+  padding: 0.5em 0.5em 0;
+  box-shadow: #ddd 1px 1px 4px 1px;
+  background-color: #F0FFFF;
+}
+
+.markdown-body details a {
+  color: #1F51FF;
+}
+
+.markdown-body details li {
+  font-size: 0.9em;
+  line-height: 1.5em;
+  color: var(--color-fg-default);
+}
+
+.markdown-body details ul {
+  margin: 5px 0;
+  padding: 0 0 0 15px;
+}
+
+.markdown-body summary {
+  font-weight: bold;
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+.markdown-body summary:hover {
+  opacity: 0.8;
+}
+
+.markdown-body details[open] {
+  padding: 0.5em;
+}
+
+.markdown-body :where(h1, h2, h3, h4) {
+  letter-spacing: -0.025em;
+}
+
+.markdown-body h2 {
+  font-size: 2rem;
+  margin-top: 6rem;
+  line-height: 1.2;
+  padding-bottom: 0.6rem;
+}
+
+.markdown-body h3 {
+  font-size: 1.5rem;
+  margin-top: 4rem;
+  line-height: 1.2;
+}
+
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 2rem;
+}
+
+figure,
+.markdown-body>.highlight,
+.markdown-body>video,
+.markdown-body>iframe {
+  margin-block: 2rem;
+}
+
+.markdown-body>p:has(img) {
+  margin-block: 2rem;
+}
+
+.markdown-body figcaption {
+  font-size: 0.8rem;
+  /* font-style: italic; */
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.markdown-body figure img+figcaption {
+  text-align: center;
+}
