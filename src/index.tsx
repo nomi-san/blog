@@ -11,14 +11,11 @@ install({
 
 // BUG: should import App after twind install
 const { App } = await import('./app.tsx')
-const { Visitors } = await import('./lib/store.ts')
 const template = await Deno.readTextFile(`${Deno.cwd()}/src/app.html`)
 
-async function render(res: Response, pathname: string) {
+function render(res: Response, pathname: string) {
   const start = performance.now()
   {
-    await Visitors.increase()
-
     if (pathname !== '/') {
       pathname = pathname.replace(/[\\\/]+$/, '')
     }
