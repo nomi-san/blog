@@ -51,10 +51,10 @@ hoặc [roshkins/IddSampleDriver](https://github.com/roshkins/IddSampleDriver).
 Trong code này, ta có thể thêm các độ phân giải và tần số quét tùy thích, có thể
 lên đến 8K miễn là GPU của bạn đủ khỏe.
 
-Xét về khả năng chơi game thì mình nhận thấy các project IDD mã nguồn mở đều có
-chung nhược điểm là không thể đạt được tần số quét mong muốn. Ví dụ thiết lập
-màn hình ảo với 144hz nhưng nó chỉ đạt trung bình 60hz hoặc bị drop liên tục.
-Điều này sẽ ảnh hưởng trực tiếp đến lượng khung hình (FPS) khi capture desktop.
+Xét về khả năng chơi game thì các project IDD mã nguồn mở đều có chung nhược
+điểm là không thể đạt được tần số quét mong muốn. Ví dụ thiết lập màn hình ảo
+với 144hz nhưng nó chỉ đạt trung bình 60hz hoặc bị drop liên tục. Điều này sẽ
+ảnh hưởng trực tiếp đến lượng khung hình (FPS) khi capture desktop.
 
 Sau nhiều thử nghiệm thì mình nhận thấy các thông số trong driver rất quan trọng
 đối với hiệu năng của màn ảo, ngoài ra timing trong
@@ -97,8 +97,7 @@ output buffer.
 
 ```cpp
 BOOL DeviceIoControl(
-  HANDLE  hDevice,
-  DWORD   dwIoControlCode,
+  HANDLE  hDevice,     DWORD  dwIoControlCode,
   LPVOID  lpInBuffer,  DWORD  nInBufferSize,
   LPVOID  lpOutBuffer, DWORD  nOutBufferSize,
   ...
@@ -177,7 +176,7 @@ MIT nên hoàn toàn không vấn đề gì, nhưng vấn đề ở VDD là driv
 freeware và phụ thuộc vào Parsec, tốt nhất cứ liên hệ với họ.
 
 Bạn đó đã gửi mail cho Parsec nhưng không có phản hồi nên mình đề xuất 2 giải
-pháp chữa cháy:
+pháp chống cháy:
 
 1. Mua license của Parsec SDK, nó chắc chắn bao gồm phần giao tiếp với driver.
    Mức giá trung bình từ 1 triệu đô và không bán cho cá nhân, họ sẽ từ chối nếu
