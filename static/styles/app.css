@@ -31,17 +31,18 @@
 }
 
 @font-face {
-  font-family: "BT Beau Sans";
+  font-family: 'Lexend';
   font-style: normal;
-  font-weight: bold;
+  font-weight: 400 700;
   font-display: swap;
-  src: url("/fonts/BT-BeauSans-Bold.woff2") format("woff2");
+  src: url("/fonts/Lexend.woff2") format("woff2");
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
+  background-color: white;
 }
 
 html {
@@ -57,7 +58,7 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'BT Beau Sans', sans-serif;
+  font-family: 'Lexend', sans-serif;
 }
 
 code,
