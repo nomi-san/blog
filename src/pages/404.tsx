@@ -8,7 +8,7 @@ export function NotFound() {
       </Helmet>
 
       <div>
-        <div class='text-center px-8 py-32 z-[3] dark:text-white mx-auto max-w-lg'>
+        <div class='text-center px-8 py-32 z-[3] mx-auto max-w-lg'>
           <h1 class='font-bold text-5xl leading-10 tracking-tight'>404</h1>
           <h2 class='mt-4 sm:mt-5 text-2xl text-center leading-tight'>
             Couldn't find what you're looking for.
@@ -30,7 +30,7 @@ export function NotFound() {
           <img
             src='/ferris.gif'
             alt='Ferris'
-            class='translate-y-[22px] w-[100px] absolute left-[60%] bottom-0 dark:filter dark:invert'
+            class='translate-y-[22px] w-[100px] absolute left-[60%] bottom-0'
           />
         </div>
       </div>

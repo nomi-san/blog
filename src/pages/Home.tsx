@@ -26,11 +26,11 @@ export function Home() {
               loading='lazy'
             />
           </div>
-          <h1 class='mt-3 text-3xl text-gray-900 dark:text-gray-100 font-bold'>
+          <h1 class='mt-3 text-3xl text-gray-900 font-bold'>
             {blog.title}
           </h1>
         </a>
-        <p class='text-lg text-gray-600 dark:text-gray-400 mt-2'>
+        <p class='text-lg text-gray-600 mt-2'>
           {blog.description}
         </p>
 
