@@ -10,10 +10,20 @@
     "allowJs": true,
     "noEmit": true,
     "strict": true,
-    "types": ["vinxi/types/client"],
+    "types": [
+      "vinxi/types/client"
+    ],
     "isolatedModules": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "$lib/*": [
+        "./src/lib/*"
+      ],
+      "$components/*": [
+        "./src/components/*"
+      ],
+      "$blog-config": [
+        "./blog.config.ts"
+      ]
     }
   }
 }

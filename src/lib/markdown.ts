@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { parse } from 'https://deno.land/std@0.200.0/yaml/mod.ts'
+import { parse } from 'yaml'
 
 import './code.md.tsx'
 import './image.md.tsx'
