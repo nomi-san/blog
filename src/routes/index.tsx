@@ -1,10 +1,16 @@
-import { For } from 'solid-js'
-import { PostHeader, listPosts } from '$lib/posts'
+import { createResource, For, Suspense } from 'solid-js'
+import { A, query } from '@solidjs/router'
+import type { PostHeader } from '$lib/posts'
 import MetaTags from '$components/MetaTags'
 import TimeTag from '$components/TimeTag'
 import * as Icons from '$components/Icons'
 import conf from '$blog-config'
-import { A } from '@solidjs/router'
+
+const getPostListQuery = query(async (_) => {
+  "use server"
+  const { listPosts } = await import('$lib/posts')
+  return listPosts()
+}, "currentUser")
 
 function PostCard(props: { post: PostHeader }) {
   return (
@@ -45,6 +51,9 @@ function PostCard(props: { post: PostHeader }) {
 }
 
 export default function Home() {
+
+  const [posts] = createResource(getPostListQuery)
+
   return (
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
       <MetaTags />
@@ -111,7 +120,7 @@ export default function Home() {
       </section>
 
       <section class='pt-12'>
-        <For each={listPosts()}>
+        <For each={posts()}>
           {(post) => <PostCard post={post} />}
         </For>
       </section>

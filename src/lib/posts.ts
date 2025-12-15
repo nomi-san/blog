@@ -8,7 +8,7 @@ export type PostHeader = {
   description: string
   image?: string
   tags: string[]
-  date: Date
+  date: string
   path: string
 }
 
@@ -30,10 +30,10 @@ for (const dir of fs.readdirSync(root, { withFileTypes: true })) {
 
       data.id = dir.name
       data.path = `/posts/${data.id}`
-      data.html = await toHtml(content, data.path)
+      data.html = toHtml(content, data.path)
 
       if (typeof data.date === 'string') {
-        data.date = new Date(data.date)
+        data.date = new Date(data.date).toUTCString()
       }
 
       // Normalize image path
@@ -57,7 +57,7 @@ for (const dir of fs.readdirSync(root, { withFileTypes: true })) {
 }
 
 export const hasPost = (id: string) => map.has(id)
-export const getPost = (id: string) => map.get(id)!
+export const getPost = (id: string) => map.get(id)
 
 export const listPosts = () =>
   [...map.values()]
@@ -65,4 +65,4 @@ export const listPosts = () =>
       const { html, ...rest } = post
       return rest as PostHeader
     })
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

@@ -33,5 +33,7 @@ export function matter<T>(content: string) {
 
 export function toHtml(markdown: string, base: string) {
   __base = base
-  return marked.parse(markdown)
+  return marked.parse(markdown, {
+    async: false,
+  })
 }

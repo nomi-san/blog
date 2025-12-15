@@ -1,13 +1,14 @@
 import { VoidComponent } from 'solid-js'
 
 interface TimeProps {
-  datetime: Date
+  datetime: string
   short?: boolean
 }
 
 const TimeTag: VoidComponent<TimeProps> = (props) => {
-  const iso = props.datetime.toISOString()
-  const text = props.datetime
+  const date = new Date(props.datetime)
+  const iso = date.toISOString()
+  const text = date
     .toLocaleDateString('vi', {
       day: '2-digit',
       month: props.short ? 'short' : 'long',
@@ -15,7 +16,7 @@ const TimeTag: VoidComponent<TimeProps> = (props) => {
     })
 
   return (
-    <time datetime={iso}>{text}</time>
+    <time dateTime={iso}>{text}</time>
   )
 }
 
