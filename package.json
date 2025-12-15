@@ -11,8 +11,10 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.4",
     "@solidjs/start": "^1.2.0",
+    "hast-util-to-html": "^9.0.5",
     "marked": "^17.0.1",
     "mermaid": "^11.12.2",
+    "refractor": "^5.0.0",
     "solid-js": "^1.9.10",
     "vinxi": "^0.5.9",
     "yaml": "^2.8.2"
