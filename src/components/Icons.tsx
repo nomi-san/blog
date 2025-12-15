@@ -1,9 +1,13 @@
-import { h } from 'nano-jsx'
+import { VoidComponent } from 'solid-js'
 
-export function IconRssFeed() {
+type IconProps = {
+  class?: string
+}
+
+export const RssFeedIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      class='inline-block w-4 h-4'
+      class={`inline-block w-4 h-4 ${props.class}`}
       viewBox='0 0 20 20'
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
@@ -14,10 +18,10 @@ export function IconRssFeed() {
   )
 }
 
-export function IconEmail() {
+export const EmailIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
@@ -30,10 +34,10 @@ export function IconEmail() {
   )
 }
 
-export function IconExternalLink() {
+export const ExternalLinkIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
@@ -46,10 +50,10 @@ export function IconExternalLink() {
   )
 }
 
-export function IconFacebook() {
+export const FacebookIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 24 24'
       fill='currentcolor'
       xmlns='http://www.w3.org/2000/svg'
@@ -60,10 +64,10 @@ export function IconFacebook() {
   )
 }
 
-export function IconGithub() {
+export const GitHubIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
@@ -76,10 +80,10 @@ export function IconGithub() {
   )
 }
 
-export function IconTwitter() {
+export const TwitterIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
@@ -92,10 +96,10 @@ export function IconTwitter() {
   )
 }
 
-export function IconInstagram() {
+export const InstagramIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
@@ -108,10 +112,10 @@ export function IconInstagram() {
   )
 }
 
-export function IconLinkedin() {
+export const LinkedinIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
-      className='inline-block w-5 h-5'
+      class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'

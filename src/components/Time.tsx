@@ -1,11 +1,11 @@
-import { h } from 'nano-jsx'
+import { VoidComponent } from 'solid-js'
 
-interface IProps {
+interface TimeProps {
   datetime: Date
   short?: boolean
 }
 
-export function Time(props: IProps) {
+const Time: VoidComponent<TimeProps> = (props) => {
   const iso = props.datetime.toISOString()
   const text = props.datetime
     .toLocaleDateString('vi', {
@@ -14,5 +14,9 @@ export function Time(props: IProps) {
       year: 'numeric',
     })
 
-  return <time datetime={iso}>{text}</time>
+  return (
+    <time datetime={iso}>{text}</time>
+  )
 }
+
+export default Time

@@ -1,25 +1,34 @@
-import { h } from 'nano-jsx'
+import { VoidComponent, onMount } from 'solid-js'
 
-export function Analytics() {
-  const id = 'G-JFPJRH80C0'
-  const script = `(${island.toString()})(window, '${id}');`
-  return <script>{script}</script>
+declare global {
+  interface Window {
+    dataLayer: any[]
+    gtag: (...args: any[]) => void
+  }
 }
 
-function island(window: Window, id: string) {
-  const gs = document.createElement('script')
-  gs.src = `https://www.googletagmanager.com/gtag/js?id=${id}`
-  gs.addEventListener('load', () => {
-    const dataLayer = window['dataLayer'] || []
-    const gtag = function (..._) {
+type AnalyticsProps = {
+  ga_tracking_id?: string
+}
+
+const Analytics: VoidComponent<AnalyticsProps> = (props) => {
+
+  onMount(() => {
+    const dataLayer = window['dataLayer'] = (window['dataLayer'] || [])
+    const gtag = window['gtag'] = function (..._) {
       dataLayer.push(arguments)
     }
-
-    window['dataLayer'] = dataLayer
-    window['gtag'] = gtag
-
     gtag('js', new Date())
-    gtag('config', id)
+    gtag('config', props.ga_tracking_id)
   })
-  document.body.appendChild(gs)
+
+  return (
+    <script
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${props.ga_tracking_id}`}
+    >
+    </script>
+  )
 }
+
+export default Analytics
