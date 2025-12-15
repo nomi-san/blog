@@ -38,6 +38,8 @@
   src: url("/fonts/Lexend.woff2") format("woff2");
 }
 
+@import "tailwindcss";
+
 html,
 body {
   margin: 0;

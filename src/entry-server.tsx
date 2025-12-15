@@ -1,5 +1,5 @@
 // @refresh reload
-import { createHandler, StartServer } from "@solidjs/start/server"
+import { createHandler, StartServer } from '@solidjs/start/server'
 import conf from '$blog-config'
 
 export default createHandler(() => (

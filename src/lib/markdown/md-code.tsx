@@ -1,29 +1,8 @@
+import { For, Show, VoidComponent } from 'solid-js'
 import { marked } from 'marked'
-import { refractor } from 'npm:refractor/lib/all.js'
-import { toHtml } from 'npm:hast-util-to-html'
-import { h, renderSSR } from 'nano-jsx'
-
-marked.use({
-  renderer: {
-    code: (code, info, escaped) =>
-      renderSSR(() => {
-        info = info || ''
-        const lang = info.match(/^\w+/)?.at(0)?.trim() || 'plain'
-        const file = info.match(/\!([^\@\n]+)/)?.at(1)?.trim()
-        const legend = info.match(/\@([^\!\n]+)/)?.at(1)?.trim()
-
-        if (lang === 'mermaid') {
-          return <div class='mermaid'>{code}</div>
-        }
-
-        if (lang === 'terminal') {
-          return <Terminal code={code} />
-        }
-
-        return <CodeBlock code={code} lang={lang} />
-      }),
-  },
-})
+import { refractor } from 'refractor/all'
+import { toHtml } from 'hast-util-to-html'
+import { renderToString } from 'solid-js/web'
 
 function highlight(code: string, lang: string) {
   if (lang in refractor.languages) {
@@ -33,14 +12,14 @@ function highlight(code: string, lang: string) {
   return code
 }
 
-function CodeBlock(props: { code: string; lang: string }) {
+const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
   const hasDiff = /(^|\n)(\+[^\+]|\-[^\-])/gm.test(props.code)
 
   if (!hasDiff) {
     const html = highlight(props.code, props.lang)
     return (
       <pre class='highlight notranslate' data-lang={props.lang}>
-        <code dangerouslySetInnerHTML={{ __html: html }} />
+        <code innerHTML={html} />
       </pre>
     )
   }
@@ -64,22 +43,24 @@ function CodeBlock(props: { code: string; lang: string }) {
   return (
     <pre class='highlight notranslate' data-lang={props.lang}>
       <code class='diff'>
-        {lines.map((line, i) => (
-          <div
-            class={map[i] === true
-              ? 'added'
-              : map[i] === false
-              ? 'deleted'
-              : ''}
-            dangerouslySetInnerHTML={{ __html: line }}
-          />
-        ))}
+        <For each={lines}>
+          {((line, index) => (
+            <div
+              class={map[index()] === true
+                ? 'added'
+                : map[index()] === false
+                  ? 'deleted'
+                  : ''}
+              innerHTML={line}
+            />
+          ))}
+        </For>
       </code>
     </pre>
   )
 }
 
-function Terminal(props: { code: string }) {
+const Terminal: VoidComponent<{ code: string }> = (props) => {
   const lines = props.code.split(/\r?\n/)
   const output = Array<string>()
   const separator = lines.findIndex((line) => /^___$/.test(line))
@@ -94,13 +75,38 @@ function Terminal(props: { code: string }) {
       <code class='stdin'>
         {lines.map((line) => <div>{line}</div>)}
       </code>
-      {output.length > 0 &&
-        (
-          <code
-            class='stdout'
-            dangerouslySetInnerHTML={{ __html: output.join('\n') }}
-          />
-        )}
+      <Show when={output.length > 0}>
+        <code
+          class='stdout'
+          innerHTML={output.join('\n')}
+        />
+      </Show>
     </pre>
   )
 }
+
+marked.use({
+  renderer: {
+    code: (token) =>
+      renderToString(() => {
+        const info = token.lang || ''
+        const lang = info.match(/^\w+/)?.at(0)?.trim() || 'plain'
+        const file = info.match(/\!([^\@\n]+)/)?.at(1)?.trim()
+        const legend = info.match(/\@([^\!\n]+)/)?.at(1)?.trim()
+
+        if (lang === 'mermaid') {
+          return <div class='mermaid'>{token.text}</div>
+        }
+
+        if (lang === 'terminal') {
+          return (
+            <Terminal code={token.text} />
+          )
+        }
+
+        return (
+          <CodeBlock code={token.text} lang={lang} />
+        )
+      }),
+  },
+})

@@ -1,17 +1,21 @@
-import { h, Helmet } from 'nano-jsx'
+import { createEffect, VoidComponent } from 'solid-js'
+import { A, useLocation } from '@solidjs/router'
 
-export function Header() {
+const Header: VoidComponent = () => {
+  const location = useLocation()
+
+  createEffect(() => {
+    if (location.pathname === '/') {
+      document.documentElement.classList.add('no-header')
+    } else {
+      document.documentElement.classList.remove('no-header')
+    }
+  })
+
   return (
     <header class='header'>
-      <Helmet>
-        <script>
-          if (location.pathname === '/')
-          document.documentElement.classList.add('no-header')
-        </script>
-      </Helmet>
-
       <div class='max-w-screen-md px-4 pt-4 pb-4 md:pt-8 mx-auto'>
-        <a
+        <A
           href='/'
           class='inline-flex items-center gap-1 text-sm text-gray-500/80 hover:text-gray-700 transition-colors'
           title='Back to Index Page'
@@ -27,8 +31,10 @@ export function Header() {
             >
             </path>
           </svg>Home
-        </a>
+        </A>
       </div>
     </header>
   )
 }
+
+export default Header

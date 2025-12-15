@@ -1,7 +1,8 @@
-import { matter, toHtml } from './markdown.ts'
-import { exists } from 'https://deno.land/std@0.200.0/fs/exists.ts'
+import fs from 'node:fs'
+import { join } from 'node:path'
+import { matter, toHtml } from './markdown'
 
-export interface IPost {
+export type PostHeader = {
   id: string
   title: string
   description: string
@@ -9,18 +10,23 @@ export interface IPost {
   tags: string[]
   date: Date
   path: string
-  html?: string
 }
 
-const map = new Map<string, IPost>()
-const root = `${Deno.cwd()}/static/posts`
+export type PostData = PostHeader & {
+  html: string
+}
 
-for await (const dir of Deno.readDir(root)) {
-  if (dir.isDirectory) {
-    const path = `${root}/${dir.name}/index.md`
-    if (await exists(path)) {
-      const raw = await Deno.readTextFile(path)
-      const { data, content } = matter<IPost>(raw)
+const map = new Map<string, PostData>()
+const root = join(process.cwd(), 'posts')
+
+for (const dir of fs.readdirSync(root, { withFileTypes: true })) {
+  if (dir.isDirectory()) {
+
+    const path = join(root, dir.name, 'index.md')
+
+    if (fs.existsSync(path)) {
+      const raw = fs.readFileSync(path, 'utf-8')
+      const { data, content } = matter<PostData>(raw)
 
       data.id = dir.name
       data.path = `/posts/${data.id}`
@@ -30,13 +36,18 @@ for await (const dir of Deno.readDir(root)) {
         data.date = new Date(data.date)
       }
 
+      // Normalize image path
       if (typeof data.image === 'string') {
         if (data.image.startsWith('./')) {
           data.image = data.path + data.image.substring(1)
         }
       }
 
-      if (!Array.isArray(data.tags)) {
+      // Normalize tags
+      if (typeof data.tags === 'string') {
+        const stags = data.tags as string
+        data.tags = stags.split(/[,;\|]/).map((t) => t.trim())
+      } else if (!Array.isArray(data.tags)) {
         data.tags = []
       }
 
@@ -51,8 +62,7 @@ export const getPost = (id: string) => map.get(id)!
 export const listPosts = () =>
   [...map.values()]
     .map((post) => {
-      const r = { ...post }
-      delete r.html
-      return r
+      const { html, ...rest } = post
+      return rest as PostHeader
     })
     .sort((a, b) => b.date.getTime() - a.date.getTime())

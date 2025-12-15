@@ -1,25 +1,37 @@
-import { A } from "@solidjs/router";
+import { Title } from '@solidjs/meta'
+import { A } from '@solidjs/router'
 
 export default function NotFound() {
   return (
-    <main class="text-center mx-auto text-gray-700 p-4">
-      <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Not Found</h1>
-      <p class="mt-8">
-        Visit{" "}
-        <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
-          solidjs.com
-        </a>{" "}
-        to learn how to build Solid apps.
-      </p>
-      <p class="my-4">
-        <A href="/" class="text-sky-600 hover:underline">
-          Home
-        </A>
-        {" - "}
-        <A href="/about" class="text-sky-600 hover:underline">
-          About Page
-        </A>
-      </p>
-    </main>
-  );
+    <div class='w-full overflow-x-hidden relative flex justify-between h-full flex-col flex-wrap'>
+      <Title>404 - Page Not Found</Title>
+      <div>
+        <div class='text-center px-8 py-32 z-3 mx-auto max-w-lg'>
+          <h1 class='font-bold text-5xl leading-10 tracking-tight'>404</h1>
+          <h2 class='mt-4 sm:mt-5 text-2xl text-center leading-tight'>
+            Couldn't find what you're looking for.
+          </h2>
+          <p class='mt-4'>
+            <A
+              href='/'
+              class='underline'
+              data-ancestor='true'
+              aria-current='true'
+            >
+              Back to Home
+            </A>
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class='mt-auto w-full pointer-events-none h-50 relative overflow-hidden'>
+          <img
+            src='/ferris.gif'
+            alt='Ferris'
+            class='translate-y-5.5 w-25 absolute left-[60%] bottom-0'
+          />
+        </div>
+      </div>
+    </div>
+  )
 }

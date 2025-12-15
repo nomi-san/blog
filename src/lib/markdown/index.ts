@@ -1,9 +1,11 @@
 import { marked } from 'marked'
 import { parse } from 'yaml'
 
-import './code.md.tsx'
-import './image.md.tsx'
-import './link.md.tsx'
+export let __base = ''
+
+import './md-code'
+import './md-images'
+import './md-links'
 
 export function matter<T>(content: string) {
   const pattern = /^---\r?\n([\s\S]+?)\r?\n---/
@@ -30,6 +32,6 @@ export function matter<T>(content: string) {
 }
 
 export function toHtml(markdown: string, base: string) {
-  marked['__base'] = base
+  __base = base
   return marked.parse(markdown)
 }

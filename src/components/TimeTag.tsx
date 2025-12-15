@@ -5,7 +5,7 @@ interface TimeProps {
   short?: boolean
 }
 
-const Time: VoidComponent<TimeProps> = (props) => {
+const TimeTag: VoidComponent<TimeProps> = (props) => {
   const iso = props.datetime.toISOString()
   const text = props.datetime
     .toLocaleDateString('vi', {
@@ -19,4 +19,4 @@ const Time: VoidComponent<TimeProps> = (props) => {
   )
 }
 
-export default Time
+export default TimeTag
