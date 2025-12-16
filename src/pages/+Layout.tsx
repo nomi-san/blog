@@ -3,6 +3,7 @@
 import '../styles/gfm.css'
 import '../styles/app.css'
 import '../styles/blog.css'
+import '@bprogress/core/css'
 
 import { Suspense, type JSX } from 'solid-js'
 import Footer from '$components/Footer'

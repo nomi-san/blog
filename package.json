@@ -8,6 +8,7 @@
     "preview": "vike build && vike preview"
   },
   "dependencies": {
+    "@bprogress/core": "^1.3.4",
     "hast-util-to-html": "^9.0.5",
     "marked": "^17.0.1",
     "mermaid": "^11.12.2",
