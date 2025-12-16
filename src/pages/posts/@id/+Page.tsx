@@ -5,6 +5,7 @@ import type { PostData } from '$lib/posts'
 import conf from '$blog-config'
 
 const ImageView = lazy(() => import('$components/ImageView'))
+const TocView = lazy(() => import('$components/TocView'))
 
 export default function Post() {
 
@@ -85,6 +86,7 @@ export default function Post() {
       />
 
       <ImageView />
+      <TocView target=".markdown-body" />
 
     </article>
   )
