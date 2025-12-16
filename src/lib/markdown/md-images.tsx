@@ -31,7 +31,7 @@ marked.use({
       let src = token.href
       const base = __base
 
-      const caption = token.title
+      const caption = token.text
         ?.replace(/h=(\d+)/i, (_, h) => (height = `${h}px`, ''))
         .replace(/wide\s*$/, () => (wide = true, ''))
         .trim()
