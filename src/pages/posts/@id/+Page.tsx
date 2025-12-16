@@ -1,4 +1,4 @@
-import { For, lazy } from 'solid-js'
+import { For, lazy, onMount } from 'solid-js'
 import TimeTag from '$components/TimeTag'
 import { useData } from 'vike-solid/useData'
 import type { PostData } from '$lib/posts'
@@ -9,6 +9,14 @@ const ImageView = lazy(() => import('$components/ImageView'))
 export default function Post() {
 
   const post = useData<PostData>()
+
+  onMount(() => {
+    import('mermaid').then((m) => {
+      const mermaid = m.default
+      mermaid.initialize({ startOnLoad: true })
+      mermaid.contentLoaded()
+    })
+  })
 
   return (
     <article class='max-w-screen-md px-4 pt-8 pb-16 md:pt-16 mx-auto'>
