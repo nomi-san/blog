@@ -21,7 +21,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       solid-js:
-        specifier: ^1.9.9
+        specifier: ^1.9.10
         version: 1.9.10
       vike:
         specifier: ^0.4.249
@@ -48,6 +48,9 @@ importers:
       vite:
         specifier: ^7.3.0
         version: 7.3.0(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.2)
+      vite-plugin-compression2:
+        specifier: ^2.4.0
+        version: 2.4.0(rollup@4.52.5)
 
 packages:
 
@@ -510,6 +513,15 @@ packages:
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
+
+  '@rollup/pluginutils@5.3.0':
+    resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
 
   '@rollup/rollup-android-arm-eabi@4.52.5':
     resolution: {integrity: sha512-8c1vW4ocv3UOMp9K+gToY5zL2XiiVw3k7f1ksf4yO1FlDFQ1C2u72iACFnSOceJFsWskc2WZNqeRhFRPzv+wtQ==}
@@ -1152,6 +1164,9 @@ packages:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
     engines: {node: '>=6'}
 
+  estree-walker@2.0.2:
+    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
+
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
@@ -1513,6 +1528,9 @@ packages:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
 
+  tar-mini@0.2.0:
+    resolution: {integrity: sha512-+qfUHz700DWnRutdUsxRRVZ38G1Qr27OetwaMYTdg8hcPxf46U0S1Zf76dQMWRBmusOt2ZCK5kbIaiLkoGO7WQ==}
+
   terser@5.44.0:
     resolution: {integrity: sha512-nIVck8DK+GM/0Frwd+nIhZ84pR/BX7rmXMfYwyg+Sri5oGVE99/E3KvXqpC2xHFxyqXyGHTKBSioxxplrO4I4w==}
     engines: {node: '>=10'}
@@ -1605,6 +1623,9 @@ packages:
         optional: true
       vite:
         optional: true
+
+  vite-plugin-compression2@2.4.0:
+    resolution: {integrity: sha512-8J4CBF1+dM1I06azba/eXJuJHinLF0Am7lUvRH8AZpu0otJoBaDEnxrIEr5iPZJSwH0AEglJGYCveh7pN52jCg==}
 
   vite-plugin-solid@2.11.10:
     resolution: {integrity: sha512-Yr1dQybmtDtDAHkii6hXuc1oVH9CPcS/Zb2jN/P36qqcrkNnVPsMTzQ06jyzFPFjj3U1IYKMVt/9ZqcwGCEbjw==}
@@ -2039,6 +2060,14 @@ snapshots:
       langium: 3.3.1
 
   '@polka/url@1.0.0-next.29': {}
+
+  '@rollup/pluginutils@5.3.0(rollup@4.52.5)':
+    dependencies:
+      '@types/estree': 1.0.8
+      estree-walker: 2.0.2
+      picomatch: 4.0.3
+    optionalDependencies:
+      rollup: 4.52.5
 
   '@rollup/rollup-android-arm-eabi@4.52.5':
     optional: true
@@ -2702,6 +2731,8 @@ snapshots:
 
   escalade@3.2.0: {}
 
+  estree-walker@2.0.2: {}
+
   fdir@6.5.0(picomatch@4.0.3):
     optionalDependencies:
       picomatch: 4.0.3
@@ -3086,6 +3117,8 @@ snapshots:
 
   tapable@2.3.0: {}
 
+  tar-mini@0.2.0: {}
+
   terser@5.44.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
@@ -3195,6 +3228,13 @@ snapshots:
       tinyglobby: 0.2.15
     optionalDependencies:
       vite: 7.3.0(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.2)
+
+  vite-plugin-compression2@2.4.0(rollup@4.52.5):
+    dependencies:
+      '@rollup/pluginutils': 5.3.0(rollup@4.52.5)
+      tar-mini: 0.2.0
+    transitivePeerDependencies:
+      - rollup
 
   vite-plugin-solid@2.11.10(solid-js@1.9.10)(vite@7.3.0(@types/node@20.19.27)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.2)):
     dependencies:

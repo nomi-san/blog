@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import vike from 'vike/plugin'
 import vikeSolid from 'vike-solid/vite'
 import tailwindcss from '@tailwindcss/vite'
+import compression from 'vite-plugin-compression2'
 
 const root = path.resolve(import.meta.dirname)
 
@@ -11,6 +12,7 @@ export default defineConfig({
     vike(),
     vikeSolid(),
     tailwindcss(),
+    compression() as any,
   ],
   resolve: {
     alias: {
