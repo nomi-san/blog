@@ -10,7 +10,7 @@ export default {
   author: {
     name: 'Nguyen Duy',
     bio: 'A software developer who loves to write about technology, programming, and web development.',
-    avatar: '/author.jpg',
+    avatar: 'https://wsrv.nl/?url=github.com/nomi-san.png&w=64&h=64',
     social: {
       email: 'wuuyi123@gmail.com',
       facebook: 'https://www.facebook.com/im.not.duy',

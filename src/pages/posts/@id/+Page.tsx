@@ -1,7 +1,8 @@
-import { For, lazy, Show } from 'solid-js'
+import { For, lazy } from 'solid-js'
 import TimeTag from '$components/TimeTag'
 import { useData } from 'vike-solid/useData'
 import type { PostData } from '$lib/posts'
+import conf from '$blog-config'
 
 const ImageView = lazy(() => import('$components/ImageView'))
 
@@ -34,13 +35,13 @@ export default function Post() {
                 class='hover:underline flex items-center gap-2'
                 target='_blank'
                 rel='noopener noreferer'
-                href='https://github.com/nomi-san'
+                href={conf.author.social.github}
               >
                 <img
-                  src='https://github.com/nomi-san.png'
+                  src={conf.author.avatar}
                   class='h-[1.75em] rounded-full'
                 />
-                <span>Nguyen Duy</span>
+                <span>{conf.author.name}</span>
               </a>
             </li>
           </ul>
