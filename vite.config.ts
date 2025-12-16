@@ -1,5 +1,6 @@
+import fs from 'node:fs/promises'
 import path from 'node:path'
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import vike from 'vike/plugin'
 import vikeSolid from 'vike-solid/vite'
 import tailwindcss from '@tailwindcss/vite'
@@ -12,7 +13,8 @@ export default defineConfig({
     vike(),
     vikeSolid(),
     tailwindcss(),
-    compression() as any,
+    compression() as Plugin,
+    postAssetsPlugin(),
   ],
   resolve: {
     alias: {
@@ -22,3 +24,39 @@ export default defineConfig({
     },
   },
 })
+
+function postAssetsPlugin(): Plugin {
+  return {
+    name: 'post-assets',
+    enforce: 'post',
+    apply: 'build',
+    async closeBundle() {
+      // Copy posts assets to dist during build
+      const postsDir = path.join(root, 'posts')
+      const distDir = path.join(root, 'dist/client/posts')
+
+      async function copyDir(src: string, dest: string) {
+        await fs.mkdir(dest, { recursive: true })
+        const entries = await fs.readdir(src, { withFileTypes: true })
+
+        for (const entry of entries) {
+          const srcPath = path.join(src, entry.name)
+          const destPath = path.join(dest, entry.name)
+
+          if (entry.isDirectory()) {
+            await copyDir(srcPath, destPath)
+          } else if (entry.isFile() && !entry.name.endsWith('.md')) {
+            // Copy all files except markdown
+            await fs.copyFile(srcPath, destPath)
+          }
+        }
+      }
+      try {
+        await copyDir(postsDir, distDir)
+        console.log('✓ Post assets copied to dist')
+      } catch (error) {
+        console.error('Failed to copy post assets:', error)
+      }
+    },
+  }
+}
