@@ -1,25 +1,24 @@
-import { Title } from '@solidjs/meta'
-import { A } from '@solidjs/router'
+import { usePageContext } from 'vike-solid/usePageContext'
 
-export default function NotFound() {
+export default function NotFoundPage() {
+  const { is404 } = usePageContext()
   return (
     <div class='w-full overflow-x-hidden relative flex justify-between h-full flex-col flex-wrap'>
-      <Title>404 - Page Not Found</Title>
       <div>
         <div class='text-center px-8 py-32 z-3 mx-auto max-w-lg'>
-          <h1 class='font-bold text-5xl leading-10 tracking-tight'>404</h1>
+          <h1 class='font-bold text-5xl leading-10 tracking-tight'>{is404 ? '404' : 'Error'}</h1>
           <h2 class='mt-4 sm:mt-5 text-2xl text-center leading-tight'>
-            Couldn't find what you're looking for.
+            {is404 ? "Couldn't find what you're looking for." : "Something went wrong."}
           </h2>
           <p class='mt-4'>
-            <A
+            <a
               href='/'
               class='underline'
               data-ancestor='true'
               aria-current='true'
             >
               Back to Home
-            </A>
+            </a>
           </p>
         </div>
       </div>

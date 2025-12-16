@@ -8,7 +8,7 @@ declare global {
 }
 
 type AnalyticsProps = {
-  ga_tracking_id?: string
+  ga_tracking_id: string
 }
 
 const Analytics: VoidComponent<AnalyticsProps> = (props) => {

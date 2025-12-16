@@ -3,26 +3,26 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vike dev",
+    "build": "vike build",
+    "preview": "vike build && vike preview"
   },
   "dependencies": {
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.4",
-    "@solidjs/start": "^1.2.0",
     "hast-util-to-html": "^9.0.5",
     "marked": "^17.0.1",
     "mermaid": "^11.12.2",
     "refractor": "^5.0.0",
     "solid-js": "^1.9.10",
-    "vinxi": "^0.5.9",
+    "vike": "^0.4.249",
+    "vike-solid": "^0.7.14",
     "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^20",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
   },
   "engines": {
     "node": ">=22"

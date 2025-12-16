@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "allowJs": true,
-    "noEmit": true,
     "strict": true,
-    "types": [
-      "vinxi/types/client"
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
     ],
-    "isolatedModules": true,
+    "types": [
+      "vite/client",
+      "vike-solid/client"
+    ],
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "solid-js",
     "paths": {
       "$lib/*": [
         "./src/lib/*"
@@ -25,5 +29,8 @@
         "./blog.config.ts"
       ]
     }
-  }
+  },
+  "exclude": [
+    "dist"
+  ]
 }

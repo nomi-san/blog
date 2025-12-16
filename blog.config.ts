@@ -6,4 +6,17 @@ export default {
   language: 'vi',
   cover_image: '/cover.jpg',
   ga_tracking_id: "G-JFPJRH80C0",
+
+  author: {
+    name: 'Nguyen Duy',
+    bio: 'A software developer who loves to write about technology, programming, and web development.',
+    avatar: '/author.jpg',
+    social: {
+      email: 'wuuyi123@gmail.com',
+      facebook: 'https://www.facebook.com/im.not.duy',
+      github: 'https://github.com/nomi-san',
+      twitter: 'https://twitter.com/im.not.duy',
+      linkedin: 'https://www.linkedin.com/in/im.not.duy/',
+    },
+  },
 }

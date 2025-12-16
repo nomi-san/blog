@@ -1,18 +1,11 @@
-import { createResource, For, Suspense } from 'solid-js'
-import { A, query } from '@solidjs/router'
+import { For, VoidComponent } from 'solid-js'
+import { useData } from 'vike-solid/useData'
 import type { PostHeader } from '$lib/posts'
-import MetaTags from '$components/MetaTags'
 import TimeTag from '$components/TimeTag'
 import * as Icons from '$components/Icons'
 import conf from '$blog-config'
 
-const getPostListQuery = query(async (_) => {
-  "use server"
-  const { listPosts } = await import('$lib/posts')
-  return listPosts()
-}, "currentUser")
-
-function PostCard(props: { post: PostHeader }) {
+const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
   return (
     <div class='py-12 grid sm:grid-cols-4 gap-4'>
       <div class='w-full text-gray-500'>
@@ -29,7 +22,7 @@ function PostCard(props: { post: PostHeader }) {
           </div>
         </div>
       </div>
-      <A
+      <a
         class='sm:col-span-3 sm:pl-8 sm:border-l sm:border-gray-300 flex flex-col gap-4'
         href={props.post.path}
       >
@@ -45,21 +38,21 @@ function PostCard(props: { post: PostHeader }) {
         <div class='text-gray-800'>
           {props.post.description}
         </div>
-      </A>
+      </a>
     </div>
   )
 }
 
-export default function Home() {
+export default function HomePage() {
 
-  const [posts] = createResource(getPostListQuery)
+  const posts = useData<PostHeader[]>()
 
   return (
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
-      <MetaTags />
+      {/* <MetaTags /> */}
 
       <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center border-b-1 border-gray-300/80'>
-        <A href='/' class='flex flex-col items-center'>
+        <a href='/' class='flex flex-col items-center'>
           <div>
             <img
               class='object-cover w-28 h-28 border-4 border-white rounded-full pointer-events-none select-none'
@@ -73,7 +66,7 @@ export default function Home() {
           <h1 class='mt-3 text-3xl text-gray-900 font-bold'>
             {conf.title}
           </h1>
-        </A>
+        </a>
 
         <p class='text-lg text-gray-600 mt-2'>
           {conf.description}
@@ -120,7 +113,7 @@ export default function Home() {
       </section>
 
       <section class='pt-12'>
-        <For each={posts()}>
+        <For each={posts}>
           {(post) => <PostCard post={post} />}
         </For>
       </section>
