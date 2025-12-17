@@ -23,7 +23,7 @@ export const EmailIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
-      fill='none'
+      fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
       <path
@@ -55,7 +55,7 @@ export const FacebookIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 24 24'
-      fill='currentcolor'
+      fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
       <path d='M11.666,2.005C6.62,2.17,2.374,6.251,2.025,11.288c-0.369,5.329,3.442,9.832,8.481,10.589V14.65H8.892 c-0.726,0-1.314-0.588-1.314-1.314v0c0-0.726,0.588-1.314,1.314-1.314h1.613v-1.749c0-2.896,1.411-4.167,3.818-4.167 c0.357,0,0.662,0.008,0.921,0.021c0.636,0.031,1.129,0.561,1.129,1.198v0c0,0.663-0.537,1.2-1.2,1.2h-0.442 c-1.022,0-1.379,0.969-1.379,2.061v1.437h1.87c0.591,0,1.043,0.527,0.953,1.111l-0.108,0.701c-0.073,0.47-0.477,0.817-0.953,0.817 h-1.762v7.247C18.235,21.236,22,17.062,22,12C22,6.366,17.341,1.821,11.666,2.005z'>
@@ -69,7 +69,7 @@ export const GitHubIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
-      fill='none'
+      fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
       <path
@@ -85,7 +85,7 @@ export const TwitterIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
-      fill='none'
+      fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
       <path
@@ -101,7 +101,7 @@ export const InstagramIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
-      fill='none'
+      fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
       <path
@@ -117,7 +117,7 @@ export const LinkedinIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
-      fill='none'
+      fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
       <path

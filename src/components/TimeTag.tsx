@@ -1,6 +1,7 @@
 import { VoidComponent } from 'solid-js'
 
 interface TimeProps {
+  class?: string
   datetime: string
   short?: boolean
 }
@@ -16,7 +17,8 @@ const TimeTag: VoidComponent<TimeProps> = (props) => {
     })
 
   return (
-    <time dateTime={iso}>{text}</time>
+    <time class={props.class}
+      dateTime={iso}>{text}</time>
   )
 }
 

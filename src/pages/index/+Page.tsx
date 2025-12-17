@@ -1,4 +1,4 @@
-import { For, VoidComponent } from 'solid-js'
+import { Component, For, VoidComponent } from 'solid-js'
 import { useData } from 'vike-solid/useData'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
@@ -26,13 +26,13 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
         class='sm:col-span-3 sm:pl-8 sm:border-l sm:border-gray-300 flex flex-col gap-4'
         href={props.post.path}
       >
-        <img
+        {/* <img
           src={props.post.image}
           alt=''
           class='w-full sm:hidden'
           loading='lazy'
-        />
-        <h2 class='text-2xl text-gray-800 sm:text-3xl font-bold leading-tight tracking-tight'>
+        /> */}
+        <h2 class='text-2xl text-gray-800 sm:text-3xl font-bold tracking-tight'>
           {props.post.title}
         </h2>
         <div class='text-gray-800'>
@@ -46,21 +46,23 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
 export default function HomePage() {
 
   const posts = useData<PostHeader[]>()
+  const social = Object.entries(conf.author.social)
+    .map(([k, v]) => {
+      const icon = (Icons as any)[`${k}Icon`]
+      return icon ? { name: k, link: v as string, icon } : null
+    })
+    .filter(Boolean) as { name: string; link: string; icon: Component }[]
 
   return (
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
       {/* <MetaTags /> */}
 
-      <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center border-b-1 border-gray-300/80'>
+      <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center border-b border-gray-300/80'>
         <a href='/' class='flex flex-col items-center'>
           <div>
             <img
               class='object-cover w-28 h-28 border-4 border-white rounded-full pointer-events-none select-none'
-              src='/logo.jpg'
-              alt=''
-              width='112'
-              height='112'
-              loading='lazy'
+              src='/logo.jpg' alt='' width='112' height='112' loading='lazy'
             />
           </div>
           <h1 class='mt-3 text-3xl text-gray-900 font-bold'>
@@ -73,42 +75,20 @@ export default function HomePage() {
         </p>
 
         <nav class='mt-5 flex gap-2'>
-          <a
-            class='flex items-center justify-center w-8 h-8 rounded-full bg-gray-600/10 text-gray-700 hover:bg-gray-600/15 hover:text-white transition-colors'
-            target='_blank'
-            rel='noopener noreferer'
-            href='mailto:wuuyi123@gmail.com'
-            title='Email'
-          >
-            <Icons.EmailIcon />
-          </a>
-          <a
-            class='flex items-center justify-center w-8 h-8 rounded-full bg-gray-600/10 text-gray-700 hover:bg-gray-600/15 hover:text-white transition-colors'
-            target='_blank'
-            rel='noopener noreferer'
-            href='https://github.com/nomi-san'
-            title='GitHub'
-          >
-            <Icons.GitHubIcon />
-          </a>
-          <a
-            class='flex items-center justify-center w-8 h-8 rounded-full bg-gray-600/10 text-gray-700 hover:bg-gray-600/15 hover:text-white transition-colors'
-            target='_blank'
-            rel='noopener noreferer'
-            href='https://facebook.com/im.not.duy'
-            title='Facebook'
-          >
-            <Icons.FacebookIcon />
-          </a>
-          <a
-            class='flex items-center justify-center w-8 h-8 rounded-full bg-gray-600/10 text-gray-700 hover:bg-gray-600/15 hover:text-white transition-colors'
-            target='_blank'
-            rel='noopener noreferer'
-            href='https://twitter.com/im.not.duy'
-            title='Twitter'
-          >
-            <Icons.TwitterIcon />
-          </a>
+          <For each={social}>
+            {(item) => (
+              <a
+                class='flex items-center justify-center size-8 rounded-full 
+      bg-gray-600/10 text-gray-700 hover:bg-gray-700 hover:text-white transition-colors'
+                target='_blank'
+                rel='noopener noreferer'
+                href={item.link}
+                title={item.name}
+              >
+                <item.icon />
+              </a>
+            )}
+          </For>
         </nav>
       </section>
 
