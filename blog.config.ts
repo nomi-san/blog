@@ -19,4 +19,6 @@ export default {
       LinkedIn: 'https://www.linkedin.com/in/im.not.duy/',
     },
   },
+
+  copyright: 'Copyright © 2017-present Nguyen Duy',
 }

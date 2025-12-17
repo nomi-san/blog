@@ -1,4 +1,5 @@
 import { VoidComponent } from 'solid-js'
+import conf from '$blog-config'
 
 const Footer: VoidComponent = () => {
   return (
@@ -8,7 +9,7 @@ const Footer: VoidComponent = () => {
           Built with SolidJS
         </p>
         <p class='mt-2'>
-          Copyright &copy; 2017-present Nguyen Duy
+          {conf.copyright}
         </p>
       </div>
     </footer>
