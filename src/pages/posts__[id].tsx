@@ -1,15 +1,26 @@
 import { For, lazy, onMount } from 'solid-js'
 import TimeTag from '$components/TimeTag'
-import { useData } from 'vike-solid/useData'
 import type { PostData } from '$lib/posts'
 import conf from '$blog-config'
+import { RouteSectionProps } from '@solidjs/router'
 
 const ImageView = lazy(() => import('$components/ImageView'))
 const TocView = lazy(() => import('$components/TocView'))
 
-export default function Post() {
+export const preload = async (params: { id: string }) => {
+  const { getPost } = await import('$lib/posts')
+  return await getPost(params.id)
+}
 
-  const post = useData<PostData>()
+export const prerender = async () => {
+  const { listPosts } = await import('$lib/posts')
+  const posts = await listPosts()
+  return posts.map(post => ({ id: post.id }))
+}
+
+export default function PostPage(props: RouteSectionProps<PostData>) {
+
+  const post = props.data
 
   onMount(() => {
     import('mermaid').then((m) => {
@@ -44,7 +55,7 @@ export default function Post() {
                 class='hover:underline flex items-center gap-2'
                 target='_blank'
                 rel='noopener noreferer'
-                href={conf.author.social.github}
+                href={conf.author.social.GitHub}
               >
                 <img
                   src={conf.author.avatar}

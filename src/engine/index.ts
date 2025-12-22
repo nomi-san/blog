@@ -1,0 +1,88 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { type Plugin } from 'vite'
+import solidPlugin from 'vite-plugin-solid'
+import compressionPlugin from 'vite-plugin-compression2'
+import { pagesResolver } from './resolver'
+
+const root = process.cwd()
+
+function overrideConfig(): Plugin {
+  return {
+    name: 'blog-override-config',
+    config: () => ({
+      ssr: {
+        noExternal: [
+          'solid-js',
+          'solid-js/web',
+          '@solidjs/router'
+        ],
+      },
+      resolve: {
+        alias: {
+          '~': root,
+        },
+      }
+    }),
+  }
+}
+
+function copyPostAssets(): Plugin {
+  let ourDir: string
+  return {
+    name: 'post-assets',
+    enforce: 'post',
+    apply: 'build',
+    configResolved(config) {
+      ourDir = config.build.outDir
+    },
+    async closeBundle() {
+      // Copy posts assets to dist during build
+      const postsDir = path.join(root, 'posts')
+      const distDir = path.join(ourDir, 'posts')
+
+      async function copyDir(src: string, dest: string) {
+        await fs.mkdir(dest, { recursive: true })
+        const entries = await fs.readdir(src, { withFileTypes: true })
+
+        for (const entry of entries) {
+          const srcPath = path.join(src, entry.name)
+          const destPath = path.join(dest, entry.name)
+
+          if (entry.isDirectory()) {
+            await copyDir(srcPath, destPath)
+          } else if (entry.isFile() && !entry.name.endsWith('.md')) {
+            // Copy all files except markdown
+            await fs.copyFile(srcPath, destPath)
+          }
+        }
+      }
+      try {
+        await copyDir(postsDir, distDir)
+        console.log('✓ Post assets copied to dist')
+      } catch (error) {
+        console.error('Failed to copy post assets:', error)
+      }
+    },
+  }
+}
+
+export function blogPlugin(options?: {
+  compression?: boolean
+}): Plugin[] {
+  options = options || {}
+
+  return [
+    pagesResolver(),
+    solidPlugin({
+      ssr: true,
+      solid: {
+        hydratable: true,
+      },
+    }),
+    overrideConfig(),
+    copyPostAssets(),
+    
+    options.compression ? compressionPlugin() as any : null,
+  ]
+}

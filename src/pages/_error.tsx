@@ -1,7 +1,10 @@
-import { usePageContext } from 'vike-solid/usePageContext'
+import { useLocation } from '@solidjs/router'
 
-export default function NotFoundPage() {
-  const { is404 } = usePageContext()
+export default function ErrorPage() {
+
+  const location = useLocation()
+  const is404 = location.pathname === '/not-found'
+
   return (
     <div class='w-full overflow-x-hidden relative flex justify-between h-full flex-col flex-wrap'>
       <div>

@@ -1,29 +1,41 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "target": "ES2022",
-    "module": "ES2022",
-    "moduleResolution": "Bundler",
+    "target": "es2022",
+    "useDefineForClassFields": true,
+    "module": "esnext",
     "lib": [
+      "ES2022",
       "DOM",
-      "DOM.Iterable",
-      "ESNext"
+      "DOM.Iterable"
     ],
-    "types": [
-      "vite/client",
-      "vike-solid/client"
-    ],
-    "noEmit": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "preserve",
     "jsxImportSource": "solid-js",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    /* Aliases */
     "paths": {
+      "~/*": [
+        "./*"
+      ],
       "$lib/*": [
         "./src/lib/*"
       ],
       "$components/*": [
         "./src/components/*"
+      ],
+      "$pages/*": [
+        "./src/pages/*"
       ],
       "$blog-config": [
         "./blog.config.ts"

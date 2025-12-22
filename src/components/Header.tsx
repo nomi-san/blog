@@ -1,11 +1,11 @@
 import { Show, VoidComponent } from 'solid-js'
-import { usePageContext } from 'vike-solid/usePageContext'
+import { useLocation } from '@solidjs/router'
 
 const Header: VoidComponent = () => {
-  const ctx = usePageContext()
+  const location = useLocation()
 
   return (
-    <Show when={ctx.urlPathname !== '/'}>
+    <Show when={location.pathname !== '/'}>
       <header class='header'>
         <div class='max-w-screen-md px-4 pt-4 pb-4 md:pt-8 mx-auto'>
           <a

@@ -1,9 +1,14 @@
 import { Component, For, VoidComponent } from 'solid-js'
-import { useData } from 'vike-solid/useData'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
 import * as Icons from '$components/Icons'
 import conf from '$blog-config'
+import { A, RouteSectionProps } from '@solidjs/router'
+
+export const preload = async () => {
+  const { listPosts } = await import('$lib/posts')
+  return await listPosts()
+}
 
 const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
   return (
@@ -43,9 +48,9 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
   )
 }
 
-export default function HomePage() {
+export default function HomePage(props: RouteSectionProps<PostHeader[]>) {
 
-  const posts = useData<PostHeader[]>()
+  const posts = props.data || []
   const social = Object.entries(conf.author.social)
     .map(([k, v]) => {
       const icon = (Icons as any)[`${k}Icon`]

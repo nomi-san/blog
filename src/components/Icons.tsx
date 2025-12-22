@@ -9,6 +9,8 @@ export const RssFeedIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-4 h-4 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -23,6 +25,8 @@ export const EmailIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -39,6 +43,8 @@ export const ExternalLinkIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -55,6 +61,8 @@ export const FacebookIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 24 24'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -69,6 +77,8 @@ export const GitHubIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -85,6 +95,8 @@ export const TwitterIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -101,6 +113,8 @@ export const InstagramIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
@@ -117,6 +131,8 @@ export const LinkedinIcon: VoidComponent<IconProps> = (props) => {
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}
       viewBox='0 0 20 20'
+      width={20}
+      height={20}
       fill='currentColor'
       xmlns='http://www.w3.org/2000/svg'
     >
