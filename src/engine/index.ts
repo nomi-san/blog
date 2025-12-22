@@ -27,10 +27,26 @@ function overrideConfig(): Plugin {
   }
 }
 
+function useServerDirective(): Plugin {
+  return {
+    name: 'blog-remove-use-server',
+    enforce: 'pre',
+    transform(code, id, options) {
+      // ignore the server code in client build
+      if (!options?.ssr && id.match(/\.(js|ts|jsx|tsx)$/)) {
+        return code.replace(
+          /(['"])use\s+server\1;*/gm,
+          '}; if (false) async () => {'
+        )
+      }
+    },
+  }
+}
+
 function copyPostAssets(): Plugin {
   let ourDir: string
   return {
-    name: 'post-assets',
+    name: 'blog-post-assets',
     enforce: 'post',
     apply: 'build',
     configResolved(config) {
@@ -73,6 +89,7 @@ export function blogPlugin(options?: {
   options = options || {}
 
   return [
+    useServerDirective(),
     pagesResolver(),
     solidPlugin({
       ssr: true,

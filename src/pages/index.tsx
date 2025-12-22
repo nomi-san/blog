@@ -6,6 +6,7 @@ import conf from '$blog-config'
 import { A, RouteSectionProps } from '@solidjs/router'
 
 export const preload = async () => {
+  'use server'
   const { listPosts } = await import('$lib/posts')
   return await listPosts()
 }
