@@ -58,7 +58,6 @@ export const PageRoutes: VoidComponent<{
       {(route) => (
         <Route
           path={route.path}
-          preload={isServer ? (props.preloadData ? () => props.preloadData : undefined) : () => (window as any)['__PRELOAD_DATA__']}
           component={route.component}
         />
       )}

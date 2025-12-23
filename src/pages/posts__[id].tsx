@@ -1,9 +1,9 @@
 import { For, lazy, onMount, Show } from 'solid-js'
+import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
 import type { PostData } from '$lib/posts'
 import conf from '$blog-config'
-import { createAsync, RouteSectionProps, useLocation } from '@solidjs/router'
 
 const ImageView = lazy(() => import('$components/ImageView'))
 const TocView = lazy(() => import('$components/TocView'))
@@ -23,11 +23,7 @@ export const prerender = async () => {
 
 export default function PostPage() {
 
-  const location = useLocation()
-  console.log('PostPage location', typeof location.key);
-
-  // @ts-ignore
-  const post = createAsync(() => import(/*@vite-ignore*/ `${location.pathname}$page.ctx`).then(m => m.default) as Promise<PostData>)
+  const post = useDataAsync<PostData>()
 
   onMount(() => {
     import('mermaid').then((m) => {

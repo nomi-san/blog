@@ -1,10 +1,11 @@
 import { Component, For, VoidComponent } from 'solid-js'
+import { A } from '@solidjs/router'
+import { useDataAsync } from '@engine/client'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
+import MetaTags from '$components/MetaTags'
 import * as Icons from '$components/Icons'
 import conf from '$blog-config'
-import { A, createAsync, RouteSectionProps } from '@solidjs/router'
-import MetaTags from '../components/MetaTags'
 
 export const preload = async () => {
   const { listPosts } = await import('$lib/posts')
@@ -13,8 +14,7 @@ export const preload = async () => {
 
 export default function HomePage() {
 
-  // @ts-ignore
-  const posts = createAsync(() => import(/*@vite-ignore*/ `/$page.ctx`).then(m => m.default) as Promise<PostHeader[]>)
+  const posts = useDataAsync<PostHeader[]>()
 
   const social = Object.entries(conf.author.social)
     .map(([k, v]) => {
@@ -47,7 +47,7 @@ export default function HomePage() {
         <nav class='mt-5 flex gap-2'>
           <For each={social}>
             {(item) => (
-              <a
+              <A
                 class='flex items-center justify-center size-8 rounded-full 
       bg-gray-600/10 text-gray-700 hover:bg-gray-700 hover:text-white transition-colors'
                 target='_blank'
@@ -56,7 +56,7 @@ export default function HomePage() {
                 title={item.name}
               >
                 <item.icon />
-              </a>
+              </A>
             )}
           </For>
         </nav>

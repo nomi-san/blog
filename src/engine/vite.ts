@@ -84,7 +84,7 @@ function copyPostAssets(): Plugin {
   }
 }
 
-export function blogPlugin(options?: {
+export default function blogPlugin(options?: {
   compression?: boolean
 }): Plugin[] {
   options = options || {}

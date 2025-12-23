@@ -39,6 +39,9 @@
       ],
       "$blog-config": [
         "./blog.config.ts"
+      ],
+      "@engine/*": [
+        "./src/engine/*"
       ]
     }
   },

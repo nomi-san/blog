@@ -1,11 +1,11 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
-import { blogPlugin } from './src/engine'
+import blogEngine from './src/engine/vite'
 
 export default defineConfig({
   plugins: [
-    blogPlugin(),
+    blogEngine(),
     tailwindcss(),
   ],
   resolve: {
@@ -13,6 +13,7 @@ export default defineConfig({
       '$blog-config': path.join(__dirname, 'blog.config.ts'),
       '$components': path.join(__dirname, 'src/components'),
       '$lib': path.join(__dirname, 'src/lib'),
+      '@engine': path.join(__dirname, 'src/engine'),
     },
   },
 })
