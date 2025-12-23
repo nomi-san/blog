@@ -4,22 +4,36 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import url from 'node:url'
+import { createServer } from 'vite'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+const toAbsolute = (p: string) => path.resolve(__dirname, p).replace(/\\/g, '/')
 
-const toAbsolute = (p: string) => path.resolve(__dirname, p)
+const vite = await createServer({
+  base: '/',
+  root: process.cwd(),
+  appType: 'custom',
+  server: { middlewareMode: true },
+})
 
-const manifest = JSON.parse(
-  await fs.readFile(toAbsolute('dist/static/.vite/ssr-manifest.json'), 'utf-8'),
-)
-const template = await fs.readFile(toAbsolute('dist/static/index.html'), 'utf-8')
-const { render, getPrerenderRoutes } = (await import('./dist/server/entry-server.js')) as typeof import('./entry-server')
+const template = await fs.readFile('./index.html', 'utf-8')
+// const manifest = await fs.readFile(toAbsolute('dist/.vite/ssr-manifest.json'), 'utf-8')
+
+const { getPrerenderRoutes } = (await vite.ssrLoadModule('/src/engine/entry-server.tsx')) as typeof import('./router.tsx')
 
 // determine routes to pre-render from src/pages
 const routes = await getPrerenderRoutes()
 
+console.log('pre-render routes:', routes)
+
+process.exit();
+
 // pre-render each route...
 for (const url of routes) {
+
+  template = await vite.transformIndexHtml(url, template)
+  render = (await vite.ssrLoadModule('/src/engine/entry-server.tsx')).render
+
   const [appHtml, appHead] = await render(url, manifest)
 
   const html = template

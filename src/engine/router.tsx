@@ -1,6 +1,5 @@
-import { Component, For, VoidComponent } from 'solid-js'
-import { Route, Params } from '@solidjs/router'
-import { isServer } from 'solid-js/web'
+import { Component, lazy } from 'solid-js'
+import { Params, RouteDefinition } from '@solidjs/router'
 import { createMatcher, normalizePath } from '~/node_modules/@solidjs/router/dist/utils'
 
 type PageExport = {
@@ -10,73 +9,78 @@ type PageExport = {
   default: Component
 }
 
-const pages = import.meta.glob<PageExport>('../pages/**/*.tsx', {
-  eager: true,
-})
+// Import all page components except files starting with _
+const _pages = import.meta.glob<PageExport>([
+  '../pages/**/*.tsx',
+  '!../pages/**/_*.tsx',
+])
 
-const routes = Object.keys(pages).map(key => {
-  const page = pages[key]
-  let path = page.path
+// Also include the _error page
+Object.assign(_pages, import.meta.glob<PageExport>(
+  '../pages/_error.tsx',
+))
+
+const _routes = Array<{
+  path: string
+  match: ReturnType<typeof createMatcher>
+  preload: (params: Params) => Promise<any | undefined>
+  prerender: () => Promise<Params[] | undefined>
+  component: ReturnType<typeof lazy>
+}>()
+
+for (const key in _pages) {
+  const page = _pages[key]
+  const name = key.match(/\.\/pages(.*)\.tsx$/)![1]
+    .toLowerCase()
+    .replace(/\\/g, '/')
 
   // implied paths:
   //  index -> /,
   //  _error -> /*error
-  //  _layout -> (no route) 
   //  posts/[id] -> /posts/:id
   //  __ -> /
 
-  if (!path) {
-    const name = key.match(/\.\/pages(.*)\.tsx$/)![1]
-      .toLowerCase()
-      .replace(/\\/g, '/')
-
-    if (name === '/index') {
-      path = '/'
-    } else if (name === '/error') {
-      path = '/*error'
-    } else {
-      path = name
-        .replace(/\__/g, '/')
-        .replace(/\/\[(.*?)\]/g, '/:$1')
-    }
+  let path: string
+  if (name === '/index') {
+    path = '/'
+  } else if (name === '/_error') {
+    path = '*error'
+  } else {
+    path = name
+      .replace(/\__/g, '/')
+      .replace(/\/\[(.*?)\]/g, '/:$1')
   }
 
-  return {
+  _routes.push({
     path,
     match: createMatcher(path),
-    preload: page.preload,
-    prerender: page.prerender,
-    component: page.default,
-  }
-})
+    preload: (params) => page().then(m => m.preload?.(params)),
+    prerender: () => page().then(m => m.prerender?.()),
+    component: lazy(page),
+  })
+}
 
-export const PageRoutes: VoidComponent<{
-  preloadData?: any
-}> = (props) => {
-  return (
-    <For each={routes}>
-      {(route) => (
-        <Route
-          path={route.path}
-          component={route.component}
-        />
-      )}
-    </For>
-  )
+console.log('Registered routes:', _routes.map(r => r.path))
+
+export const getRoutes = (): RouteDefinition[] => {
+  return _routes.map(r => ({
+    path: r.path,
+    component: r.component,
+  }))
 }
 
 export const getPreloader = (url: string) => {
-  for (const route of routes) {
+  for (const route of _routes) {
     const match = route.match(url)
-    if (match && route.preload) {
-      return () => route.preload!(match.params)
+    if (match) {
+      return () => route.preload(match.params)
     }
   }
 }
 
 export const getPrerenderRoutes = async () => {
   const prerenderRoutes: string[] = []
-  for (const route of routes) {
+  for (const route of _routes) {
     // dynamic route with prerender function
     if (route.path.includes(':')) {
       if (route.prerender) {

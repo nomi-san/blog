@@ -8,6 +8,7 @@ import * as Icons from '$components/Icons'
 import conf from '$blog-config'
 
 export const preload = async () => {
+  'use server'
   const { listPosts } = await import('$lib/posts')
   return await listPosts()
 }

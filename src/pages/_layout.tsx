@@ -2,11 +2,10 @@ import '../styles/app.css'
 import '../styles/gfm.css'
 import '../styles/blog.css'
 
-import { type FlowComponent } from 'solid-js'
 import Footer from '$components/Footer'
 import Header from '$components/Header'
 
-const Layout: FlowComponent = (props) => {
+export default function Layout(props: any) {
   return (
     <>
       <Header />
@@ -18,5 +17,3 @@ const Layout: FlowComponent = (props) => {
     </>
   )
 }
-
-export default Layout

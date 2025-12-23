@@ -3,6 +3,6 @@ import { hydrate, render } from 'solid-js/web'
 import { Root } from './root'
 
 render(
-  () => <Root url={window.location.pathname} />,
+  () => <Root />,
   document.getElementById('root') as HTMLElement
 )

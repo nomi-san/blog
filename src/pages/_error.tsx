@@ -1,12 +1,14 @@
+import { Title } from '@solidjs/meta'
 import { useLocation } from '@solidjs/router'
 
 export default function ErrorPage() {
 
   const location = useLocation()
-  const is404 = location.pathname === '/not-found'
+  const is404 = location.pathname !== '/error'
 
   return (
     <div class='w-full overflow-x-hidden relative flex justify-between h-full flex-col flex-wrap'>
+      <Title>{is404 ? 'Not Found' : 'Error'}</Title>
       <div>
         <div class='text-center px-8 py-32 z-3 mx-auto max-w-lg'>
           <h1 class='font-bold text-5xl leading-10 tracking-tight'>{is404 ? '404' : 'Error'}</h1>

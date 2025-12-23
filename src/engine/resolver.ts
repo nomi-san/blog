@@ -32,7 +32,6 @@ export function preloadResolver(): Plugin {
     },
     resolveId(id) {
       if (id.endsWith(suffix)) {
-        console.log('preloadResolver resolveId', id)
         return id
       }
     },
@@ -40,9 +39,9 @@ export function preloadResolver(): Plugin {
       if (id.endsWith(suffix)) {
         const path = id.replace(suffix, '')
         try {
-          const { getPreloader } = await _server.ssrLoadModule(join(__dirname, './router'))
+          const { getPreloader } = (await _server.ssrLoadModule(join(__dirname, './router'))) as typeof import('./router')
           const preloader = getPreloader(path)
-          const data = await preloader()
+          const data = await preloader?.()
           return `export default ${JSON.stringify(data)};`
         }
         catch (e) {

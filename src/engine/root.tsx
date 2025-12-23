@@ -1,18 +1,17 @@
 import { Suspense } from 'solid-js'
 import { Router } from '@solidjs/router'
-import { PageRoutes } from './router'
-import Layout from 'virtual:$pages/_layout'
 import { MetaProvider } from '@solidjs/meta'
+import Layout from '~/src/pages/_layout'
+import { getRoutes } from './router'
 
 export function Root(props: {
-  url: string
-  preloadData?: any
+  url?: string
 }) {
   return (
     <MetaProvider>
       <Suspense>
         <Router url={props.url} root={Layout}>
-          <PageRoutes preloadData={props.preloadData} />
+          {getRoutes()}
         </Router>
       </Suspense>
     </MetaProvider>
