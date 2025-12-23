@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/engine/server.ts",
+    "dev": "vite dev",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --ssrManifest .vite/ssr-manifest.json --outDir dist/client",
     "build:server": "vite build --ssr src/engine/entry-server.tsx --outDir dist/server",

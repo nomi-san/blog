@@ -11,7 +11,7 @@ export function Root(props: {
   return (
     <MetaProvider>
       <Suspense>
-        <Router url={props.url} root={Layout} explicitLinks={true} preload={false}>
+        <Router url={props.url} root={Layout}>
           <PageRoutes preloadData={props.preloadData} />
         </Router>
       </Suspense>

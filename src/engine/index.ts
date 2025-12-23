@@ -3,7 +3,7 @@ import path from 'node:path'
 import { type Plugin } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
 import compressionPlugin from 'vite-plugin-compression2'
-import { pagesResolver } from './resolver'
+import { pagesResolver, preloadResolver } from './resolver'
 
 const root = process.cwd()
 
@@ -20,7 +20,8 @@ function overrideConfig(): Plugin {
       },
       resolve: {
         alias: {
-          '~': root,
+          '~/src': path.join(root, 'src'),
+          '~/node_modules': path.join(root, 'node_modules'),
         },
       }
     }),
@@ -91,6 +92,7 @@ export function blogPlugin(options?: {
   return [
     useServerDirective(),
     pagesResolver(),
+    preloadResolver(),
     solidPlugin({
       ssr: true,
       solid: {

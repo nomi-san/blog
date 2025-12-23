@@ -1,8 +1,8 @@
 /* @refresh reload */
-import { hydrate } from 'solid-js/web'
+import { hydrate, render } from 'solid-js/web'
 import { Root } from './root'
 
-hydrate(
+render(
   () => <Root url={window.location.pathname} />,
   document.getElementById('root') as HTMLElement
 )
