@@ -22,7 +22,7 @@ export function pagesResolver(): Plugin {
 }
 
 export function preloadResolver(): Plugin {
-  const suffix = '$page.ctx'
+  const suffix = '$page.ctx.js'
   let _server: ViteDevServer
 
   return {

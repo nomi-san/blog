@@ -2,7 +2,7 @@
 import { hydrate, render } from 'solid-js/web'
 import { Root } from './root'
 
-render(
-  () => <Root />,
+(import.meta.env.DEV ? render : hydrate)(
+  () => <Root url={window.location.pathname} />,
   document.getElementById('root') as HTMLElement
 )

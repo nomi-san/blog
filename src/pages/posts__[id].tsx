@@ -26,11 +26,11 @@ export default function PostPage() {
   const post = useDataAsync<PostData>()
 
   onMount(() => {
-    // import('mermaid').then((m) => {
-    //   const mermaid = m.default
-    //   mermaid.initialize({ startOnLoad: true })
-    //   mermaid.contentLoaded()
-    // })
+    import('mermaid').then((m) => {
+      const mermaid = m.default
+      mermaid.initialize({ startOnLoad: true })
+      mermaid.contentLoaded()
+    })
   })
 
   return (

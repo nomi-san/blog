@@ -1,5 +1,5 @@
 import { Title } from '@solidjs/meta'
-import { useLocation } from '@solidjs/router'
+import { A, useLocation } from '@solidjs/router'
 
 export default function ErrorPage() {
 
@@ -16,14 +16,14 @@ export default function ErrorPage() {
             {is404 ? "Couldn't find what you're looking for." : "Something went wrong."}
           </h2>
           <p class='mt-4'>
-            <a
+            <A
               href='/'
               class='underline'
               data-ancestor='true'
               aria-current='true'
             >
               Back to Home
-            </a>
+            </A>
           </p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { Show, VoidComponent } from 'solid-js'
-import { useLocation } from '@solidjs/router'
+import { A, useLocation } from '@solidjs/router'
 
 const Header: VoidComponent = () => {
   const location = useLocation()
@@ -8,7 +8,7 @@ const Header: VoidComponent = () => {
     <Show when={location.pathname !== '/'}>
       <header class='header'>
         <div class='max-w-screen-md px-4 pt-4 pb-4 md:pt-8 mx-auto'>
-          <a
+          <A
             href='/'
             class='inline-flex items-center gap-1 text-sm text-gray-500/80 hover:text-gray-700 transition-colors'
             title='Back to Index Page'
@@ -24,7 +24,7 @@ const Header: VoidComponent = () => {
               >
               </path>
             </svg>Home
-          </a>
+          </A>
         </div>
       </header>
     </Show>

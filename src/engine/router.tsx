@@ -60,8 +60,6 @@ for (const key in _pages) {
   })
 }
 
-console.log('Registered routes:', _routes.map(r => r.path))
-
 export const getRoutes = (): RouteDefinition[] => {
   return _routes.map(r => ({
     path: r.path,
@@ -85,14 +83,16 @@ export const getPrerenderRoutes = async () => {
     if (route.path.includes(':')) {
       if (route.prerender) {
         const paramsList = await route.prerender()
-        for (const params of paramsList) {
-          // resolve path with params
-          let path = buildPath(route.path, params)
-          prerenderRoutes.push(path)
+        if (paramsList != null) {
+          for (const params of paramsList) {
+            // resolve path with params
+            let path = buildPath(route.path, params)
+            prerenderRoutes.push(path)
+          }
         }
       }
     } else if (route.path.includes('*')) {
-      prerenderRoutes.push(route.path.replace(/\*/g, ''))
+      prerenderRoutes.push(route.path.replace(/\*/g, '/'))
     } else {
       // static route
       prerenderRoutes.push(route.path)
