@@ -2,6 +2,7 @@ import { basename, extname } from 'node:path'
 import { renderToStringAsync, generateHydrationScript, getAssets } from 'solid-js/web'
 import { getPreloader, getPrerenderRoutes } from './router'
 import { Root } from './root'
+import { themeScript } from '$lib/theme'
 
 export { getPrerenderRoutes }
 
@@ -19,8 +20,9 @@ export async function render(url: string, manifest?: Record<string, string[]>) {
     }
   }
 
-  heads.push(getAssets())
+  heads.push(getAssets().replace(/\>\</g, '>\n<'))
   heads.push(renderPreloadLinks(manifest || {}))
+  heads.push(`<script>${themeScript}</script>`)
   heads.push(generateHydrationScript())
 
   return [html, heads.join('\n'), context]

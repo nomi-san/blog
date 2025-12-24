@@ -4,7 +4,6 @@ import '../styles/blog.css'
 
 import { useContext } from 'solid-js'
 import { MetaContext } from '@solidjs/meta'
-import { isServer } from 'solid-js/web'
 import { themeScript } from '$lib/theme'
 
 import Footer from '$components/Footer'
@@ -12,7 +11,7 @@ import Header from '$components/Header'
 
 export default function Layout(props: any) {
 
-  if (isServer || import.meta.env.DEV) {
+  if (!import.meta.env.SSR) {
     const meta = useContext(MetaContext)!
     meta.addTag({
       id: 'theme-script',
