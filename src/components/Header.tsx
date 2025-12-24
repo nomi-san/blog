@@ -1,5 +1,6 @@
 import { Show, VoidComponent } from 'solid-js'
 import { A, useLocation } from '@solidjs/router'
+import ThemeButton from './ThemeButton'
 
 const Header: VoidComponent = () => {
   const location = useLocation()
@@ -7,7 +8,7 @@ const Header: VoidComponent = () => {
   return (
     <Show when={location.pathname !== '/'}>
       <header class='header'>
-        <div class='max-w-screen-md px-4 pt-4 pb-4 md:pt-8 mx-auto'>
+        <div class='max-w-screen-md flex justify-between px-4 pt-4 pb-4 md:pt-8 mx-auto'>
           <div class="animate show">
             <A
               href="/"
@@ -22,6 +23,9 @@ const Header: VoidComponent = () => {
               </svg>
               <span class="text-sm">Back to home</span>
             </A>
+          </div>
+          <div>
+            <ThemeButton />
           </div>
         </div>
       </header>

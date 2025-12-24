@@ -10,7 +10,7 @@ const Footer: VoidComponent = () => {
   }
 
   return (
-    <footer class='bg-[rgb(250,250,250)] mt-32'>
+    <footer class='bg-[#fafafa] dark:bg-[#171717] mt-32'>
       <div class="max-w-screen-md relative mx-auto">
         <Show when={location.pathname !== '/'}>
           <div class="absolute right-0 -top-20">

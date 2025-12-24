@@ -2,10 +2,27 @@ import '../styles/gfm.css'
 import '../styles/app.css'
 import '../styles/blog.css'
 
+import { useContext } from 'solid-js'
+import { MetaContext } from '@solidjs/meta'
+import { isServer } from 'solid-js/web'
+import { themeScript } from '$lib/theme'
+
 import Footer from '$components/Footer'
 import Header from '$components/Header'
 
 export default function Layout(props: any) {
+
+  if (isServer || import.meta.env.DEV) {
+    const meta = useContext(MetaContext)!
+    meta.addTag({
+      id: 'theme-script',
+      tag: 'script',
+      props: {
+        innerHTML: themeScript,
+      },
+    })
+  }
+
   return (
     <>
       <Header />

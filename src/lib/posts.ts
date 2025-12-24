@@ -8,6 +8,7 @@ export type PostHeader = {
   title: string
   description: string
   image?: string
+  color?: string
   tags: string[]
   date: string
   path: string
