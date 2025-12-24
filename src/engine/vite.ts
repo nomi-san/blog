@@ -105,6 +105,8 @@ export default function blogPlugin(options?: {
     overrideConfig(),
     copyPostAssets(),
     
-    options.compression ? compressionPlugin() as any : null,
+    options.compression ? compressionPlugin({
+      algorithms: ['gz'],
+    }) as any : null,
   ]
 }

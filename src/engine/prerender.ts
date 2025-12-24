@@ -56,7 +56,11 @@ for (const url of routes) {
   console.log('pre-rendered:', filePath)
 }
 
+vite.close()
+
 // done, delete .vite directory including ssr manifest
 await fs.rm(path.join(root, 'dist/.vite'), { recursive: true })
 
-vite.close()
+try {
+  await fs.rm(path.join(root, 'dist/index.html.gz'))
+} catch { }

@@ -14,7 +14,9 @@ export default defineConfig({
     }
   },
   plugins: [
-    blogEngine(),
+    blogEngine({
+      compression: true,
+    }),
   ],
   resolve: {
     alias: {
