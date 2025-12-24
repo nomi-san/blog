@@ -1,4 +1,5 @@
 /* @refresh reload */
+import './polyfills'
 import { hydrate, render } from 'solid-js/web'
 import { Root } from './root'
 
