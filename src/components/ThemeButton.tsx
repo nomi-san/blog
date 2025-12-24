@@ -46,7 +46,7 @@ export default function ThemeButton() {
       type="button"
       role="switch"
       title="Toggle dark mode"
-      class="flex px-3 py-1.5 flex-nowrap rounded border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-100 ease-in-out"
+      class="flex p-1.5 flex-nowrap rounded-full border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-100 ease-in-out"
       aria-checked={isDark()}
       data-view-transition={viewTransition()}
       onClick={toggleAppearance}

@@ -5,6 +5,7 @@ export default {
   description: 'Blog xàm cùng các ngâm cứu chill chill về công nghệ',
   language: 'vi',
   cover_image: '/cover.jpg',
+  highlight_color: '#435581',
   ga_tracking_id: "G-JFPJRH80C0",
 
   author: {

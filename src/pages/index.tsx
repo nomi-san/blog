@@ -1,11 +1,13 @@
-import { Component, For, VoidComponent } from 'solid-js'
+import { Component, For, Show, VoidComponent } from 'solid-js'
 import { A } from '@solidjs/router'
 import { useDataAsync } from '@engine/client'
+import { useIsDark } from '$lib/theme'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
 import * as Icons from '$components/Icons'
 import conf from '$blog-config'
+import ThemeButton from '../components/ThemeButton'
 
 export const preload = async () => {
   'use server'
@@ -15,6 +17,7 @@ export const preload = async () => {
 
 export default function HomePage() {
 
+  const isDark = useIsDark()
   const posts = useDataAsync<PostHeader[]>()
 
   const social = Object.entries(conf.author.social)
@@ -28,7 +31,14 @@ export default function HomePage() {
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
       <MetaTags />
 
-      <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center border-b border-black/15 dark:border-white/20'>
+      <Show when={isDark() && conf.highlight_color}>
+        <div
+          class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
+          style={`background-image:linear-gradient(${conf.highlight_color},transparent); --highlightColor: ${conf.highlight_color};`}>
+        </div>
+      </Show>
+
+      <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center'>
         <A href='/' class='flex flex-col items-center'>
           <div>
             <img
@@ -63,6 +73,12 @@ export default function HomePage() {
           </For>
         </nav>
       </section>
+
+      <div class="flex justify-center items-center gap-4 mx-12">
+        <hr class="flex-1 border-black/15 dark:border-white/20" />
+        <ThemeButton />
+        <hr class="flex-1 border-black/15 dark:border-white/20" />
+      </div>
 
       <section class='pt-12'>
         <For each={posts()}>
