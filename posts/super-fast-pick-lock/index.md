@@ -3,6 +3,7 @@ title: Pick-lock Yasuo tốc độ bàn thờ
 description: Còn gì ngầu hơn khi pick-lock tướng yêu thích với tốc độ ánh sáng chỉ bằng trình duyệt web.
 date: 2020-02-23
 image: ./daxua-pick-lock.jpg
+color: '#435581'
 tags: [lcu, yasuo]
 ---
 

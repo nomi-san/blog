@@ -3,6 +3,7 @@ title: Generic vector trong C
 description: Liệu có xịn sò như std::vector trong C++ không?
 date: 2020-12-06
 image: ./cover.jpg
+color: '#517e94'
 tags: [c, vector]
 ---
 

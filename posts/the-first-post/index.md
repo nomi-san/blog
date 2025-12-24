@@ -3,20 +3,23 @@ title: The first post
 description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiumod stempor incididunt ut labore et dolore magna aliqua.
 date: 2017-05-04
 image: https://www.ohsolovelyblog.com/wp-content/uploads/2023/09/November-2023-wallpapers-OhSoLovelyBlog.com-SundayStart1.jpg
-tags: [example]
-dev: true
-author:
-    name: nomi
-    avatar: /images/no.png
+color: '#eed8cc'
+tags: [example, markdown]
 ---
 
-> This post is used to test markdown systax.
+# Heading 1
 
-# Header 1
+```
+# Heading 1
+```
 
-## Header 2 `demo`
+## Heading 2 `demo`
 
-### Header 3
+```
+## Heading 2 `demo`
+```
+
+### Heading 3
 
 A paragraph...
 
@@ -56,10 +59,10 @@ function main() {
 
 ## Table
 
-|      | Apple | Banana | Be FA |
+|      | Apple | Banana | Kiwi |
 | :--- | :---: | :----: | :---: |
 | John |  👍   |   👍   |       |
-| Jame |  👎   |   👍   |  🏳️‍🌈  |
+| Jame |  👎   |   👍   |  👏  |
 
 ## Mermaid
 

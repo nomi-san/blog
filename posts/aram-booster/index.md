@@ -3,6 +3,7 @@ title: Boost skin ARAM chỉ với vài dòng Batch
 description: Đào lại lịch sử các bug boost skin free, và quá trình ngâm cứu tìm ra giải pháp mới.
 date: 2021-05-06
 image: ./champ-select.jpg
+color: '#9698C1'
 tags: [lcu, reverse]
 ---
 

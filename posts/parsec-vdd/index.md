@@ -3,6 +3,7 @@ title: Màn hình ảo 4K hoàn hảo cho headless PC
 description: Giải pháp màn hình ảo hoàn hảo cho headless PC và cloud gaming solution.
 date: 2024-02-02
 image: ./cover.jpg
+color: '#2596be'
 tags: [vdd, parsec]
 ---
 

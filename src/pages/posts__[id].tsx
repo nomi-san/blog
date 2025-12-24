@@ -40,6 +40,13 @@ export default function PostPage() {
     <Show when={post()} keyed>
       {(post) => (
         <>
+          <Show when={post.color} keyed>
+            <div
+              class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
+              style={`background-image:linear-gradient(${post.color},transparent); --highlightColor: ${post.color};`}>
+            </div>
+          </Show>
+
           <article class='max-w-screen-md px-4 pt-8 pb-16 md:pt-16 mx-auto'>
             <MetaTags
               article
