@@ -40,7 +40,7 @@ const ImageView: VoidComponent = () => {
   return (
     <div
       ref={view}
-      class='invisible flex fixed p-8 top-0 left-0 bottom-0 right-0 items-center justify-center z-999 cursor-zoom-out bg-[#222a] backdrop-blur-sm backdrop-brightness-50'
+      class='invisible z-50 flex fixed p-8 top-0 left-0 bottom-0 right-0 items-center justify-center z-999 cursor-zoom-out bg-[#222a] backdrop-blur-sm backdrop-brightness-50'
     >
       <figure class='flex justify-center items-center'>
         <img

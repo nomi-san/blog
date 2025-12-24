@@ -74,7 +74,7 @@ const TocView: VoidComponent<TocViewProps> = (props) => {
   return (
     <div
       id="toc"
-      class="fixed top-36 overflow-auto mt-6 text-sm hidden"
+      class="fixed z-40 top-36 overflow-auto mt-6 text-sm hidden"
       ref={self}
     />
   )
