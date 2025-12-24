@@ -52,7 +52,7 @@ body {
 html {
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
-  font-family: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  font-family: 'Inter Variable', sans-serif;
   scroll-behavior: smooth;
   overflow: initial;
 }

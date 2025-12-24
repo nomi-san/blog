@@ -1,5 +1,5 @@
-import '../styles/app.css'
 import '../styles/gfm.css'
+import '../styles/app.css'
 import '../styles/blog.css'
 
 import Footer from '$components/Footer'
