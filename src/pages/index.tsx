@@ -111,7 +111,7 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
       </div>
       <A
         class='sm:col-span-3 sm:pl-8 sm:border-l sm:border-black/15 dark:sm:border-white/20 flex flex-col gap-4'
-        href={props.post.path}
+        href={`${props.post.path}/`}
       >
         {/* <img
           src={props.post.image}
