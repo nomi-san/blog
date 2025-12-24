@@ -11,6 +11,10 @@
   color: #cfcfcf;
 }
 
+#toc.hidden {
+  display: none;
+}
+
 #toc>.toc-list li {
   list-style: none;
 }
