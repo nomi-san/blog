@@ -1,12 +1,20 @@
 import path from 'node:path'
 import { defineConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
+import autoprefixer from 'autoprefixer'
+import tailwindcss from 'tailwindcss'
 import blogEngine from './src/engine/vite'
 
 export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [
+        autoprefixer,
+        tailwindcss
+      ]
+    }
+  },
   plugins: [
     blogEngine(),
-    tailwindcss(),
   ],
   resolve: {
     alias: {
