@@ -61,15 +61,16 @@ export default function PostPage() {
               {post.title}
             </h1>
 
-            {         /* meta data */}
-            <div class='mt-6 text-neutral-600 dark:text-neutral-400'>
-              <div class='gap-2 items-center'>
+            <hr class='inline-block mt-8 mb-4 border-black/15 dark:border-white/20 w-1/3' />
+
+            {/* meta data */}
+            <div class='text-sm text-neutral-700 dark:text-neutral-300'>
+              <div class='flex items-center gap-2'>
                 {/* post date */}
-                <div class='text-base'>
-                  <TimeTag datetime={post.date} />
-                </div>
+                <TimeTag datetime={post.date} />
+                <span>—</span>
                 {/* author info */}
-                <ul class='flex flex-wrap gap-2 gap-x-4 mt-4 text-sm'>
+                <ul class='flex flex-wrap gap-2 gap-x-4'>
                   <li class='whitespace-nowrap'>
                     <a
                       class='hover:underline flex items-center gap-2'
@@ -85,24 +86,22 @@ export default function PostPage() {
                     </a>
                   </li>
                 </ul>
-                {/* post tags */}
-                <div class='flow-root mt-6 text-sm'>
-                  <div class='-m-1 flex flex-row flex-wrap gap-2 px-1'>
-                    <For each={post.tags}>
-                      {(tag) => (
-                        <span class='px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20'>
-                          {tag}
-                        </span>
-                      )}
-                    </For>
-                  </div>
+              </div>
+              {/* post tags */}
+              <div class='flow-root mt-4 text-sm'>
+                <div class='-m-1 flex flex-row flex-wrap gap-2 px-1'>
+                  <For each={post.tags}>
+                    {(tag) => (
+                      <span class='px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20'>
+                        {tag}
+                      </span>
+                    )}
+                  </For>
                 </div>
               </div>
             </div>
 
-            <hr class='my-8 border-black/15 dark:border-white/20' />
-
-            <div class='my-12'>
+            <div class='my-16'>
               <img
                 src={post.image}
                 alt=''
