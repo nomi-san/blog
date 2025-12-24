@@ -45,7 +45,7 @@ export default function PostPage() {
             path={post.path}
           />
 
-          <h1 class='blog-header mt-6 text-4xl font-bold text-gray-800 sm:text-5xl'>
+          <h1 class='leading-[1.2] mt-6 text-4xl font-bold text-gray-800 sm:text-5xl'>
             {post.title}
           </h1>
 
@@ -90,7 +90,7 @@ export default function PostPage() {
             <img
               src={post.image}
               alt=''
-              class='mx-auto max-w-screen-sm max-w-lg w-full mt-4 sm:mt-0'
+              class='mx-auto max-w-screen-sm w-full mt-4 sm:mt-0'
               loading='lazy'
               decoding='async'
             />
