@@ -12,7 +12,7 @@ const Footer: VoidComponent = () => {
   return (
     <footer class='bg-[#fafafa] dark:bg-[#171717] mt-32'>
       <div class="max-w-screen-md relative mx-auto">
-        <Show when={location.pathname !== '/'}>
+        <Show when={location.pathname.startsWith('/posts/')}>
           <div class="absolute right-0 -top-20">
             <button
               onClick={scrollToTop}

@@ -28,11 +28,11 @@ export default function HomePage() {
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
       <MetaTags />
 
-      <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center border-b border-gray-300/80 dark:border-neutral-700/80'>
+      <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center border-b border-black/15 dark:border-white/20'>
         <A href='/' class='flex flex-col items-center'>
           <div>
             <img
-              class='object-cover size-28 rounded-full pointer-events-none select-none'
+              class='object-cover size-28 border-4 dark:border-transparent rounded-full pointer-events-none select-none'
               src='/logo.jpg' alt='' width='112' height='112' loading='lazy'
             />
           </div>
@@ -85,7 +85,7 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
           <div class='flex flex-wrap gap-2'>
             <For each={props.post.tags}>
               {(tag) => (
-                <span class='border py-1 px-2 border-gray-300 dark:border-neutral-700 rounded-md'>
+                <span class='border py-1 px-2 rounded-md border-black/15 dark:border-white/20'>
                   {tag}
                 </span>
               )}
@@ -94,7 +94,7 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
         </div>
       </div>
       <A
-        class='sm:col-span-3 sm:pl-8 sm:border-l sm:border-gray-300 dark:sm:border-neutral-700 flex flex-col gap-4'
+        class='sm:col-span-3 sm:pl-8 sm:border-l sm:border-black/15 dark:sm:border-white/20 flex flex-col gap-4'
         href={props.post.path}
       >
         {/* <img

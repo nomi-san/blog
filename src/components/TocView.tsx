@@ -14,7 +14,7 @@ const TocView: VoidComponent<TocViewProps> = (props) => {
     const el = document.querySelector(props.target)
     if (el) {
       const rc = el.getBoundingClientRect()
-      self.style.left = `${rc.right + 36}px`
+      self.style.left = `${rc.right + 72}px`
     }
   }
 
@@ -46,7 +46,7 @@ const TocView: VoidComponent<TocViewProps> = (props) => {
   return (
     <div
       id="toc"
-      class="fixed top-32 overflow-auto p-4 text-sm"
+      class="fixed top-36 overflow-auto mt-6 text-sm"
       ref={self}
     />
   )

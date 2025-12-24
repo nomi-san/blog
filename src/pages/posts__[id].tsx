@@ -40,7 +40,7 @@ export default function PostPage() {
     <Show when={post()} keyed>
       {(post) => (
         <>
-          <Show when={post.color} keyed>
+          <Show when={post.color}>
             <div
               class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
               style={`background-image:linear-gradient(${post.color},transparent); --highlightColor: ${post.color};`}>
@@ -57,7 +57,7 @@ export default function PostPage() {
             />
 
             {/* post title */}
-            <h1 class='leading-[1.2] mt-6 text-4xl font-bold text-gray-800 dark:text-neutral-200 sm:text-5xl'>
+            <h1 class='!leading-[1.2] mt-6 text-4xl font-bold text-gray-800 dark:text-neutral-200 sm:text-5xl'>
               {post.title}
             </h1>
 
@@ -86,11 +86,11 @@ export default function PostPage() {
                   </li>
                 </ul>
                 {/* post tags */}
-                <div class='flow-root mt-6 text-base'>
+                <div class='flow-root mt-6 text-sm'>
                   <div class='-m-1 flex flex-row flex-wrap gap-2 px-1'>
                     <For each={post.tags}>
                       {(tag) => (
-                        <span class='px-2 py-0.5 rounded-md border border-neutral-300 dark:border-neutral-700'>
+                        <span class='px-2 py-0.5 rounded-md border border-black/15 dark:border-white/20'>
                           {tag}
                         </span>
                       )}
@@ -100,7 +100,7 @@ export default function PostPage() {
               </div>
             </div>
 
-            <hr class='my-8 border-gray-300/80 dark:border-neutral-700/80' />
+            <hr class='my-8 border-black/15 dark:border-white/20' />
 
             <div class='my-12'>
               <img

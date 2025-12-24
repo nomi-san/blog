@@ -24,13 +24,13 @@ export default function Layout(props: any) {
   }
 
   return (
-    <>
+    <main class="flex flex-col min-h-screen mx-auto">
       <Header />
       <div class="flex-1">
         {props.children}
       </div>
       <Footer />
       {/* <Analytics ga_tracking_id={conf.ga_tracking_id} /> */}
-    </>
+    </main>
   )
 }

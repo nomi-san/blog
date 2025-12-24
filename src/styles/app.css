@@ -76,10 +76,6 @@ pre code {
   -webkit-font-smoothing: antialiased;
 }
 
-.no-header header.header {
-  display: none;
-}
-
 pre code.stdin>::before {
   content: '>';
   margin-right: .6rem;
