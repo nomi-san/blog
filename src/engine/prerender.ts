@@ -1,14 +1,14 @@
 import fs from 'node:fs/promises'
-import path from 'node:path'
+import path, { join } from 'node:path'
 import url from 'node:url'
 import { createServer } from 'vite'
 
 const root = process.cwd()
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
-const toAbsolute = (p: string) => path.resolve(__dirname, p).replace(/\\/g, '/')
 
 console.log('\nStarting pre-rendering...')
 
+// create vite server in middleware mode
 const vite = await createServer({
   base: '/',
   root: process.cwd(),
@@ -22,9 +22,10 @@ const vite = await createServer({
 })
 
 const template = await fs.readFile(path.join(root, 'dist/index.html'), 'utf-8')
-const manifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/ssr-manifest.json'), 'utf-8'))
+const manifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/ssr-manifest.json'), 'utf-8')) as Record<string, string[]>
 
-const { render, getPrerenderRoutes } = (await vite.ssrLoadModule('/src/engine/entry-server.tsx')) as typeof import('./entry-server')
+// load server entry module
+const { render, getPrerenderRoutes } = (await vite.ssrLoadModule(join(__dirname, './entry-server'))) as typeof import('./entry-server')
 
 // determine routes to pre-render from src/pages
 const routes = await getPrerenderRoutes()
@@ -48,7 +49,7 @@ for (const url of routes) {
   await fs.writeFile(filePath, html)
 
   if (context) {
-    const ctxFile = `dist/${url}$page.ctx.js`
+    const ctxFile = `dist/${url}/index$ctx.js`
     await fs.writeFile(path.join(root, ctxFile), context)
   }
 
