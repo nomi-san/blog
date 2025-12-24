@@ -7,6 +7,8 @@ const root = process.cwd()
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const toAbsolute = (p: string) => path.resolve(__dirname, p).replace(/\\/g, '/')
 
+console.log('\nStarting pre-rendering...')
+
 const vite = await createServer({
   base: '/',
   root: process.cwd(),
@@ -57,10 +59,3 @@ for (const url of routes) {
 await fs.rm(path.join(root, 'dist/.vite'), { recursive: true })
 
 vite.close()
-
-// copy post assets from dist/client/posts to dist/static/posts
-// await fs.cp(
-//   toAbsolute('dist/client/posts'),
-//   toAbsolute('dist/static/posts'),
-//   { recursive: true },
-// )

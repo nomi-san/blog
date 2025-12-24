@@ -11,6 +11,9 @@ function overrideConfig(): Plugin {
   return {
     name: 'blog-override-config',
     config: () => ({
+      build: {
+        ssrManifest: true,
+      },
       ssr: {
         noExternal: [
           'solid-js',
