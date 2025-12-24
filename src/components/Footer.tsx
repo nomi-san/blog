@@ -13,7 +13,7 @@ const Footer: VoidComponent = () => {
     <footer class='bg-[#fafafa] dark:bg-[#171717] mt-32'>
       <div class="max-w-screen-md relative mx-auto">
         <Show when={location.pathname.startsWith('/posts/')}>
-          <div class="absolute right-0 -top-20">
+          <div class="absolute right-0 -top-20 mr-4">
             <button
               onClick={scrollToTop}
               class="relative group w-fit flex pl-8 pr-3 py-1.5 flex-nowrap rounded border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-100 ease-in-out"
