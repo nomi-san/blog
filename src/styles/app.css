@@ -42,6 +42,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bprogress-color: #0b0b0b;
+  --bprogress-height: 3px;
+}
+
 html,
 body {
   margin: 0;
@@ -61,6 +66,7 @@ html.dark {
   background-color: #1a1a1a;
   color: #ffffff;
   color-scheme: dark;
+  --bprogress-color: #f5f5f5;
 }
 
 h1,
