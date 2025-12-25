@@ -2,7 +2,7 @@
 title: Hộp thoại Rust
 description: Cách tạo hộp thoại thông báo trên Windows bằng Rust.
 date: 2017-11-11
-image: https://www.vectorlogo.zone/logos/rust-lang/rust-lang-ar21.png
+color: '#be572d'
 tags: [rust, win32]
 ---
 

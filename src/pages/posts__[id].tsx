@@ -3,6 +3,7 @@ import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
 import type { PostData } from '$lib/posts'
+import { useIsDark } from '$lib/theme'
 import conf from '$blog-config'
 
 const ImageView = lazy(() => import('$components/ImageView'))
@@ -30,7 +31,7 @@ export default function PostPage() {
       const mermaid = m.default
       mermaid.initialize({
         startOnLoad: true,
-        theme: 'default',
+        theme: useIsDark()() ? 'dark' : 'default',
       })
       mermaid.contentLoaded()
     })
@@ -50,7 +51,7 @@ export default function PostPage() {
 
           <Show when={post.color}>
             <div
-              class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
+              class="pointer-events-none absolute start-0 top-0 z-[-1] h-screen w-full opacity-25"
               style={`background-image:linear-gradient(${post.color},transparent); --highlightColor: ${post.color};`}>
             </div>
           </Show>
@@ -104,13 +105,15 @@ export default function PostPage() {
 
             {/* post cover image */}
             <div class='my-16'>
-              <img
-                src={post.image}
-                alt='Post cover image'
-                class='mx-auto max-w-screen-sm w-full mt-4 sm:mt-0'
-                loading='lazy'
-                decoding='async'
-              />
+              <Show when={post.image}>
+                <img
+                  src={post.image}
+                  alt='Post cover image'
+                  class='mx-auto max-w-screen-sm w-full mt-4 sm:mt-0'
+                  loading='lazy'
+                  decoding='async'
+                />
+              </Show>
             </div>
 
             {/* post content */}

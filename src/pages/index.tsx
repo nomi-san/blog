@@ -33,7 +33,7 @@ export default function HomePage() {
 
       <Show when={isDark() && conf.highlight_color}>
         <div
-          class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
+          class="pointer-events-none absolute start-0 top-0 z-[-1] h-screen w-full opacity-25"
           style={`background-image:linear-gradient(${conf.highlight_color},transparent); --highlightColor: ${conf.highlight_color};`}>
         </div>
       </Show>
