@@ -9,17 +9,21 @@ tags: [example, markdown]
 
 # Heading 1
 
-```
+```md
 # Heading 1
 ```
 
 ## Heading 2 `demo`
 
-```
+```md
 ## Heading 2 `demo`
 ```
 
 ### Heading 3
+
+```md
+### Heading 3
+```
 
 A paragraph...
 
@@ -32,15 +36,30 @@ dolore magna aliqua.
 1. Android
 2. iOS
 
+```md
+1. Android
+2. iOS
+```
+
 ## Unordered list
 
 - Mac OS :apple:
 - Windows :windows:
 
+```md
+ - Mac OS :apple:
+ - Windows :windows:
+```
+
 ## Check list
 
 - [x] Done
 - [ ] Todo
+
+```md
+ - [x] Done
+ - [ ] Todo
+```
 
 ## Code
 
@@ -71,12 +90,23 @@ about syntax.
 
 ```mermaid
 flowchart LR
-    A[Rental service] -. give account .-> User
+    A[Rental service] -. gives account .-> User
 ```
+
+````
+```mermaid
+flowchart LR
+    A[Rental service] -. gives account .-> User
+```
+````
 
 # Image
 
 ![Markdown is awesome h=160](https://grafxflow.co.uk/storage/app/uploads/public/5ad/e5b/d9b/thumb_891_266_0_0_0_auto.png)
+
+```markdown
+![Markdown is awesome h=160](https://grafxflow.co.uk/storage/app/uploads/public/5ad/e5b/d9b/thumb_891_266_0_0_0_auto.png)
+```
 
 # What is Lorem Ipsum?
 

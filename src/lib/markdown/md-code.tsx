@@ -18,9 +18,12 @@ const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
   if (!hasDiff) {
     const html = highlight(props.code, props.lang)
     return (
-      <pre class='highlight notranslate' data-lang={props.lang}>
-        <code innerHTML={html} />
-      </pre>
+      <div class="relative my-8">
+        <pre class="highlight notranslate" data-lang={props.lang}>
+          <code innerHTML={html} />
+        </pre>
+        <span class="language absolute top-1 right-2 text-sm pointer-events-none">{props.lang}</span>
+      </div>
     )
   }
 
@@ -71,7 +74,7 @@ const Terminal: VoidComponent<{ code: string }> = (props) => {
   }
 
   return (
-    <pre class='notranslate'>
+    <pre class='notranslate' data-lang='terminal'>
       <code class='stdin'>
         {lines.map((line) => <div>{line}</div>)}
       </code>
@@ -90,7 +93,7 @@ marked.use({
     code: (token) =>
       renderToString(() => {
         const info = token.lang || ''
-        const lang = info.match(/^\w+/)?.at(0)?.trim() || 'plain'
+        const lang = info.match(/^\w+/)?.at(0)?.trim() || ''
         const file = info.match(/\!([^\@\n]+)/)?.at(1)?.trim()
         const legend = info.match(/\@([^\!\n]+)/)?.at(1)?.trim()
 

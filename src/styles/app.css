@@ -60,6 +60,7 @@ html {
 html.dark {
   background-color: #1a1a1a;
   color: #ffffff;
+  color-scheme: dark;
 }
 
 h1,
@@ -78,7 +79,8 @@ pre code {
 
 pre code.stdin>::before {
   content: '>';
-  margin-right: .6rem;
+  margin-left: -0.8rem;
+  margin-right: 0.8rem;
 }
 
 pre code.stdout {
@@ -93,16 +95,21 @@ pre code.stdout {
   word-break: break-word;
 }
 
+html.dark pre code.stdout {
+  background-color: #7373d1;
+}
+
+.markdown-body pre {
+  position: relative;
+}
+
 pre code>.added {
   position: relative;
-  background-color: rgb(220 252 231);
-  margin-left: -28px;
-  margin-right: -28px;
+  background-color: rgba(25, 221, 90, 0.16);
+  margin-left: -26px;
+  margin-right: -26px;
   padding-left: 26px;
   padding-right: 26px;
-
-  border-left: solid 2px rgb(22 163 74);
-  border-right: solid 2px rgb(22 163 74);
 }
 
 pre code>.added::before {
@@ -115,16 +122,13 @@ pre code>.added::before {
 
 pre code>.deleted {
   position: relative;
-  background-color: rgb(254 226 226);
+  background-color: rgba(244, 63, 94, 0.16);
   color: #8d8a88;
   user-select: none;
-  margin-left: -28px;
-  margin-right: -28px;
+  margin-left: -26px;
+  margin-right: -26px;
   padding-left: 26px;
   padding-right: 26px;
-
-  border-left: solid 2px rgb(220 38 38);
-  border-right: solid 2px rgb(220 38 38);
 }
 
 pre code.diff> :not(.added) {

@@ -17,9 +17,8 @@
 }
 
 .markdown-body blockquote {
-  background-color: rgb(241 242 249);
-  padding: 1.5em;
-  margin: 2em 0;
+  /* padding: 1.5em; */
+  /* margin: 2em 0; */
 }
 
 .markdown-body table {

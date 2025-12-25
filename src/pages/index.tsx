@@ -63,7 +63,7 @@ export default function HomePage() {
                 bg-neutral-600/10 text-neutral-700 hover:bg-neutral-700 hover:text-white
                 dark:bg-neutral-300/10 dark:text-neutral-300 dark:hover:bg-neutral-300 dark:hover:text-black'
                 target='_blank'
-                rel='noopener noreferer'
+                rel='noopener noreferrer'
                 href={item.link}
                 title={item.name}
               >
