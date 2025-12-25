@@ -1,7 +1,7 @@
 import { Title } from '@solidjs/meta'
 import { A, useLocation } from '@solidjs/router'
 
-export default function ErrorPage() {
+export default function NotFound() {
 
   const location = useLocation()
   const is404 = location.pathname !== '/error'

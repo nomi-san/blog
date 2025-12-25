@@ -15,11 +15,6 @@ const _pages = import.meta.glob<PageExport>([
   '!../pages/**/_*.tsx',
 ])
 
-// Also include the _error page
-Object.assign(_pages, import.meta.glob<PageExport>(
-  '../pages/_error.tsx',
-))
-
 const _routes = Array<{
   path: string
   match: ReturnType<typeof createMatcher>
@@ -36,15 +31,16 @@ for (const key in _pages) {
 
   // implied paths:
   //  index -> /,
-  //  _error -> /*error
   //  posts/[id] -> /posts/:id
   //  __ -> /
+  //  [...404] -> *404
 
   let path: string
   if (name === '/index') {
     path = '/'
-  } else if (name === '/_error') {
-    path = '*error'
+  } else if (/\/\[\...(\w+)\]/.test(name)) {
+    path = name
+      .replace(/\/\[\...(\w+)\]/, '*$1')
   } else {
     path = name
       .replace(/\__/g, '/')
@@ -59,6 +55,14 @@ for (const key in _pages) {
     component: lazy(page),
   })
 }
+
+_routes.sort((a, b) => {
+  const awc = a.path.includes('*')
+  const bwc = b.path.includes('*')
+  if (awc && !bwc) return 1
+  if (!awc && bwc) return -1
+  return b.path.charCodeAt(0) - a.path.charCodeAt(0)
+})
 
 export const getRoutes = (): RouteDefinition[] => {
   return _routes.map(r => ({
