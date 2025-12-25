@@ -11,16 +11,12 @@ Thấy trên giang hồ dạo này xuất hiện khá nhiều yêu cầu về to
 nhanh, nên tại hạ đây cũng bỏ tí thời gian ra để nghiên cứu. Tuy không phải là
 một game thủ **Liên Minh Huyền Thoại**, nhưng tại hạ cũng đã từng chơi qua nó.
 Sau khi hoàn tất bài viết này, tại hạ lại càng thích nó hơn, không phải là game
-hay, mà là công nghệ tạo ra nó.
+hay, mà là một phần công nghệ làm nên nó.
 
 Bài toán của chúng ta không đơn thuần như tiêu đề, mà là: **tự động chấp nhận
 trận đấu và pick-lock tướng siêu nhanh chỉ bằng trình duyệt web**! Trên thực tế,
 bài viết này nhằm mục đích giúp các vị tìm hiểu về League Client và cách sử dụng
-API.
-
-Nhìn scrollbar đi, nếu các vị đây không muốn dài dòng hay thậm chí là chỉ muốn
-đạt được như tiêu đề thì có thể nhảy thẳng đến phần [**THỰC HIỆN**](#thực-hiện)
-ngay và luôn nhé.
+LCU API.
 
 ## NGÂM CỨU
 
@@ -28,7 +24,7 @@ Trong quyển **Binh Pháp** của **Tôn Tử** có câu:
 
 ![](./sun-tzu-quote.jpg)
 
-> "Biết người biết ta, trăm trận trăm thắng"
+> Biết người biết ta, trăm trận trăm thắng
 
 Đúng vậy, muốn làm được thì phải hiểu rõ về **League Client**, một khi đã thông
 được nó thì mọi chuyện dễ như trở bàn tay 😆
@@ -52,18 +48,17 @@ Bấy giờ, **LCO** được viết bằng C++, còn UI sử dụng nền tản
 **Flash**). Về kết nối và truyền tải dữ liệu giữa client, game và tương tác với
 API core, Riot sử dụng giao thức
 [**RTMP**](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol). AIR như
-là một hệ khép kín, và RTMP là cổng chính để truyền tải dữ liệu, giao tiếp với
+là một hệ khép kín, và RTMP là giao thức chính để truyền tải dữ liệu, giao tiếp với
 bên ngoài.
 
-Sau đấy Riot nhận thấy rằng **AIR** đã dần lỗi thời và **LCO** hiện tại đã khá
-cũ. Trong lúc nền tảng web đang làm mưa làm gió, không cầm lòng trước các trang
-web màu mè cùng hiệu ứng chuyển động lung linh, thế là họ quyết định xây dựng
-một diện mạo mới cho client bằng **HTML** và **JavaScript** (sau khi **HTML5**
-xuất hiện 1 năm).
+Sau đó Riot nhận thấy rằng **AIR** đã dần lỗi thời và **LCO** hiện tại đã khá
+cũ. Trong lúc nền tảng web đang lên ngôi, không kìm lòng trước các trang web
+màu mè cùng hiệu ứng chuyển động, họ quyết định xây dựng một diện mạo mới cho
+client bằng **HTML** và **JavaScript** (sau khi **HTML5** xuất hiện).
 
 ![](./lcu_htmljs_in.png)
 
-Lúc đó, **JavaScript** như là một ông trùm và đứng sau là **node.js**. Nhưng
+Lúc đó, **JavaScript** như một ông trùm và đứng sau là **node.js**. Nhưng
 Riot không muốn phụ thuộc vào **node.js** mà là xây dựng nền tảng riêng tương
 tự, thế là họ đưa ra lựa chọn dị theo concept cũ: vẫn sử dụng **RTMP** kèm bộ xử
 lý responses bất đồng bộ, thay vào đó là xây dựng UI bằng **CEF**.
@@ -85,20 +80,20 @@ source của nhân Chromium và gần như tận dụng mọi thứ từ nó.
 #### Microservices
 
 Đây là nơi chứa các tài nguyên của client, và là nơi phản hồi các request từ UI.
-RTMP sẽ đảm nhiệm làm cổng trung gian truyền tải dữ liệu.
+RTMP sẽ đảm nhiệm làm service trung gian truyền tải dữ liệu.
 
 ![](./lcu_architecture_2.png)
 
 Chẳng hạn, khi bạn click vào xem tướng (Bộ sưu tập > Tướng), UI sẽ gửi một
 request đến **microservices**. Trong lúc chờ phản hồi, UI sẽ hiển thị một loader
-thay thế. Nếu respone thành công, server trả về dữ liệu dạng JSON chứa thông tin
+thay thế. Nếu response thành công, server trả về dữ liệu dạng JSON chứa thông tin
 tướng đã sở hữu, tướng miễn phí, giá cả... và UI xử lý dữ liệu đó để kết xuất
 thành giao diện rồi hiển thị cho bạn xem.
 
 Được biết, CEF có hỗ trợ API của **V8 core** (Javascript engine) để tương tác
-hai chiều với **DOM** trong UI bằng **C++**. Nếu như họ sử dụng trực tiếp theo
-phương pháp này thì có thể sẽ nhanh hơn được phần nào, vừa khép kín, vừa an
-toàn. Chắc do họ lười nên lấy cái sườn cũ ấy mà.
+hai chiều với **DOM** trong UI bằng **C++**. Nếu sử dụng phương pháp này trực
+tiếp có thể sẽ tối ưu hơn về hiệu năng và tính an toàn. Tuy nhiên Riot có lý do
+để giữ lại một số phần của kiến trúc cũ, có thể là đảm bảo tương thích và làm UI nhanh hơn.
 
 #### Swagger docs
 
@@ -113,8 +108,8 @@ Swagger UI cung cấp giao diện dễ nhìn, trực quan. Đến end-user cũng
 ### Tìm cổng kết nối đến LCU
 
 RTMP mà Riot sử dụng là RTMPT (Tunneled - đường hầm), các gói tin được trao đổi
-thông qua HTTP. Khoảng 2018 thì Riot bắt đầu cập nhật bảo mật cho RTMP, thêm
-**TSL**/**SSL** và sử dụng **HTTPS** cho cổng kết nối.
+thông qua HTTP. Khoảng 2018 Riot bắt đầu cập nhật bảo mật cho RTMP, thêm
+**TLS**/**SSL** và sử dụng **HTTPS** cho cổng kết nối.
 
 > Vậy ta chỉ cần biết được cổng kết nối và phương thức xác thực là có thể truy
 > cập vào hệ thống.
@@ -284,20 +279,20 @@ của bạn trong trận.
 > Trong đấu tùy chọn hoặc phòng tập, số này mặc định là **thứ tự gia nhập của
 > bạn** + **số lượng BOT** (nhân vật máy).
 
-```json JSON
+```json
 ...
 "actions": [
     { "actorCellId": 1, "id": 2 },
     { "actorCellId": 2, "id": 3 },
-    { "actorCellId": 3, "id": 1 }
-],
-"localPlayerCellId": 3,
+    { "actorCellId": 3, "id": 1 }   <-----
+],                                       |
+"localPlayerCellId": 3,               ----
 ...
 ```
 
 Để có được `id` một cách tự động, thì ta lấy `localPlayerCellId` - thứ tự chọn
 tướng của bạn (thường gọi là s1, s2, s3...) rồi tìm trong `actions` sẽ có
-`actorCellId` mang giá trị tương tự, từ đó suy ra `id`. Vậy trong đoạn mẫu trên
+`actorCellId` mang giá trị tương tự, từ đó suy ra `id`. Vậy trong đoạn JSON mẫu trên
 thì `id` sẽ là 1.
 
 ## THỰC HIỆN
@@ -308,13 +303,12 @@ thì `id` sẽ là 1.
 
 ### Truy cập và lấy ID tướng
 
-Mở trình duyệt web và nhập dòng sau vào thanh địa chỉ rồi nhấn enter:
+Mở trình duyệt web và nhập dòng sau vào thanh địa chỉ, thay PORT
+thành port của bạn rồi nhấn enter:
 
 ```
 https://127.0.0.1:PORT/lol-champions/v1/owned-champions-minimal
 ```
-
-- Chỗ **PORT** thay bằng port của bạn.
 
 Sau đó, có một hộp thoại yêu cầu đăng nhập hiện ra:
 
@@ -355,13 +349,20 @@ Mở console ngay tại tab lúc nãy để nhập code, nếu bạn sử dụng
 Đầu tiên, tạo một hàm request đơn giản với `fetch`:
 
 ```js
-var request = async (url, method = 'GET', body = undefined) => (
-  await fetch(url, {
-    method,
-    body: JSON.stringify(body),
-    headers: { 'Content-type': 'application/json; charset=UTF-8' },
-  }).then((res) => res.ok ? res.json() : {})
-)
+const request = async (url, method = 'GET', body = undefined) => {
+  try {
+    const res = await fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+    })
+    if (!res.ok) return {}
+    try { return await res.json() } catch { return {} }
+  } catch (e) {
+    console.warn('request error', e)
+    return {}
+  }
+}
 ```
 
 - Lý do mình loại IE ra vì nó không hỗ trợ `fetch`, có thể thay bằng XHR
@@ -372,79 +373,76 @@ var request = async (url, method = 'GET', body = undefined) => (
 
 Hàm kiểm tra có phải đang chờ chấp nhận trận đấu:
 
-```js console
-var isMatchFound = async () => (
-  (await request('/lol-matchmaking/v1/ready-check'))
-    .state === 'InProgress'
-)
+```js
+const isMatchFound = async () => {
+  const r = await request('/lol-matchmaking/v1/ready-check')
+  return r && r.state === 'InProgress'
+}
 ```
 
 - Khi tìm thấy trận, thuộc tính state sẽ mang giá trị là `InProgress`.
 
 Hàm chấp nhận trận đấu:
 
-```js console
-var acceptMatch = async () => (
-  await request('/lol-matchmaking/v1/ready-check/accept', 'POST')
-)
+```js
+const acceptMatch = async () => {
+  return request('/lol-matchmaking/v1/ready-check/accept', 'POST')
+}
 ```
 
 Hàm lấy action ID:
 
-```js console
-var getActionId = async () => {
-  const { localPlayerCellId, actions } = await request(
-    '/lol-champ-select/v1/session',
-  )
-  if (!actions) return -1
-  return actions[0]
-    .find((a) => a.actorCellId === localPlayerCellId)
-    .id
+```js
+const getActionId = async () => {
+  const s = await request('/lol-champ-select/v1/session')
+  if (!s || !s.actions) return -1
+  const local = s.localPlayerCellId
+  const act = s.actions.find(a => a.actorCellId === local)
+  return act ? act.id : -1
 }
 ```
 
-- Trả về -1 nếu không phải đang chọn tướng. Dùng `find` để tìm `id` của chính
-  mình.
+- Trả về -1 nếu không phải đang chọn tướng.
+- Dùng `find` để tìm `id` của chính mình.
 
 Hàm `pick` và hàm `lock`:
 
-```js console
-var pick = async (id, championId) => (
-  Object.keys(
-    await request(
-      `/lol-champ-select/v1/session/actions/${id}`,
-      'PATCH',
-      { championId },
-    ),
-  ).length === 0
-)
+```js
+const pick = async (id, championId) => {
+  const r = await request(`/lol-champ-select/v1/session/actions/${id}`, 'PATCH', { championId })
+  // endpoint often returns empty body on success
+  return r !== null
+}
 
-var lock = async (id) => (
-  await request(`/lol-champ-select/v1/session/actions/${id}/complete`, 'POST')
-)
+const lock = async (id) => {
+  return request(`/lol-champ-select/v1/session/actions/${id}/complete`, 'POST')
+}
 ```
 
 - Tham số `id` lấy từ hàm `getActionId`
 - Khi chọn tướng thành công thì ta được đoạn JSON rỗng
 
-Và cuối cùng là hàm auto chấp nhận trận dấu và pick-lock:
+Và cuối cùng là hàm auto chấp nhận trận đấu và pick-lock:
 
-```js console Khi khóa tướng xong sẽ dừng auto.
-var start = (championIds = [157]) => {
+```js
+// Khi khóa tướng xong sẽ dừng auto.
+const start = (championIds = [157], intervalMs = 250) => {
   const inv = setInterval(async () => {
-    if (await isMatchFound()) {
-      await acceptMatch()
-    } else {
+    try {
+      if (await isMatchFound()) { await acceptMatch(); return }
       const id = await getActionId()
       if (id > -1) {
-        await championIds.some(
-          async (champId) => await pick(id, champId),
-        )
+        for (const champId of championIds) {
+          if (await pick(id, champId)) break
+        }
         await lock(id)
         clearInterval(inv)
       }
+    } catch (e) {
+      console.warn('auto error', e)
     }
-  }, 250)
+  }, intervalMs)
+  return () => clearInterval(inv)
 }
 ```
 
@@ -454,7 +452,7 @@ var start = (championIds = [157]) => {
 - Dùng `setInterval` để check liên tục mỗi 250ms, vì ta không có callback event
   nào cả
 
-### Test
+### Thử nghiệm
 
 Chỉ cần gọi hàm `start` và truyền vào một mảng ID của tướng:
 
