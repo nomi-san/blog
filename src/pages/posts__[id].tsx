@@ -40,6 +40,14 @@ export default function PostPage() {
     <Show when={post()} keyed>
       {(post) => (
         <>
+          <MetaTags
+            article
+            title={post.title}
+            description={post.description}
+            image={post.image}
+            path={post.path}
+          />
+
           <Show when={post.color}>
             <div
               class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
@@ -48,14 +56,6 @@ export default function PostPage() {
           </Show>
 
           <article class='max-w-screen-md px-4 pt-8 pb-16 md:pt-16 mx-auto'>
-            <MetaTags
-              article
-              title={post.title}
-              description={post.description}
-              image={post.image}
-              path={post.path}
-            />
-
             {/* post title */}
             <h1 class='!leading-[1.2] mt-6 text-4xl font-bold text-gray-800 dark:text-neutral-200 sm:text-5xl'>
               {post.title}
@@ -75,11 +75,12 @@ export default function PostPage() {
                     <a
                       class='hover:underline flex items-center gap-2'
                       target='_blank'
-                      rel='noopener noreferer'
+                      rel='noopener noreferrer'
                       href={conf.author.social.GitHub}
                     >
                       <img
                         src={conf.author.avatar}
+                        alt={conf.author.name}
                         class='h-[1.75em] rounded-full'
                       />
                       <span>{conf.author.name}</span>
@@ -101,16 +102,18 @@ export default function PostPage() {
               </div>
             </div>
 
+            {/* post cover image */}
             <div class='my-16'>
               <img
                 src={post.image}
-                alt=''
+                alt='Post cover image'
                 class='mx-auto max-w-screen-sm w-full mt-4 sm:mt-0'
                 loading='lazy'
                 decoding='async'
               />
             </div>
 
+            {/* post content */}
             <div
               class='markdown-body'
               innerHTML={post.html}

@@ -5,9 +5,11 @@ import '../styles/blog.css'
 import { useContext } from 'solid-js'
 import { MetaContext } from '@solidjs/meta'
 import { themeScript } from '$lib/theme'
+import conf from '$blog-config'
 
 import Footer from '$components/Footer'
 import Header from '$components/Header'
+import Analytics from '$components/Analytics'
 
 export default function Layout(props: any) {
 
@@ -29,7 +31,7 @@ export default function Layout(props: any) {
         {props.children}
       </div>
       <Footer />
-      {/* <Analytics ga_tracking_id={conf.ga_tracking_id} /> */}
+      <Analytics trackingId={conf.ga_tracking_id} />
     </main>
   )
 }

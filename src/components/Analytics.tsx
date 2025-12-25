@@ -7,11 +7,9 @@ declare global {
   }
 }
 
-type AnalyticsProps = {
-  ga_tracking_id: string
-}
-
-const Analytics: VoidComponent<AnalyticsProps> = (props) => {
+const Analytics: VoidComponent<{
+  trackingId: string
+}> = (props) => {
 
   onMount(() => {
     const dataLayer = window['dataLayer'] = (window['dataLayer'] || [])
@@ -19,13 +17,13 @@ const Analytics: VoidComponent<AnalyticsProps> = (props) => {
       dataLayer.push(arguments)
     }
     gtag('js', new Date())
-    gtag('config', props.ga_tracking_id)
+    gtag('config', props.trackingId)
   })
 
   return (
     <script
       async
-      src={`https://www.googletagmanager.com/gtag/js?id=${props.ga_tracking_id}`}
+      src={`https://www.googletagmanager.com/gtag/js?id=${props.trackingId}`}
     >
     </script>
   )
