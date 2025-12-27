@@ -1,8 +1,9 @@
 import { createAsync, useLocation } from '@solidjs/router'
 
 export function useDataAsync<T>() {
-  const path = useLocation().pathname
+  const location = useLocation()
   return createAsync(async () => {
+    const path = location.pathname
     const module = await import(/*@vite-ignore*/ `${path === '/' ? '' : path}/index$ctx.js`)
     return <T>module.default
   })
