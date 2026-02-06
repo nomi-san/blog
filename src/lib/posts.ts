@@ -1,58 +1,85 @@
-import { matter, toHtml } from './markdown.ts'
-import { exists } from 'https://deno.land/std@0.200.0/fs/exists.ts'
+import fs from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
+import { matter, toHtml } from './markdown'
 
-export interface IPost {
+export type PostHeader = {
   id: string
   title: string
   description: string
   image?: string
+  color?: string
   tags: string[]
-  date: Date
+  date: string
   path: string
-  html?: string
 }
 
-const map = new Map<string, IPost>()
-const root = `${Deno.cwd()}/static/posts`
+export type PostData = PostHeader & {
+  html: string
+}
 
-for await (const dir of Deno.readDir(root)) {
-  if (dir.isDirectory) {
-    const path = `${root}/${dir.name}/index.md`
-    if (await exists(path)) {
-      const raw = await Deno.readTextFile(path)
-      const { data, content } = matter<IPost>(raw)
+const _postCache = new Map<string, PostData>()
+
+async function fetchPosts() {
+  if (_postCache.size > 0) {
+    return
+  }
+
+  const root = join(process.cwd(), 'posts')
+  const entries = await fs.readdir(root, { withFileTypes: true })
+
+  for (const dir of entries) {
+    if (!dir.isDirectory()) {
+      continue
+    }
+
+    const path = join(root, dir.name, 'index.md')
+    if (existsSync(path)) {
+
+      const raw = await fs.readFile(path, 'utf-8')
+      const { data, content } = matter<PostData>(raw)
 
       data.id = dir.name
       data.path = `/posts/${data.id}`
       data.html = await toHtml(content, data.path)
 
       if (typeof data.date === 'string') {
-        data.date = new Date(data.date)
+        data.date = new Date(data.date).toUTCString()
       }
 
+      // Normalize image path
       if (typeof data.image === 'string') {
         if (data.image.startsWith('./')) {
           data.image = data.path + data.image.substring(1)
         }
       }
 
-      if (!Array.isArray(data.tags)) {
+      // Normalize tags
+      if (typeof data.tags === 'string') {
+        const stags = data.tags as string
+        data.tags = stags.split(/[,;\|]/).map((t) => t.trim())
+      } else if (!Array.isArray(data.tags)) {
         data.tags = []
       }
 
-      map.set(data.id, data)
+      _postCache.set(data.id, data)
     }
   }
 }
 
-export const hasPost = (id: string) => map.has(id)
-export const getPost = (id: string) => map.get(id)!
+export async function getPost(id: string) {
+  await fetchPosts()
+  return _postCache.get(id)
+}
 
-export const listPosts = () =>
-  [...map.values()]
+export async function listPosts() {
+  await fetchPosts()
+  return Array.from(_postCache.values())
     .map((post) => {
-      const r = { ...post }
-      delete r.html
-      return r
+      const { html, ...rest } = post
+      return rest as PostHeader
     })
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
+}

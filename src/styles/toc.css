@@ -1,0 +1,86 @@
+#toc>.toc-list {
+  overflow: hidden;
+  position: relative;
+}
+
+#toc {
+  color: #111;
+}
+
+.dark #toc {
+  color: #cfcfcf;
+}
+
+#toc.hidden {
+  display: none;
+}
+
+#toc>.toc-list li {
+  list-style: none;
+}
+
+#toc .toc-list {
+  margin: 0;
+  padding-left: 15px;
+}
+
+#toc a.toc-link {
+  color: currentColor;
+  height: 100%;
+}
+
+#toc a:hover {
+  border: none;
+}
+
+#toc li {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+#toc .is-collapsible {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 300ms ease-in-out;
+}
+
+#toc .is-collapsed {
+  max-height: 0;
+}
+
+#toc .is-active-link {
+  color: #000 !important;
+}
+
+.dark #toc .is-active-link {
+  color: #cfcfcf !important;
+}
+
+#toc .toc-link::before {
+  background-color: #e6e6e6;
+  content: " ";
+  display: inline-block;
+  height: inherit;
+  left: 0;
+  margin-top: -1px;
+  position: absolute;
+  width: 2px;
+}
+
+.dark #toc .toc-link::before {
+  background-color: #444;
+}
+
+#toc .is-active-link::before {
+  background-color: #000 !important;
+}
+
+.dark #toc .is-active-link::before {
+  background-color: #cfcfcf !important;
+}
+
+@media only screen and (max-width: 1260px) {
+  #toc {
+    display: none;
+  }
+}
