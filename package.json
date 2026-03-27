@@ -17,7 +17,7 @@
     "refractor": "^5.0.0",
     "solid-js": "^1.9.10",
     "tocbot": "^4.36.4",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
     "@fontsource-variable/inter": "^5.2.8",
