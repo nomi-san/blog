@@ -13,7 +13,7 @@
     "@solidjs/router": "^0.15.4",
     "hast-util-to-html": "^9.0.5",
     "marked": "^17.0.1",
-    "mermaid": "^11.12.2",
+    "mermaid": "^11.15.0",
     "refractor": "^5.0.0",
     "solid-js": "^1.9.10",
     "tocbot": "^4.36.4",
