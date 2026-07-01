@@ -40,7 +40,7 @@ function useServerDirective(): Plugin {
       if (!options?.ssr && id.match(/\.(js|ts|jsx|tsx)$/)) {
         return code.replace(
           /(['"])use\s+server\1;*/gm,
-          '}; if (false) async () => {'
+          'return void 0;'
         )
       }
     },
