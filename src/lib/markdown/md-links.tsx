@@ -21,25 +21,19 @@ marked.use({
         </Dynamic>
       ))
     },
-    link: (token) => renderToString(() => {
-      const href = token.href
-      const text = token.text
-      if (/^(\/[^\/]|\?|\#)/.test(href)) {
-        return (
-          <a
-            href={href}
-            innerHTML={text}
-          />
-        )
-      }
-      return (
+    link(token) {
+      const inner = this.parser.parseInline(token.tokens)
+      const external = !/^(\/[^\/]|\?|\#)/.test(token.href)
+
+      return renderToString(() => (
         <a
-          href={href}
-          target='_blank'
-          rel='external noopener noreferrer'
-          innerHTML={text}
+          href={token.href}
+          title={token.title ?? undefined}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'external noopener noreferrer' : undefined}
+          innerHTML={inner}
         />
-      )
-    }),
+      ))
+    },
   },
 })
