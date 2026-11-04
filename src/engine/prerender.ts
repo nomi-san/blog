@@ -19,6 +19,8 @@ const vite = await createServer({
   appType: 'custom',
   mode: 'production',
   server: { middlewareMode: true },
+  // Nothing here runs in a browser, so there is nothing to pre-bundle for one.
+  optimizeDeps: { noDiscovery: true },
   build: {
     ssr: true,
     minify: 'terser',
