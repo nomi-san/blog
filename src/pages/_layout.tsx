@@ -14,7 +14,7 @@ import conf from '$blog-config'
 import Footer from '$components/Footer'
 import Header from '$components/Header'
 import Analytics from '$components/Analytics'
-import NotFound from './[...404]'
+import NotFound from '$components/NotFound'
 
 import { BProgress } from '@bprogress/core'
 
