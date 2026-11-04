@@ -10,13 +10,13 @@ const ImageView = lazy(() => import('$components/ImageView'))
 const TocView = lazy(() => import('$components/TocView'))
 
 export const preload = async (params: { id: string }) => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { getPost } = await import('$lib/posts')
   return await getPost(params.id)
 }
 
 export const prerender = async () => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { listPosts } = await import('$lib/posts')
   const posts = await listPosts()
   return posts.map(post => ({ id: post.id }))

@@ -9,7 +9,7 @@ import conf from '$blog-config'
 import ThemeButton from '../components/ThemeButton'
 
 export const preload = async () => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { listPosts } = await import('$lib/posts')
   return await listPosts()
 }
