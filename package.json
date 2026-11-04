@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && tsx ./src/engine/prerender.ts",
-    "preview": "npx serve dist/"
+    "preview": "npx serve dist/",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@bprogress/core": "^1.3.4",

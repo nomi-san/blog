@@ -114,8 +114,6 @@ marked.use({
       renderToString(() => {
         const info = token.lang || ''
         const lang = info.match(/^\w+/)?.at(0)?.trim() || ''
-        const file = info.match(/\!([^\@\n]+)/)?.at(1)?.trim()
-        const legend = info.match(/\@([^\!\n]+)/)?.at(1)?.trim()
 
         if (lang === 'mermaid') {
           return <div class='mermaid'>{token.text}</div>

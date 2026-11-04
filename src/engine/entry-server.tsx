@@ -1,4 +1,4 @@
-import { basename, extname } from 'node:path'
+import { extname } from 'node:path'
 import { renderToStringAsync, generateHydrationScript, getAssets } from 'solid-js/web'
 import { getPreloader, getPrerenderRoutes } from './router'
 import { renderErrors } from './boundary'
