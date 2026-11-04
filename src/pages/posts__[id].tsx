@@ -1,4 +1,4 @@
-import { For, lazy, onMount, Show } from 'solid-js'
+import { createEffect, For, lazy, Show } from 'solid-js'
 import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
@@ -26,14 +26,19 @@ export default function PostPage() {
 
   const post = useDataAsync<PostData>()
 
-  onMount(() => {
+  // Runs for each post shown here, mermaid is only loaded when one has a diagram.
+  createEffect(() => {
+    if (!post() || !document.querySelector('.mermaid')) {
+      return
+    }
+
     import('mermaid').then((m) => {
       const mermaid = m.default
       mermaid.initialize({
-        startOnLoad: true,
+        startOnLoad: false,
         theme: useIsDark()() ? 'dark' : 'default',
       })
-      mermaid.contentLoaded()
+      mermaid.run({ suppressErrors: true })
     })
   })
 
