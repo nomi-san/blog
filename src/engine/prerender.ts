@@ -51,7 +51,7 @@ for (const url of routes) {
   await fs.writeFile(filePath, html)
 
   if (context) {
-    const ctxFile = `dist/${url}/index$ctx.js`
+    const ctxFile = `dist/${url}/index.ctx.js`
     await fs.writeFile(path.join(root, ctxFile), context)
   }
 
