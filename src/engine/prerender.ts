@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path, { join } from 'node:path'
 import url from 'node:url'
 import { createServer } from 'vite'
+import { fillTemplate } from './template'
 
 const root = process.cwd()
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
@@ -38,10 +39,7 @@ for (const url of routes) {
 
   const [appHtml, appHead, context] = await render(url, manifest)
 
-  // Replacer functions: post text may contain "$&" and other replace() patterns.
-  const html = template
-    .replace(`<!--app-head-->`, () => appHead)
-    .replace(`<!--app-html-->`, () => appHtml)
+  const html = fillTemplate(template, appHead, appHtml)
 
   // Static hosts look for /404.html when they serve an unknown url.
   const file = url === '/404' ? 'dist/404.html' : `dist/${url}/index.html`
