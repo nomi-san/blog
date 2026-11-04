@@ -365,6 +365,15 @@ describe('post styles', () => {
     }
   })
 
+  it('sets h4 larger than body text', async (t) => {
+    const { page } = await open(t)
+    await visit(page, `/posts/${postIds.find((id) => /^#### /m.test(source(id)))}/`)
+
+    const [h4, paragraph] = await page.evaluate(() =>
+      ['.markdown-body h4', '.markdown-body > p'].map((selector) => parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize)))
+    assert.ok(h4 > paragraph, `h4 is ${h4}px and body text ${paragraph}px`)
+  })
+
   it('sets lists and code blocks like the blocks around them', async (t) => {
     const { page } = await open(t)
     await visit(page, demoPost)
