@@ -1,5 +1,5 @@
 import { join } from 'node:path'
-import { ViteDevServer, type Plugin } from 'vite'
+import { type Plugin, type ViteDevServer } from 'vite'
 
 const root = process.cwd()
 const resolve = (p: string) => join(root, p).replace(/\\/g, '/')
@@ -57,7 +57,7 @@ export function preloadResolver(): Plugin {
       if (id.endsWith(suffix)) {
         const path = id.replace(suffix, '')
         try {
-          const { getPreloader } = (await _server.ssrLoadModule(join(__dirname, './router'))) as typeof import('./router')
+          const { getPreloader } = (await _server.ssrLoadModule(join(import.meta.dirname, './router'))) as typeof import('./router')
           const preloader = getPreloader(path)
           const data = await preloader?.()
           // Otherwise fail to load, as in production where no file is written for it.

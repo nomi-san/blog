@@ -3,7 +3,7 @@ import path from 'node:path'
 import { type Plugin } from 'vite'
 import solidPlugin from '@solidjs/vite-plugin'
 import compressionPlugin from 'vite-plugin-compression2'
-import { pagesResolver, preloadResolver } from './resolver'
+import { pagesResolver, preloadResolver } from './resolver.ts'
 
 const root = process.cwd()
 
