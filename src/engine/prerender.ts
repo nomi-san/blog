@@ -43,7 +43,8 @@ for (const url of routes) {
     .replace(`<!--app-head-->`, () => appHead)
     .replace(`<!--app-html-->`, () => appHtml)
 
-  const file = `dist/${url}/index.html`
+  // Static hosts look for /404.html when they serve an unknown url.
+  const file = url === '/404' ? 'dist/404.html' : `dist/${url}/index.html`
   const filePath = path.join(root, file).replace(/\\/g, '/')
 
   await fs.mkdir(path.dirname(filePath), { recursive: true })
