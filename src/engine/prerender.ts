@@ -2,7 +2,10 @@ import fs from 'node:fs/promises'
 import path, { join } from 'node:path'
 import url from 'node:url'
 import { createServer } from 'vite'
-import { fillTemplate } from './template'
+import { fillTemplate, stripAssetLinks } from './template'
+
+// The output ships to readers, so render with Solid's production builds.
+process.env.NODE_ENV = 'production'
 
 const root = process.cwd()
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
@@ -22,8 +25,10 @@ const vite = await createServer({
   }
 })
 
-const template = await fs.readFile(path.join(root, 'dist/index.html'), 'utf-8')
-const manifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/ssr-manifest.json'), 'utf-8')) as Record<string, string[]>
+const template = stripAssetLinks(await fs.readFile(path.join(root, 'dist/index.html'), 'utf-8'))
+const ssrManifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/ssr-manifest.json'), 'utf-8')) as Record<string, string[]>
+// Solid needs the client manifest to find the chunks of lazy() components.
+const clientManifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/manifest.json'), 'utf-8'))
 
 // load server entry module
 const { render, getPrerenderRoutes } = (await vite.ssrLoadModule(join(__dirname, './entry-server'))) as typeof import('./entry-server')
@@ -37,7 +42,7 @@ for (const url of routes) {
   // template = await vite.transformIndexHtml(url, template)
   // render = (await vite.ssrLoadModule('/src/engine/entry-server.tsx')).render
 
-  const [appHtml, appHead, context] = await render(url, manifest)
+  const [appHtml, appHead, context] = await render(url, ssrManifest, clientManifest)
 
   const html = fillTemplate(template, appHead, appHtml)
 

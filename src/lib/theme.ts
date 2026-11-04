@@ -1,48 +1,49 @@
 import { createRoot, createSignal } from 'solid-js'
-import { isServer } from 'solid-js/web'
+import { isServer } from '@solidjs/web'
 
 const DEFAULT_APPEARANCE: string = 'auto'
 const APPEARANCE_KEY = 'appearance'
 
 let query: MediaQueryList
-let userPreference: string | null
-let [isDark, setDark] = createRoot(() => createSignal(false))
+let userPreference: string | null = null
+let initialDark = false
 
 if (!isServer && typeof window === 'object') {
   query = window.matchMedia('(prefers-color-scheme: dark)')
   userPreference = localStorage.getItem(APPEARANCE_KEY)
 
-  setDark(
+  initialDark =
     (DEFAULT_APPEARANCE === 'dark' && userPreference == null) ||
     (userPreference === 'auto' || userPreference == null
       ? query.matches : userPreference === 'dark')
-  )
+
+  // Prerendered pages already did this with themeScript, dev has no such script.
+  setClass(initialDark)
 
   window.addEventListener('load', () => {
     query.onchange = (e: any) => {
       if (userPreference === 'auto' || userPreference == null) {
-        setDark(dark => {
-          setClass((dark = e.matches))
-          return dark
-        })
+        setDark(e.matches)
+        setClass(e.matches)
       }
     }
   })
 }
 
+const [isDark, setDark] = createRoot(() => createSignal(initialDark))
+
 export const useIsDark = () => isDark
 
 export function toggleTheme() {
-  setDark(dark => {
-    setClass((dark = !dark))
+  const dark = !isDark()
+  setDark(dark)
+  setClass(dark)
 
-    userPreference = dark
-      ? query.matches ? 'auto' : 'dark'
-      : query.matches ? 'light' : 'auto'
+  userPreference = dark
+    ? query.matches ? 'auto' : 'dark'
+    : query.matches ? 'light' : 'auto'
 
-    localStorage.setItem(APPEARANCE_KEY, userPreference)
-    return dark
-  })
+  localStorage.setItem(APPEARANCE_KEY, userPreference)
 }
 
 function setClass(dark: boolean) {

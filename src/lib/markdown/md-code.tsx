@@ -2,7 +2,7 @@ import { For, Show, VoidComponent } from 'solid-js'
 import { marked } from 'marked'
 import { refractor } from 'refractor/all'
 import { toHtml } from 'hast-util-to-html'
-import { renderToString } from 'solid-js/web'
+import { renderHtml } from './render'
 
 function escapeHtml(code: string) {
   return code
@@ -111,7 +111,7 @@ const Terminal: VoidComponent<{ code: string }> = (props) => {
 marked.use({
   renderer: {
     code: (token) =>
-      renderToString(() => {
+      renderHtml(() => {
         const info = token.lang || ''
         const lang = info.match(/^\w+/)?.at(0)?.trim() || ''
 

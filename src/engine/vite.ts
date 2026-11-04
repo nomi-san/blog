@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { type Plugin } from 'vite'
-import solidPlugin from 'vite-plugin-solid'
+import solidPlugin from '@solidjs/vite-plugin'
 import compressionPlugin from 'vite-plugin-compression2'
 import { pagesResolver, preloadResolver } from './resolver'
 
@@ -12,19 +12,20 @@ function overrideConfig(): Plugin {
     name: 'blog-override-config',
     config: () => ({
       build: {
+        manifest: true,
         ssrManifest: true,
       },
       ssr: {
         noExternal: [
           'solid-js',
-          'solid-js/web',
-          '@solidjs/router'
+          '@solidjs/web',
+          '@solidjs/router',
+          '@solidjs/meta',
         ],
       },
       resolve: {
         alias: {
           '~/src': path.join(root, 'src'),
-          '~/node_modules': path.join(root, 'node_modules'),
         },
       }
     }),
@@ -95,9 +96,8 @@ export default function blogPlugin(options?: {
     preloadResolver(),
     solidPlugin({
       ssr: true,
-      solid: {
-        hydratable: true,
-      },
+      // prerender.ts renders through a dev server, which defaults to Solid's dev builds.
+      ...(process.env.NODE_ENV === 'production' ? { dev: false } : {}),
     }),
     overrideConfig(),
     copyPostAssets(),

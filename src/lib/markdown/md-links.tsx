@@ -1,6 +1,7 @@
 import { marked } from 'marked'
-import { Dynamic, renderToString } from 'solid-js/web'
+import { dynamic } from '@solidjs/web'
 import { __slugs } from '.'
+import { renderHtml } from './render'
 
 // Keeps letters and digits of any script, repeated headings get a numeric suffix.
 function slugify(html: string) {
@@ -24,22 +25,23 @@ marked.use({
         renderer: null,
       })
       const id = slugify(inner)
+      const Heading = dynamic(() => `h${token.depth}`)
 
-      return renderToString(() => (
-        <Dynamic component={`h${token.depth}`} id={id}>
+      return renderHtml(() => (
+        <Heading id={id}>
           <a
             href={`#${id}`}
             class='heading-link'
             innerHTML={inner}
           />
-        </Dynamic>
+        </Heading>
       ))
     },
     link(token) {
       const inner = this.parser.parseInline(token.tokens)
       const external = !/^(\/[^\/]|\?|\#)/.test(token.href)
 
-      return renderToString(() => (
+      return renderHtml(() => (
         <a
           href={token.href}
           title={token.title ?? undefined}

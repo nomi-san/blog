@@ -1,4 +1,4 @@
-import { onCleanup, onMount, VoidComponent } from 'solid-js'
+import { onSettled, VoidComponent } from 'solid-js'
 import type Tocbot from 'tocbot'
 import '../styles/toc.css'
 
@@ -18,7 +18,7 @@ const TocView: VoidComponent<TocViewProps> = (props) => {
     }
   }
 
-  onMount(() => {
+  onSettled(() => {
     let tocbot: typeof Tocbot | undefined
     let observer: IntersectionObserver | undefined
 
@@ -64,11 +64,11 @@ const TocView: VoidComponent<TocViewProps> = (props) => {
 
     window.addEventListener('resize', handleResize)
 
-    onCleanup(() => {
+    return () => {
       tocbot?.destroy()
       observer?.disconnect()
       window.removeEventListener('resize', handleResize)
-    })
+    }
   })
 
   return (

@@ -7,9 +7,8 @@ interface TimeProps {
 }
 
 const TimeTag: VoidComponent<TimeProps> = (props) => {
-  const date = new Date(props.datetime)
-  const iso = date.toISOString()
-  const text = date
+  const date = () => new Date(props.datetime)
+  const text = () => date()
     .toLocaleDateString('vi', {
       timeZone: 'UTC',
       day: '2-digit',
@@ -19,7 +18,7 @@ const TimeTag: VoidComponent<TimeProps> = (props) => {
 
   return (
     <time class={props.class}
-      dateTime={iso}>{text}</time>
+      datetime={date().toISOString()}>{text()}</time>
   )
 }
 

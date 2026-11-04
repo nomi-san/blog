@@ -1,5 +1,5 @@
 import { Show, VoidComponent } from 'solid-js'
-import { A, useLocation } from '@solidjs/router'
+import { useLocation } from '@solidjs/router'
 import ThemeButton from './ThemeButton'
 
 const Header: VoidComponent = () => {
@@ -10,7 +10,7 @@ const Header: VoidComponent = () => {
       <header class='header'>
         <div class='max-w-screen-md flex justify-between px-4 pt-4 pb-4 md:pt-8 mx-auto'>
           <div class="animate show">
-            <A
+            <a
               href="/"
               class="relative group w-fit flex pl-7 pr-3 py-1.5 flex-nowrap rounded 
                 border border-black/15 dark:border-white/20 hover:bg-black/5 
@@ -22,7 +22,7 @@ const Header: VoidComponent = () => {
                 <polyline points="12 5 5 12 12 19" class="translate-x-1 group-hover:translate-x-0 transition-transform duration-100 ease-in-out" />
               </svg>
               <span class="text-sm">Back to home</span>
-            </A>
+            </a>
           </div>
           <div>
             <ThemeButton />

@@ -1,19 +1,15 @@
-import { Suspense } from 'solid-js'
-import { Router } from '@solidjs/router'
-import { MetaProvider } from '@solidjs/meta'
+import { Loading } from 'solid-js'
 import Layout from '~/src/pages/_layout'
-import { getRoutes } from './router'
+import { AppRouter } from './router'
 
 export function Root(props: {
   url?: string
 }) {
   return (
-    <MetaProvider>
-      <Suspense>
-        <Router url={props.url} root={Layout}>
-          {getRoutes()}
-        </Router>
-      </Suspense>
-    </MetaProvider>
+    <Loading>
+      <AppRouter url={props.url}>
+        {(section) => <Layout>{section.children}</Layout>}
+      </AppRouter>
+    </Loading>
   )
 }

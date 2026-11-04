@@ -1,7 +1,13 @@
 /* @refresh reload */
 import './polyfills'
-import { hydrate, render } from 'solid-js/web'
+import { configureClientErrors } from 'solid-js'
+import { hydrate, render } from '@solidjs/web'
 import { Root } from './root'
+
+// A boundary's fallback hides the failure, so keep it visible in the console.
+configureClientErrors({
+  onError: (error) => console.error(error),
+})
 
 const container = document.getElementById('root') as HTMLElement
 const app = () => <Root url={window.location.pathname} />

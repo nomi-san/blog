@@ -1,6 +1,6 @@
 import { marked } from 'marked'
 import { Show, VoidComponent } from 'solid-js'
-import { renderToString } from 'solid-js/web'
+import { renderHtml } from './render'
 import { __base } from '.'
 
 const ImageTag: VoidComponent<{
@@ -40,7 +40,7 @@ marked.use({
         src = `${base}/${src.substring(2)}`
       }
 
-      return renderToString(() => (
+      return renderHtml(() => (
         <ImageTag
           src={src}
           height={height}

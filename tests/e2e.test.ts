@@ -102,6 +102,52 @@ describe('home page', () => {
     await visit(page, '/')
     assert.deepEqual(requests.filter((url) => url.includes('.ctx.js')), [])
   })
+
+  it('loads every asset once', async (t) => {
+    const { page, requests } = await open(t)
+    await visit(page, `/posts/${withImage}/`)
+    await page.waitForLoadState('networkidle')
+
+    const assets = requests.filter((url) => url.startsWith('/assets/'))
+    assert.deepEqual(assets.filter((url, index) => assets.indexOf(url) !== index), [])
+  })
+})
+
+describe('document head', () => {
+  const titles = (page: Page) =>
+    page.evaluate(() => Array.from(document.querySelectorAll('title')).map((title) => title.textContent))
+
+  it('keeps one title, updated on navigation', async (t) => {
+    const { page } = await open(t)
+    await visit(page, '/')
+    const home = await page.title()
+    assert.deepEqual(await titles(page), [home])
+
+    await openPost(page, withoutDiagram)
+    await postTitle(page).waitFor()
+    await page.waitForFunction((title) => document.title !== title, home)
+    const post = await page.title()
+    assert.deepEqual(await titles(page), [post])
+    assert.ok(post.includes(await postTitle(page).innerText()))
+
+    await page.locator('header a[href="/"]').click()
+    await page.waitForFunction((title) => document.title === title, home)
+    assert.deepEqual(await titles(page), [home])
+  })
+
+  it('replaces the page metadata on navigation', async (t) => {
+    const { page } = await open(t)
+    await visit(page, '/')
+    const ogUrl = () => page.locator('meta[property="og:url"]').getAttribute('content')
+    const homeUrl = await ogUrl()
+
+    await openPost(page, withoutDiagram)
+    await postTitle(page).waitFor()
+    await page.waitForFunction((url) => document.querySelector('meta[property="og:url"]')?.getAttribute('content') !== url, homeUrl)
+
+    assert.match(await ogUrl() ?? '', new RegExp(`/posts/${withoutDiagram}$`))
+    assert.equal(await page.locator('meta[property="og:url"]').count(), 1)
+  })
 })
 
 describe('theme', () => {

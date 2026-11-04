@@ -1,4 +1,4 @@
-import { VoidComponent, onMount } from 'solid-js'
+import { VoidComponent, onSettled } from 'solid-js'
 
 declare global {
   interface Window {
@@ -11,7 +11,7 @@ const Analytics: VoidComponent<{
   trackingId: string
 }> = (props) => {
 
-  onMount(() => {
+  onSettled(() => {
     const dataLayer = window['dataLayer'] = (window['dataLayer'] || [])
     const gtag = window['gtag'] = function (..._) {
       dataLayer.push(arguments)

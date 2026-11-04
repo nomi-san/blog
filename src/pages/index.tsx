@@ -1,5 +1,4 @@
 import { Component, For, Show, VoidComponent } from 'solid-js'
-import { A } from '@solidjs/router'
 import { useDataAsync } from '@engine/client'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
@@ -37,7 +36,7 @@ export default function HomePage() {
       </Show>
 
       <section class='max-w-screen-sm h-full px-6 py-20 mx-auto flex flex-col items-center justify-center'>
-        <A href='/' class='flex flex-col items-center'>
+        <a href='/' class='flex flex-col items-center'>
           <div>
             <img
               class='object-cover size-28 border-4 dark:border-transparent rounded-full pointer-events-none select-none'
@@ -47,7 +46,7 @@ export default function HomePage() {
           <h1 class='mt-3 text-3xl font-bold text-gray-900 dark:text-gray-200'>
             {conf.title}
           </h1>
-        </A>
+        </a>
 
         <p class='text-lg mt-2 text-gray-600 dark:text-neutral-400 text-center'>
           {conf.description}
@@ -107,7 +106,7 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
           </div>
         </div>
       </div>
-      <A
+      <a
         class='sm:col-span-3 sm:pl-8 sm:border-l sm:border-black/15 dark:sm:border-white/20 flex flex-col gap-4'
         href={`${props.post.path}/`}
       >
@@ -123,7 +122,7 @@ const PostCard: VoidComponent<{ post: PostHeader }> = (props) => {
         <div class='text-gray-800 dark:text-neutral-300 leading-relaxed'>
           {props.post.description}
         </div>
-      </A>
+      </a>
     </div>
   )
 }

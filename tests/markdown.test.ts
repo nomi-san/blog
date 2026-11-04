@@ -211,6 +211,20 @@ describe('code blocks', () => {
   })
 })
 
+describe('post html', () => {
+  it('has no hydration keys', async () => {
+    const html = await render([
+      '## Title',
+      '[link](https://a.example)',
+      '![Caption](/x.png)',
+      fence('js', 'const a = 1'),
+      fence('c', '+int a;'),
+      fence('terminal', 'ls'),
+    ].join('\n\n'))
+    assert.doesNotMatch(html, /\b_hk=|data-hk=/)
+  })
+})
+
 describe('images', () => {
   it('rebases a relative source on the post', async () => {
     assert.match(await render('![](./x.png)'), /src="\/posts\/test\/x\.png"/)

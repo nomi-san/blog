@@ -27,8 +27,8 @@ export default function PostPage() {
   const post = useDataAsync<PostData>()
 
   // Runs for each post shown here, mermaid is only loaded when one has a diagram.
-  createEffect(() => {
-    if (!post() || !document.querySelector('.mermaid')) {
+  createEffect(post, (value) => {
+    if (!value || !document.querySelector('.mermaid')) {
       return
     }
 
