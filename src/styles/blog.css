@@ -80,6 +80,14 @@
   font-size: inherit;
 }
 
+/* Drawn in place to measure the same, taking up no room until it is swapped in. */
+.markdown-body .mermaid.drawing {
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
 @media (max-width: 720px) {
   .markdown-body .highlights ul li span:first-child {
     display: none;

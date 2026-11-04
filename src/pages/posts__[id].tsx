@@ -2,6 +2,7 @@ import { createEffect, For, lazy, Show } from 'solid-js'
 import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
+import { drawDiagrams } from '$lib/diagrams'
 import type { PostData } from '$lib/posts'
 import { isDark } from '$lib/theme'
 import conf from '$blog-config'
@@ -26,32 +27,16 @@ export default function PostPage() {
 
   const post = useDataAsync<PostData>()
 
-  // Runs for each post shown here, mermaid is only loaded when one has a diagram.
-  createEffect(post, {
-    effect: (value) => {
-      const diagrams = Array.from(document.querySelectorAll('.mermaid'))
-      if (!value || !diagrams.length) {
+  // Runs for each post shown here and each change of theme.
+  createEffect(() => [post(), isDark()] as const, {
+    effect: ([value, dark]) => {
+      if (!value) {
         return
       }
 
-      // Mermaid's default font lacks Vietnamese letters, so use the article's font.
-      const fontFamily = getComputedStyle(diagrams[0]).fontFamily
-      // Boxes are sized from the measured text, so the font has to load first.
-      const fontLoaded = document.fonts
-        .load(`1em ${fontFamily}`, diagrams.map((diagram) => diagram.textContent).join(''))
-        .catch(() => {})
-
-      import('mermaid').then(async (m) => {
-        const mermaid = m.default
-        // Right after the import, or mermaid starts by itself on window load.
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: isDark() ? 'dark' : 'default',
-          fontFamily,
-        })
-        await fontLoaded
-        mermaid.run({ querySelector: '.mermaid', suppressErrors: true })
-      })
+      const controller = new AbortController()
+      drawDiagrams(dark, controller.signal)
+      return () => controller.abort()
     },
     // A failed load is the page boundary's to show. Without this, Solid logs it here too.
     error: () => {},

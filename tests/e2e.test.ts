@@ -72,11 +72,42 @@ async function addLink(page: Page, href: string) {
 
 const diagramsRendered = (page: Page) =>
   page.waitForFunction(() => {
-    const diagrams = document.querySelectorAll('.mermaid')
-    // Mermaid adds the svg first and sets its viewBox once the diagram is laid out.
-    const svgs = Array.from(document.querySelectorAll<SVGSVGElement>('.mermaid svg'))
-    return diagrams.length > 0 && svgs.length === diagrams.length && svgs.every((svg) => svg.viewBox.baseVal.width > 0)
+    const diagrams = document.querySelectorAll('.mermaid:not(.drawing)')
+    return diagrams.length > 0 && document.querySelectorAll('.mermaid:not(.drawing) svg').length === diagrams.length
   }, null, { timeout: 20_000 })
+
+const clickThemeButton = (page: Page) =>
+  page.evaluate(() => document.querySelector<HTMLElement>('button[role=switch]')!.click())
+
+const nodeFill = (page: Page) =>
+  page.evaluate(() => getComputedStyle(document.querySelector('.mermaid g.node rect')!).fill)
+
+async function nodeFillChanged(page: Page, from: string) {
+  await page.waitForFunction((fill) => getComputedStyle(document.querySelector('.mermaid g.node rect')!).fill !== fill, from)
+  return nodeFill(page)
+}
+
+// Clicks the theme button, then clicks it again as many times as told once the new
+// diagrams are being drawn. Returns the height of the page at that moment.
+const clickThemeButtonWhileDrawing = (page: Page, clicks = 0) =>
+  page.evaluate((clicks) => new Promise<number>((resolve, reject) => {
+    // Evaluate has no timeout of its own, so this would hang when nothing is drawn.
+    setTimeout(() => reject(new Error('The diagrams were not drawn again')), 5_000)
+
+    const button = document.querySelector<HTMLElement>('button[role=switch]')!
+    const observer = new MutationObserver(() => {
+      if (document.querySelector('.mermaid.drawing')) {
+        observer.disconnect()
+        const height = document.documentElement.scrollHeight
+        for (let i = 0; i < clicks; i++) {
+          button.click()
+        }
+        resolve(height)
+      }
+    })
+    observer.observe(document.querySelector('.markdown-body')!, { childList: true, subtree: true })
+    button.click()
+  }), clicks)
 
 const themeState = (page: Page) =>
   page.evaluate(() => {
@@ -257,6 +288,71 @@ describe('diagrams', () => {
     for (const { label, ...checks } of labels) {
       assert.deepEqual(checks, { font: true, size: true, fits: true }, label ?? '')
     }
+  })
+
+  it('follows the theme button without moving the page', async (t) => {
+    const { page, errors } = await open(t, { colorScheme: 'light' })
+    await visit(page, `/posts/${withDiagram}/`)
+    await diagramsRendered(page)
+    await page.evaluate(() => {
+      const { bottom } = document.querySelector('.mermaid')!.getBoundingClientRect()
+      window.scrollTo({ top: window.scrollY + bottom, behavior: 'instant' })
+    })
+
+    const layout = () => page.evaluate(() => ({
+      scrollY: window.scrollY,
+      scrollHeight: document.documentElement.scrollHeight,
+      diagrams: document.querySelectorAll('.mermaid').length,
+    }))
+    const before = await layout()
+    const light = await nodeFill(page)
+
+    assert.equal(await clickThemeButtonWhileDrawing(page), before.scrollHeight)
+    const dark = await nodeFillChanged(page, light)
+    assert.deepEqual(await layout(), before)
+
+    await clickThemeButton(page)
+    assert.equal(await nodeFillChanged(page, dark), light)
+    assert.deepEqual(await layout(), before)
+    assert.deepEqual(errors, [])
+  })
+
+  it('follows the os theme for a visitor without a preference', async (t) => {
+    const { page } = await open(t, { colorScheme: 'light' })
+    await visit(page, `/posts/${withDiagram}/`)
+    await diagramsRendered(page)
+    const light = await nodeFill(page)
+
+    await page.emulateMedia({ colorScheme: 'dark' })
+    await nodeFillChanged(page, light)
+  })
+
+  it('ends up in the last theme when toggled during a redraw', async (t) => {
+    const { page, errors } = await open(t, { colorScheme: 'light' })
+    await visit(page, `/posts/${withDiagram}/`)
+    await diagramsRendered(page)
+    const count = await page.locator('.mermaid').count()
+    const light = await nodeFill(page)
+
+    // Light to dark, and back and forth once the first redraw has started.
+    await clickThemeButtonWhileDrawing(page, 2)
+    await nodeFillChanged(page, light)
+    await page.waitForFunction(() => !document.querySelector('.mermaid.drawing'))
+    assert.equal(await page.locator('.mermaid').count(), count)
+    assert.deepEqual(errors, [])
+  })
+
+  it('draws a post opened after a theme change in that theme', async (t) => {
+    const { page } = await open(t, { colorScheme: 'light' })
+    await visit(page, `/posts/${withDiagram}/`)
+    await diagramsRendered(page)
+    const light = await nodeFill(page)
+
+    await visit(page, `/posts/${withoutDiagram}/`)
+    await clickThemeButton(page)
+    await addLink(page, `/posts/${withDiagram}`)
+    await diagramsRendered(page)
+    assert.notEqual(await nodeFill(page), light)
   })
 
   it('renders diagrams when opened from the home page', async (t) => {

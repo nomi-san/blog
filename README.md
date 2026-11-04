@@ -121,8 +121,8 @@ Besides GitHub flavored markdown, the renderers support:
   and in YAML and Markdown blocks `- ` and `+ ` are list items.
 - **Terminal blocks:** a `terminal` code block shows its lines as input. Lines after a `___` line
   are output, which is inserted as HTML.
-- **Diagrams:** a `mermaid` code block renders as a diagram. Mermaid is only downloaded by pages
-  that have one.
+- **Diagrams:** a `mermaid` code block renders as a diagram in the page's font and theme, and is
+  drawn again when the theme changes. Mermaid is only downloaded by pages that have one.
 - **Headings:** `h1` to `h3` appear in the table of contents, and every heading gets an anchor link
   with an id built from its text. Repeated headings get a numeric suffix.
 - **Links:** external links open in a new tab.
