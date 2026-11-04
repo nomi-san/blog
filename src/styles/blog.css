@@ -1,7 +1,8 @@
 /* Blog */
 
 .markdown-body p,
-.markdown-body ul {
+.markdown-body ul,
+.markdown-body ol {
   /* color: rgb(76 78 103); */
   line-height: 1.5;
   /* font-size: 1.125rem; */
@@ -102,6 +103,17 @@
   margin-top: 0.5rem;
 }
 
+/* In a task list the checkbox is the marker, in the place of the bullet. */
+.markdown-body li:has(> input[type=checkbox], > p > input[type=checkbox]) {
+  list-style: none;
+}
+
+.markdown-body li>input[type=checkbox],
+.markdown-body li>p>input[type=checkbox] {
+  margin: 0 0.2em 0.25em -1.4em;
+  vertical-align: middle;
+}
+
 .markdown-body video {
   width: 100%;
 }
@@ -178,6 +190,7 @@
 }
 
 figure,
+.markdown-body>pre,
 .markdown-body>.highlight,
 .markdown-body>video,
 .markdown-body>iframe {

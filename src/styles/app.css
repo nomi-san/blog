@@ -109,13 +109,19 @@ html.dark pre code.stdout {
   position: relative;
 }
 
+/* As wide as the longest line, so that rows keep their color when scrolled. */
+.markdown-body pre code.diff {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+}
+
+/* The margins and padding reach the edges of the pre around them. */
 pre code>.added {
   position: relative;
   background-color: rgba(25, 221, 90, 0.16);
-  margin-left: -26px;
-  margin-right: -26px;
-  padding-left: 26px;
-  padding-right: 26px;
+  margin-inline: -1.75rem;
+  padding-inline: 1.75rem;
 }
 
 pre code>.added::before {
@@ -131,10 +137,8 @@ pre code>.deleted {
   background-color: rgba(244, 63, 94, 0.16);
   color: #8d8a88;
   user-select: none;
-  margin-left: -26px;
-  margin-right: -26px;
-  padding-left: 26px;
-  padding-right: 26px;
+  margin-inline: -1.75rem;
+  padding-inline: 1.75rem;
 }
 
 pre code.diff> :not(.added) {
@@ -187,6 +191,7 @@ pre code>.deleted::before {
 
 ::selection {
   @apply bg-yellow-400 dark:bg-yellow-600;
+  color: #000;
 }
 
 /* ::view-transition-old(root),

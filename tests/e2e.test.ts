@@ -203,6 +203,81 @@ describe('small screens', () => {
       assert.equal(overflow, 0, `${path} scrolls sideways`)
     }
   })
+
+  it('fills diff rows to the full width of their scrolling block', async (t) => {
+    const { page } = await open(t, { viewport: { width: 320, height: 640 } })
+    let scrolling = 0
+
+    for (const id of postIds) {
+      await visit(page, `/posts/${id}/`)
+      const rows = await page.evaluate(() =>
+        Array.from(document.querySelectorAll<HTMLElement>('code.diff .added, code.diff .deleted')).map((row) => {
+          const block = row.closest('pre')!
+          return { row: row.getBoundingClientRect().width, block: block.scrollWidth, scrolls: block.scrollWidth > block.clientWidth }
+        }))
+
+      for (const { row, block, scrolls } of rows) {
+        assert.ok(Math.abs(row - block) <= 1, `${id}: a ${row}px row in a ${block}px block`)
+        scrolling += Number(scrolls)
+      }
+    }
+
+    assert.ok(scrolling > 0, 'no diff block scrolls at this width, so this checked nothing')
+  })
+})
+
+describe('post styles', () => {
+  // This post exists to show every Markdown feature.
+  const demoPost = '/posts/the-first-post/'
+
+  const luminance = (color: string) => {
+    const [r, g, b] = color.match(/[\d.]+/g)!.map((value) => {
+      const channel = Number(value) / 255
+      return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+    })
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+  }
+
+  it('keeps selected text readable in both themes', async (t) => {
+    for (const colorScheme of ['light', 'dark'] as const) {
+      const { page } = await open(t, { colorScheme })
+      await visit(page, demoPost)
+
+      // Links are the worst case, being colored text.
+      const { color, backgroundColor } = await page.evaluate(() => {
+        const { color, backgroundColor } = getComputedStyle(document.querySelector('.markdown-body > p a')!, '::selection')
+        return { color, backgroundColor }
+      })
+      const [lighter, darker] = [luminance(color), luminance(backgroundColor)].sort((a, b) => b - a)
+      const ratio = (lighter + 0.05) / (darker + 0.05)
+
+      assert.ok(ratio >= 4.5, `${colorScheme}: selected links have a contrast of ${ratio.toFixed(2)}`)
+    }
+  })
+
+  it('sets lists and code blocks like the blocks around them', async (t) => {
+    const { page } = await open(t)
+    await visit(page, demoPost)
+
+    const [ordered, unordered, paragraph, terminal, diff] = await page.evaluate((selectors) =>
+      selectors.map((selector) => {
+        const { fontSize, marginTop } = getComputedStyle(document.querySelector(selector)!)
+        return { fontSize, marginTop }
+      }), [
+      '.markdown-body > ol > li',
+      '.markdown-body > ul > li',
+      '.markdown-body > p',
+      '.markdown-body > pre[data-lang=terminal]',
+      '.markdown-body > pre.highlight',
+    ])
+    const taskMarker = await page.evaluate(() =>
+      getComputedStyle(document.querySelector('.markdown-body li > input[type=checkbox]')!.closest('li')!).listStyleType)
+
+    assert.equal(ordered.fontSize, paragraph.fontSize)
+    assert.equal(unordered.fontSize, paragraph.fontSize)
+    assert.equal(terminal.marginTop, diff.marginTop)
+    assert.equal(taskMarker, 'none')
+  })
 })
 
 describe('theme', () => {
