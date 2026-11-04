@@ -7,7 +7,7 @@ export default function NotFound() {
   const is404 = location.pathname !== '/error'
 
   return (
-    <div class='w-full overflow-x-hidden relative flex justify-between h-full flex-col flex-wrap'>
+    <div data-not-found class='w-full overflow-x-hidden relative flex justify-between h-full flex-col flex-wrap'>
       <Title>{is404 ? 'Not Found' : 'Error'}</Title>
       <div>
         <div class='text-center px-8 py-32 z-3 mx-auto'>
