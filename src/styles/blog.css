@@ -135,6 +135,11 @@
   width: 100%;
 }
 
+/* The language icons are made for dark editors, too pale on a light code block. */
+html:not(.dark) .language svg {
+  filter: brightness(0.62) saturate(1.4);
+}
+
 .markdown-body div.highlight pre {
   border-radius: 0;
 }
@@ -213,7 +218,6 @@
 
 figure,
 .markdown-body>pre,
-.markdown-body>.highlight,
 .markdown-body>video,
 .markdown-body>iframe {
   margin-block: 2rem;

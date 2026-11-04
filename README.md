@@ -116,6 +116,10 @@ Besides GitHub flavored markdown, the renderers support:
 - **Images:** `![Caption h=300 wide](./image.png)`. The text is the caption, `h=300` sets the
   height and a trailing `wide` widens the figure on large screens. `./` is relative to the post
   folder. Clicking an image zooms it.
+- **Code blocks:** the corner shows the language as an icon, or as its name if it has no icon. Icons
+  are inlined at build time, so a post only carries the ones it uses. They come from
+  [material-icon-theme](https://github.com/material-extensions/vscode-material-icon-theme),
+  MIT License, Copyright (c) 2025 Material Extensions.
 - **Diff lines:** in any code block, a line starting with `+` or `-` is shown as added or removed,
   without the mark. `++` and `--` don't count, which keeps C increments and Lua comments intact,
   and in YAML and Markdown blocks `- ` and `+ ` are list items.

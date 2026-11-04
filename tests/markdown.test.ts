@@ -225,6 +225,48 @@ describe('post html', () => {
   })
 })
 
+describe('code block language', () => {
+  const icon = (html: string) => html.match(/<span class="language[^"]*"[^>]*>(<svg.*?<\/svg>)/s)?.[1]
+
+  it('shows an icon, named for tooltips and screen readers', async () => {
+    const html = await render(fence('c', 'int a;'))
+    assert.ok(icon(html))
+    assert.match(html, /role="img"/)
+    assert.match(html, /aria-label="c"/)
+    assert.match(html, /title="c"/)
+  })
+
+  it('shows the icon on diff blocks too', async () => {
+    assert.ok(icon(await render(fence('c', '+int a;'))))
+  })
+
+  it('finds the icon of a language the theme knows by another name', async () => {
+    const batch = icon(await render(fence('batch', 'echo a')))
+    assert.ok(batch)
+    assert.equal(batch, icon(await render(fence('bat', 'echo a'))))
+  })
+
+  it('shows the name of a language without an icon', async () => {
+    const html = await render(fence('lockfile', 'a'))
+    assert.equal(icon(html), undefined)
+    assert.match(html, />lockfile<\/span>/)
+  })
+
+  it('keeps the ids of an icon apart from those of other icons', async () => {
+    const svg = icon(await render(fence('kt', 'val a = 1')))!
+    const ids = [...svg.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1])
+    const references = [...svg.matchAll(/(?:url\(#|href="#)([^)"]+)/g)].map((match) => match[1])
+
+    assert.ok(references.length > 0)
+    for (const id of [...ids, ...references]) {
+      assert.ok(id.startsWith('kotlin-'), id)
+    }
+    for (const reference of references) {
+      assert.ok(ids.includes(reference), reference)
+    }
+  })
+})
+
 describe('tables', () => {
   it('wraps a table in its own scroll box', async () => {
     const html = await render('| a | b |\n| - | - |\n| 1 | 2 |')

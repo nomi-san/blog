@@ -2,6 +2,7 @@ import { For, Show, VoidComponent } from 'solid-js'
 import { marked } from 'marked'
 import { refractor } from 'refractor/all'
 import { toHtml } from 'hast-util-to-html'
+import { languageIcon } from './language-icons'
 import { renderHtml } from './render'
 
 function escapeHtml(code: string) {
@@ -29,6 +30,14 @@ function diffMark(line: string, lang: string) {
   return mark
 }
 
+const Language: VoidComponent<{ lang: string }> = (props) => {
+  const icon = languageIcon(props.lang)
+
+  return icon
+    ? <span class="language absolute top-1 right-2" role="img" aria-label={props.lang} title={props.lang} innerHTML={icon} />
+    : <span class="language absolute top-1 right-2 text-sm pointer-events-none">{props.lang}</span>
+}
+
 const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
   const lines = props.code.split(/\r?\n/)
   const hasDiff = lines.some((line) => diffMark(line, props.lang))
@@ -40,7 +49,7 @@ const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
         <pre class="highlight notranslate" data-lang={props.lang}>
           <code innerHTML={html} />
         </pre>
-        <span class="language absolute top-1 right-2 text-sm pointer-events-none">{props.lang}</span>
+        <Language lang={props.lang} />
       </div>
     )
   }
@@ -64,22 +73,25 @@ const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
   }
 
   return (
-    <pre class='highlight notranslate' data-lang={props.lang}>
-      <code class='diff'>
-        <For each={lines}>
-          {((line, index) => (
-            <div
-              class={map[index()] === true
-                ? 'added'
-                : map[index()] === false
-                  ? 'deleted'
-                  : ''}
-              innerHTML={line}
-            />
-          ))}
-        </For>
-      </code>
-    </pre>
+    <div class="relative my-8">
+      <pre class='highlight notranslate' data-lang={props.lang}>
+        <code class='diff'>
+          <For each={lines}>
+            {((line, index) => (
+              <div
+                class={map[index()] === true
+                  ? 'added'
+                  : map[index()] === false
+                    ? 'deleted'
+                    : ''}
+                innerHTML={line}
+              />
+            ))}
+          </For>
+        </code>
+      </pre>
+      <Language lang={props.lang} />
+    </div>
   )
 }
 

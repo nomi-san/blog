@@ -375,6 +375,32 @@ describe('post styles', () => {
     assert.ok(requests.some((url) => url.includes('-italic')), 'the italic text of this post uses no italic font')
   })
 
+  it('marks code blocks with an icon clear of the code, darkened on light blocks', async (t) => {
+    for (const [colorScheme, filtered] of [['light', true], ['dark', false]] as const) {
+      const { page } = await open(t, { colorScheme })
+      await visit(page, demoPost)
+
+      const icons = await page.evaluate(() =>
+        Array.from(document.querySelectorAll('.markdown-body pre.highlight:not([data-lang=""])')).map((pre) => {
+          const icon = pre.parentElement!.querySelector('.language svg')
+          const code = document.createRange()
+          code.selectNodeContents(pre)
+          return {
+            found: !!icon,
+            filter: icon && getComputedStyle(icon).filter,
+            clearOfCode: !!icon && icon.getBoundingClientRect().bottom <= code.getClientRects()[0].top,
+          }
+        }))
+
+      assert.ok(icons.length > 0)
+      for (const icon of icons) {
+        assert.equal(icon.found, true)
+        assert.equal(icon.filter !== 'none', filtered)
+        assert.equal(icon.clearOfCode, true)
+      }
+    }
+  })
+
   it('sets h4 larger than body text', async (t) => {
     const { page } = await open(t)
     await visit(page, `/posts/${postIds.find((id) => /^#### /m.test(source(id)))}/`)
@@ -397,7 +423,7 @@ describe('post styles', () => {
       '.markdown-body > ul > li',
       '.markdown-body > p',
       '.markdown-body > pre[data-lang=terminal]',
-      '.markdown-body > pre.highlight',
+      '.markdown-body > div:has(> pre.highlight)',
     ])
     const taskMarker = await page.evaluate(() =>
       getComputedStyle(document.querySelector('.markdown-body li > input[type=checkbox]')!.closest('li')!).listStyleType)
