@@ -5,9 +5,12 @@ import { hydrate, render } from '@solidjs/web'
 import { Root } from './root'
 
 // A boundary's fallback hides the failure, so keep it visible in the console.
-configureClientErrors({
-  onError: (error) => console.error(error),
-})
+// Solid's dev builds already log it.
+if (import.meta.env.PROD) {
+  configureClientErrors({
+    onError: (error) => console.error(error),
+  })
+}
 
 const container = document.getElementById('root') as HTMLElement
 const app = () => <Root url={window.location.pathname} />

@@ -27,19 +27,23 @@ export default function PostPage() {
   const post = useDataAsync<PostData>()
 
   // Runs for each post shown here, mermaid is only loaded when one has a diagram.
-  createEffect(post, (value) => {
-    if (!value || !document.querySelector('.mermaid')) {
-      return
-    }
+  createEffect(post, {
+    effect: (value) => {
+      if (!value || !document.querySelector('.mermaid')) {
+        return
+      }
 
-    import('mermaid').then((m) => {
-      const mermaid = m.default
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: useIsDark()() ? 'dark' : 'default',
+      import('mermaid').then((m) => {
+        const mermaid = m.default
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: useIsDark()() ? 'dark' : 'default',
+        })
+        mermaid.run({ querySelector: '.mermaid', suppressErrors: true })
       })
-      mermaid.run({ querySelector: '.mermaid', suppressErrors: true })
-    })
+    },
+    // A failed load is the page boundary's to show. Without this, Solid logs it here too.
+    error: () => {},
   })
 
   return (
