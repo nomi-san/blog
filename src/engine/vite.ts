@@ -31,17 +31,17 @@ function overrideConfig(): Plugin {
   }
 }
 
-function useServerDirective(): Plugin {
+// Pages guard server code with `if (!import.meta.env.SSR) return`. That relies on the
+// bundler dropping the code, so check the result: `readdir` only exists in $lib/posts.
+function assertNoServerCode(): Plugin {
   return {
-    name: 'blog-remove-use-server',
-    enforce: 'pre',
-    transform(code, id, options) {
-      // ignore the server code in client build
-      if (!options?.ssr && id.match(/\.(js|ts|jsx|tsx)$/)) {
-        return code.replace(
-          /(['"])use\s+server\1;*/gm,
-          'return void 0;'
-        )
+    name: 'blog-assert-no-server-code',
+    apply: 'build',
+    generateBundle(_options, bundle) {
+      for (const file of Object.values(bundle)) {
+        if (file.type === 'chunk' && file.code.includes('readdir')) {
+          this.error(`Server code reached the client chunk ${file.fileName}`)
+        }
       }
     },
   }
@@ -77,12 +77,9 @@ function copyPostAssets(): Plugin {
           }
         }
       }
-      try {
-        await copyDir(postsDir, distDir)
-        console.log('✓ Post assets copied to dist')
-      } catch (error) {
-        console.error('Failed to copy post assets:', error)
-      }
+
+      await copyDir(postsDir, distDir)
+      console.log('Post assets copied to dist')
     },
   }
 }
@@ -93,7 +90,7 @@ export default function blogPlugin(options?: {
   options = options || {}
 
   return [
-    useServerDirective(),
+    assertNoServerCode(),
     pagesResolver(),
     preloadResolver(),
     solidPlugin({

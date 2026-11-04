@@ -4,16 +4,34 @@ import { refractor } from 'refractor/all'
 import { toHtml } from 'hast-util-to-html'
 import { renderToString } from 'solid-js/web'
 
+function escapeHtml(code: string) {
+  return code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 function highlight(code: string, lang: string) {
-  if (lang in refractor.languages) {
+  if (refractor.registered(lang)) {
     const tree = refractor.highlight(code, lang)
     return toHtml(tree as any)
   }
-  return code
+  return escapeHtml(code)
+}
+
+// In these languages a leading "- " or "+ " is a list item, not a diff mark.
+const LIST_LANGS = new Set(['yaml', 'yml', 'markdown', 'md'])
+
+function diffMark(line: string, lang: string) {
+  const mark = line[0]
+  if ((mark !== '+' && mark !== '-') || line[1] === mark) return
+  if (line[1] === ' ' && LIST_LANGS.has(lang)) return
+  return mark
 }
 
 const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
-  const hasDiff = /(^|\n)(\+[^\+]|\-[^\-])/gm.test(props.code)
+  const lines = props.code.split(/\r?\n/)
+  const hasDiff = lines.some((line) => diffMark(line, props.lang))
 
   if (!hasDiff) {
     const html = highlight(props.code, props.lang)
@@ -28,18 +46,20 @@ const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
   }
 
   const map: Record<number, boolean> = {}
-  const lines = props.code.split(/\r?\n/)
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
-    if (line.startsWith('+') && !line.startsWith('++')) {
+    const mark = diffMark(line, props.lang)
+    if (mark === '+') {
       map[i] = true
       lines[i] = highlight(line.substring(1), props.lang)
-    } else if (line.startsWith('-') && !line.startsWith('--')) {
+    } else if (mark === '-') {
       map[i] = false
-      lines[i] = line.substring(1)
+      lines[i] = escapeHtml(line.substring(1))
     } else if (line === '') {
       lines[i] = '\n'
+    } else {
+      lines[i] = escapeHtml(line)
     }
   }
 
@@ -94,8 +114,6 @@ marked.use({
       renderToString(() => {
         const info = token.lang || ''
         const lang = info.match(/^\w+/)?.at(0)?.trim() || ''
-        const file = info.match(/\!([^\@\n]+)/)?.at(1)?.trim()
-        const legend = info.match(/\@([^\!\n]+)/)?.at(1)?.trim()
 
         if (lang === 'mermaid') {
           return <div class='mermaid'>{token.text}</div>

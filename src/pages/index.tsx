@@ -1,7 +1,6 @@
 import { Component, For, Show, VoidComponent } from 'solid-js'
 import { A } from '@solidjs/router'
 import { useDataAsync } from '@engine/client'
-import { useIsDark } from '$lib/theme'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
@@ -10,14 +9,13 @@ import conf from '$blog-config'
 import ThemeButton from '../components/ThemeButton'
 
 export const preload = async () => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { listPosts } = await import('$lib/posts')
   return await listPosts()
 }
 
 export default function HomePage() {
 
-  const isDark = useIsDark()
   const posts = useDataAsync<PostHeader[]>()
 
   const social = Object.entries(conf.author.social)
@@ -31,9 +29,9 @@ export default function HomePage() {
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
       <MetaTags />
 
-      <Show when={isDark() && conf.highlight_color}>
+      <Show when={conf.highlight_color}>
         <div
-          class="pointer-events-none absolute start-0 top-0 z-[-1] h-screen w-full opacity-25"
+          class="pointer-events-none absolute start-0 top-0 z-[-1] hidden h-screen w-full opacity-25 dark:block"
           style={`background-image:linear-gradient(${conf.highlight_color},transparent); --highlightColor: ${conf.highlight_color};`}>
         </div>
       </Show>
@@ -58,7 +56,7 @@ export default function HomePage() {
         <nav class='mt-5 flex gap-2'>
           <For each={social}>
             {(item) => (
-              <A
+              <a
                 class='flex items-center justify-center size-8 rounded-full transition-colors
                 bg-neutral-600/10 text-neutral-700 hover:bg-neutral-700 hover:text-white
                 dark:bg-neutral-300/10 dark:text-neutral-300 dark:hover:bg-neutral-300 dark:hover:text-black'
@@ -68,7 +66,7 @@ export default function HomePage() {
                 title={item.name}
               >
                 <item.icon />
-              </A>
+              </a>
             )}
           </For>
         </nav>

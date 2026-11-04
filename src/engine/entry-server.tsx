@@ -1,6 +1,7 @@
-import { basename, extname } from 'node:path'
+import { extname } from 'node:path'
 import { renderToStringAsync, generateHydrationScript, getAssets } from 'solid-js/web'
 import { getPreloader, getPrerenderRoutes } from './router'
+import { renderErrors } from './boundary'
 import { Root } from './root'
 import { themeScript } from '$lib/theme'
 
@@ -9,6 +10,10 @@ export { getPrerenderRoutes }
 export async function render(url: string, manifest?: Record<string, string[]>) {
   const heads = Array<string>()
   const html = await renderToStringAsync(() => <Root url={url} />)
+  if (renderErrors.length > 0) {
+    throw renderErrors[0]
+  }
+
   let context: string = ''
 
   const preload = getPreloader(url)

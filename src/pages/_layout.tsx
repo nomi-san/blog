@@ -7,12 +7,14 @@ import '../styles/blog.css'
 import { createEffect, onMount, useContext } from 'solid-js'
 import { MetaContext } from '@solidjs/meta'
 import { useIsRouting } from '@solidjs/router'
+import { PageBoundary } from '@engine/boundary'
 import { themeScript } from '$lib/theme'
 import conf from '$blog-config'
 
 import Footer from '$components/Footer'
 import Header from '$components/Header'
 import Analytics from '$components/Analytics'
+import NotFound from '$components/NotFound'
 
 import { BProgress } from '@bprogress/core'
 
@@ -52,7 +54,9 @@ export default function Layout(props: any) {
     <main class="flex flex-col min-h-screen mx-auto">
       <Header />
       <div class="flex-1">
-        {props.children}
+        <PageBoundary fallback={NotFound}>
+          {props.children}
+        </PageBoundary>
       </div>
       <Footer />
       <Analytics trackingId={conf.ga_tracking_id} />

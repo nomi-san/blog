@@ -11,6 +11,7 @@ const TimeTag: VoidComponent<TimeProps> = (props) => {
   const iso = date.toISOString()
   const text = date
     .toLocaleDateString('vi', {
+      timeZone: 'UTC',
       day: '2-digit',
       month: props.short ? 'short' : 'long',
       year: 'numeric',

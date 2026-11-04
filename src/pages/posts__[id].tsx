@@ -1,4 +1,4 @@
-import { For, lazy, onMount, Show } from 'solid-js'
+import { createEffect, For, lazy, Show } from 'solid-js'
 import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
@@ -10,13 +10,13 @@ const ImageView = lazy(() => import('$components/ImageView'))
 const TocView = lazy(() => import('$components/TocView'))
 
 export const preload = async (params: { id: string }) => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { getPost } = await import('$lib/posts')
   return await getPost(params.id)
 }
 
 export const prerender = async () => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { listPosts } = await import('$lib/posts')
   const posts = await listPosts()
   return posts.map(post => ({ id: post.id }))
@@ -26,14 +26,19 @@ export default function PostPage() {
 
   const post = useDataAsync<PostData>()
 
-  onMount(() => {
+  // Runs for each post shown here, mermaid is only loaded when one has a diagram.
+  createEffect(() => {
+    if (!post() || !document.querySelector('.mermaid')) {
+      return
+    }
+
     import('mermaid').then((m) => {
       const mermaid = m.default
       mermaid.initialize({
-        startOnLoad: true,
+        startOnLoad: false,
         theme: useIsDark()() ? 'dark' : 'default',
       })
-      mermaid.contentLoaded()
+      mermaid.run({ querySelector: '.mermaid', suppressErrors: true })
     })
   })
 
