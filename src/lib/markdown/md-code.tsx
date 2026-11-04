@@ -4,12 +4,19 @@ import { refractor } from 'refractor/all'
 import { toHtml } from 'hast-util-to-html'
 import { renderToString } from 'solid-js/web'
 
+function escapeHtml(code: string) {
+  return code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 function highlight(code: string, lang: string) {
-  if (lang in refractor.languages) {
+  if (refractor.registered(lang)) {
     const tree = refractor.highlight(code, lang)
     return toHtml(tree as any)
   }
-  return code
+  return escapeHtml(code)
 }
 
 const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
@@ -37,9 +44,11 @@ const CodeBlock: VoidComponent<{ code: string; lang: string }> = (props) => {
       lines[i] = highlight(line.substring(1), props.lang)
     } else if (line.startsWith('-') && !line.startsWith('--')) {
       map[i] = false
-      lines[i] = line.substring(1)
+      lines[i] = escapeHtml(line.substring(1))
     } else if (line === '') {
       lines[i] = '\n'
+    } else {
+      lines[i] = escapeHtml(line)
     }
   }
 
