@@ -7,6 +7,7 @@ export const __slugs = new Map<string, number>()
 import './md-code'
 import './md-images'
 import './md-links'
+import './md-tables'
 
 export function matter<T>(content: string) {
   const pattern = /^\uFEFF?---\r?\n([\s\S]+?)\r?\n---[ \t]*(?:\r?\n|$)/

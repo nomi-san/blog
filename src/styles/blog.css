@@ -26,6 +26,11 @@
   width: 100%;
 }
 
+/* Full width tables can't scroll by themselves, so a wider one does it in here. */
+.markdown-body .table-scroll {
+  overflow: auto hidden;
+}
+
 .markdown-body .highlights {
   background-color: #f6f8fa;
   padding: 16px;

@@ -158,6 +158,22 @@ describe('document head', () => {
   })
 })
 
+describe('small screens', () => {
+  it('never scrolls the page sideways', async (t) => {
+    const { page } = await open(t, { viewport: { width: 320, height: 640 } })
+
+    for (const path of ['/', ...postIds.map((id) => `/posts/${id}/`)]) {
+      await visit(page, path)
+      if (await page.locator('.mermaid').count()) {
+        await diagramsRendered(page)
+      }
+
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+      assert.equal(overflow, 0, `${path} scrolls sideways`)
+    }
+  })
+})
+
 describe('theme', () => {
   it('matches the page on a light first load', async (t) => {
     const { page } = await open(t, { colorScheme: 'light' })

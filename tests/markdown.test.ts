@@ -225,6 +225,13 @@ describe('post html', () => {
   })
 })
 
+describe('tables', () => {
+  it('wraps a table in its own scroll box', async () => {
+    const html = await render('| a | b |\n| - | - |\n| 1 | 2 |')
+    assert.match(html, /^<div class="table-scroll"><table>[\s\S]*<td>2<\/td>[\s\S]*<\/table>\s*<\/div>\s*$/)
+  })
+})
+
 describe('images', () => {
   it('rebases a relative source on the post', async () => {
     assert.match(await render('![](./x.png)'), /src="\/posts\/test\/x\.png"/)
