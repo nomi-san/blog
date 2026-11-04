@@ -1,4 +1,4 @@
-import { createRoot, createSignal } from 'solid-js'
+import { createSignal } from 'solid-js'
 import { isServer } from '@solidjs/web'
 
 const DEFAULT_APPEARANCE: string = 'auto'
@@ -30,9 +30,9 @@ if (!isServer && typeof window === 'object') {
   })
 }
 
-const [isDark, setDark] = createRoot(() => createSignal(initialDark))
+const [isDark, setDark] = createSignal(initialDark)
 
-export const useIsDark = () => isDark
+export { isDark }
 
 export function toggleTheme() {
   const dark = !isDark()

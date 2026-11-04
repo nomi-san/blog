@@ -1,10 +1,9 @@
 import { createSignal, onSettled } from 'solid-js'
-import { useIsDark, toggleTheme } from '$lib/theme'
+import { isDark, toggleTheme } from '$lib/theme'
 import { MoonIcon, SunIcon } from './Icons'
 
 export default function ThemeButton() {
 
-  const isDark = useIsDark()
   const [mounted, setMounted] = createSignal(false)
   const [viewTransition, setViewTransition] = createSignal(false)
 

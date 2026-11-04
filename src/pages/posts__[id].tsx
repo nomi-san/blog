@@ -3,7 +3,7 @@ import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
 import type { PostData } from '$lib/posts'
-import { useIsDark } from '$lib/theme'
+import { isDark } from '$lib/theme'
 import conf from '$blog-config'
 
 const ImageView = lazy(() => import('$components/ImageView'))
@@ -46,7 +46,7 @@ export default function PostPage() {
         // Right after the import, or mermaid starts by itself on window load.
         mermaid.initialize({
           startOnLoad: false,
-          theme: useIsDark()() ? 'dark' : 'default',
+          theme: isDark() ? 'dark' : 'default',
           fontFamily,
         })
         await fontLoaded
