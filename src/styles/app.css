@@ -189,27 +189,6 @@ pre code>.deleted::before {
   @apply bg-yellow-400 dark:bg-yellow-600;
 }
 
-.apperance-switch {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 36px;
-  height: 36px;
-  color: var(--vp-c-text-2);
-  transition: color 0.5s;
-}
-
-.apperance-switch:hover {
-  color: var(--vp-c-text-1);
-  transition: color 0.25s;
-}
-
-.apperance-switch :deep(svg) {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-}
-
 /* ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
