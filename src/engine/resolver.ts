@@ -60,7 +60,10 @@ export function preloadResolver(): Plugin {
           const { getPreloader } = (await _server.ssrLoadModule(join(__dirname, './router'))) as typeof import('./router')
           const preloader = getPreloader(path)
           const data = await preloader?.()
-          return `export default ${JSON.stringify(data)};`
+          // Otherwise fail to load, as in production where no file is written for it.
+          if (data !== undefined) {
+            return `export default ${JSON.stringify(data)};`
+          }
         }
         catch (e) {
           console.error('preloadResolver error', e)
