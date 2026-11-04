@@ -170,6 +170,22 @@ describe('code blocks', () => {
     assert.doesNotMatch(html, /class="(added|deleted)"/)
   })
 
+  it('keeps lua comments out of diff mode', async () => {
+    const html = await render(fence('lua', '-- comment', '---@param x number', '--[[', 'block', ']]', 'local a = 1'))
+    assert.doesNotMatch(html, /class="(added|deleted)"/)
+    assert.match(html, /class="token comment"/)
+    assert.ok(text(html).includes('-- comment'))
+  })
+
+  it('keeps a lua comment next to real diff marks', async () => {
+    const html = await render(fence('lua', '-- kept', '+-- added', '-local removed = 1'))
+    assert.equal(html.match(/class="added"/g)?.length, 1)
+    assert.equal(html.match(/class="deleted"/g)?.length, 1)
+    assert.match(html, /class="token comment">-- added/)
+    assert.ok(text(html).includes('-- kept'))
+    assert.ok(!text(html).includes('+-- added'))
+  })
+
   for (const lang of ['yaml', 'yml', 'markdown', 'md']) {
     it(`keeps ${lang} list items out of diff mode`, async () => {
       const html = await render(fence(lang, '- first', '- second'))

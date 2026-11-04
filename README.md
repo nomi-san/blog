@@ -113,8 +113,8 @@ Besides GitHub flavored markdown, the renderers support:
   height and a trailing `wide` widens the figure on large screens. `./` is relative to the post
   folder. Clicking an image zooms it.
 - **Diff lines:** in any code block, a line starting with `+` or `-` is shown as added or removed,
-  without the mark. `++` and `--` don't count, and in YAML and Markdown blocks `- ` and `+ ` are
-  list items.
+  without the mark. `++` and `--` don't count, which keeps C increments and Lua comments intact,
+  and in YAML and Markdown blocks `- ` and `+ ` are list items.
 - **Terminal blocks:** a `terminal` code block shows its lines as input. Lines after a `___` line
   are output, which is inserted as HTML.
 - **Diagrams:** a `mermaid` code block renders as a diagram. Mermaid is only downloaded by pages
