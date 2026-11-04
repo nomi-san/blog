@@ -38,7 +38,7 @@ export default function PostPage() {
         startOnLoad: false,
         theme: useIsDark()() ? 'dark' : 'default',
       })
-      mermaid.run({ suppressErrors: true })
+      mermaid.run({ querySelector: '.mermaid', suppressErrors: true })
     })
   })
 
