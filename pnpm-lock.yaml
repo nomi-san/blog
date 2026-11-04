@@ -15,8 +15,8 @@ importers:
         specifier: ^0.29.4
         version: 0.29.8(solid-js@1.9.18)
       '@solidjs/router':
-        specifier: ^0.16.1
-        version: 0.16.3(solid-js@1.9.18)
+        specifier: ^1.0.1
+        version: 1.0.1(solid-js@1.9.18)
       hast-util-to-html:
         specifier: ^9.0.5
         version: 9.0.6
@@ -484,8 +484,8 @@ packages:
     peerDependencies:
       solid-js: ^1.8.4
 
-  '@solidjs/router@0.16.3':
-    resolution: {integrity: sha512-WWQkmSmSpl+15HgUktGPbeXkgWmonj4XwPOcZVHJz1EQV3dz5qWHIyQ/BKXFevor6u/0dKvC9FlUmKmDwE1QHw==}
+  '@solidjs/router@1.0.1':
+    resolution: {integrity: sha512-JxY0+Y8RMZZjk3pATfY5f9ANbFa26+aOf3X7KtpRC9yCuy7f2UWDL8ukx6pVot2OYOJyUfTH7LYG2bbMPZ3WDw==}
     peerDependencies:
       solid-js: ^1.8.6
 
@@ -1910,7 +1910,7 @@ snapshots:
     dependencies:
       solid-js: 1.9.18
 
-  '@solidjs/router@0.16.3(solid-js@1.9.18)':
+  '@solidjs/router@1.0.1(solid-js@1.9.18)':
     dependencies:
       solid-js: 1.9.18
 
