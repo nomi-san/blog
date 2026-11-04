@@ -38,9 +38,10 @@ for (const url of routes) {
 
   const [appHtml, appHead, context] = await render(url, manifest)
 
+  // Replacer functions: post text may contain "$&" and other replace() patterns.
   const html = template
-    .replace(`<!--app-head-->`, appHead)
-    .replace(`<!--app-html-->`, appHtml)
+    .replace(`<!--app-head-->`, () => appHead)
+    .replace(`<!--app-html-->`, () => appHtml)
 
   const file = `dist/${url}/index.html`
   const filePath = path.join(root, file).replace(/\\/g, '/')
