@@ -365,6 +365,16 @@ describe('post styles', () => {
     }
   })
 
+  it('loads real italics only for pages with italic text', async (t) => {
+    const { page, requests } = await open(t)
+    await visit(page, '/')
+    assert.deepEqual(requests.filter((url) => url.includes('-italic')), [])
+
+    await visit(page, demoPost)
+    await page.evaluate(() => document.fonts.ready)
+    assert.ok(requests.some((url) => url.includes('-italic')), 'the italic text of this post uses no italic font')
+  })
+
   it('sets h4 larger than body text', async (t) => {
     const { page } = await open(t)
     await visit(page, `/posts/${postIds.find((id) => /^#### /m.test(source(id)))}/`)

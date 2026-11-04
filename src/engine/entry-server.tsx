@@ -84,7 +84,10 @@ function renderPreloadLink(file: string) {
     case '.woff':
       return `<link rel="preload" href="${file}" as="font" type="font/woff" crossorigin>`
     case '.woff2':
-      return `<link rel="preload" href="${file}" as="font" type="font/woff2" crossorigin>`
+      // Not every page has italic text, the ones that do load these when they need them.
+      return file.includes('-italic')
+        ? ''
+        : `<link rel="preload" href="${file}" as="font" type="font/woff2" crossorigin>`
     default:
       return ''
   }
