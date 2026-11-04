@@ -13,7 +13,7 @@ export default {
     bio: 'A software developer who loves to write about technology, programming, and web development.',
     avatar: 'https://wsrv.nl/?url=github.com/nomi-san.png&w=64&h=64',
     social: {
-      Email: 'wuuyi123@gmail.com',
+      Email: 'mailto:wuuyi123@gmail.com',
       GitHub: 'https://github.com/nomi-san',
       Facebook: 'https://www.facebook.com/im.not.duy',
       Twitter: 'https://twitter.com/im.not.duy',

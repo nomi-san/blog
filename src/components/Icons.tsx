@@ -126,7 +126,7 @@ export const InstagramIcon: VoidComponent<IconProps> = (props) => {
   )
 }
 
-export const LinkedinIcon: VoidComponent<IconProps> = (props) => {
+export const LinkedInIcon: VoidComponent<IconProps> = (props) => {
   return (
     <svg
       class={`inline-block w-5 h-5 ${props.class}`}

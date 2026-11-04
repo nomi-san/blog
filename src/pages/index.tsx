@@ -56,7 +56,7 @@ export default function HomePage() {
         <nav class='mt-5 flex gap-2'>
           <For each={social}>
             {(item) => (
-              <A
+              <a
                 class='flex items-center justify-center size-8 rounded-full transition-colors
                 bg-neutral-600/10 text-neutral-700 hover:bg-neutral-700 hover:text-white
                 dark:bg-neutral-300/10 dark:text-neutral-300 dark:hover:bg-neutral-300 dark:hover:text-black'
@@ -66,7 +66,7 @@ export default function HomePage() {
                 title={item.name}
               >
                 <item.icon />
-              </A>
+              </a>
             )}
           </For>
         </nav>
