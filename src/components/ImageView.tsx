@@ -1,4 +1,4 @@
-import { onMount, VoidComponent } from 'solid-js'
+import { onCleanup, onMount, VoidComponent } from 'solid-js'
 
 const ImageView: VoidComponent = () => {
   let view!: HTMLDivElement
@@ -23,6 +23,11 @@ const ImageView: VoidComponent = () => {
 
   onMount(() => {
     if (!view) return
+
+    // Leaving the page with the viewer open must not keep the scroll lock.
+    onCleanup(() => {
+      document.documentElement.style.overflowY = ''
+    })
 
     const content = document.querySelector('.markdown-body')
     if (content != null) {
