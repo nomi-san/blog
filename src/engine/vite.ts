@@ -77,12 +77,9 @@ function copyPostAssets(): Plugin {
           }
         }
       }
-      try {
-        await copyDir(postsDir, distDir)
-        console.log('✓ Post assets copied to dist')
-      } catch (error) {
-        console.error('Failed to copy post assets:', error)
-      }
+
+      await copyDir(postsDir, distDir)
+      console.log('Post assets copied to dist')
     },
   }
 }
