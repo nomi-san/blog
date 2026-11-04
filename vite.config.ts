@@ -2,7 +2,7 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
-import blogEngine from './src/engine/vite'
+import blogEngine from './src/engine/vite.ts'
 
 export default defineConfig({
   css: {
@@ -20,10 +20,10 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '$blog-config': path.join(__dirname, 'blog.config.ts'),
-      '$components': path.join(__dirname, 'src/components'),
-      '$lib': path.join(__dirname, 'src/lib'),
-      '@engine': path.join(__dirname, 'src/engine'),
+      '$blog-config': path.join(import.meta.dirname, 'blog.config.ts'),
+      '$components': path.join(import.meta.dirname, 'src/components'),
+      '$lib': path.join(import.meta.dirname, 'src/lib'),
+      '@engine': path.join(import.meta.dirname, 'src/engine'),
     },
   },
 })

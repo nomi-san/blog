@@ -11,36 +11,35 @@ interface MetaTagsProps {
 }
 
 const MetaTags: VoidComponent<MetaTagsProps> = (props) => {
-  let title = props.title || conf.title
-  let image = props.image || conf.cover_image
-  const description = props.description || conf.description
-  const path = props.path || '/'
+  const path = () => props.path || '/'
+  const url = () => conf.url + path()
+  const type = () => props.article ? 'article' : 'website'
+  const description = () => props.description || conf.description
 
-  const url = conf.url + path
-  const type = props.article ? 'article' : 'website'
-
-  if (title && path !== '/') {
-    title = `${title} - ${conf.title}`
+  const title = () => {
+    const title = props.title || conf.title
+    return path() !== '/' ? `${title} - ${conf.title}` : title
   }
 
-  if (image.startsWith('//')) {
-    image = 'https:' + image
-  }
-  else if (image.startsWith('/')) {
-    image = conf.url + image
+  const image = () => {
+    const image = props.image || conf.cover_image
+    if (image.startsWith('//')) {
+      return 'https:' + image
+    }
+    return image.startsWith('/') ? conf.url + image : image
   }
 
   return (
     <>
-      <Title>{title}</Title>
-      <Meta name='title' content={title} />
-      <Meta name='description' content={description} />
+      <Title>{title()}</Title>
+      <Meta name='title' content={title()} />
+      <Meta name='description' content={description()} />
 
-      <Meta property='og:type' content={type} />
-      <Meta property='og:url' content={url} />
-      <Meta property='og:title' content={title} />
-      <Meta property='og:description' content={description} />
-      <Meta property='og:image' content={image} />
+      <Meta property='og:type' content={type()} />
+      <Meta property='og:url' content={url()} />
+      <Meta property='og:title' content={title()} />
+      <Meta property='og:description' content={description()} />
+      <Meta property='og:image' content={image()} />
     </>
   )
 }

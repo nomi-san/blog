@@ -1,7 +1,8 @@
 /* Blog */
 
 .markdown-body p,
-.markdown-body ul {
+.markdown-body ul,
+.markdown-body ol {
   /* color: rgb(76 78 103); */
   line-height: 1.5;
   /* font-size: 1.125rem; */
@@ -21,9 +22,31 @@
   /* margin: 2em 0; */
 }
 
+/* The muted color of a quote is too dim on the background of inline code. */
+.markdown-body blockquote code {
+  color: var(--color-fg-default);
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+  line-height: 1;
+  white-space: nowrap;
+  background-color: var(--color-canvas-subtle);
+  border: 1px solid var(--color-border-default);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+}
+
 .markdown-body table {
   display: table;
   width: 100%;
+}
+
+/* Full width tables can't scroll by themselves, so a wider one does it in here. */
+.markdown-body .table-scroll {
+  overflow: auto hidden;
 }
 
 .markdown-body .highlights {
@@ -70,6 +93,19 @@
   padding: 2rem 0;
 }
 
+/* Labels are paragraphs, keep them at the size of the diagram. */
+.markdown-body .mermaid p {
+  font-size: inherit;
+}
+
+/* Drawn in place to measure the same, taking up no room until it is swapped in. */
+.markdown-body .mermaid.drawing {
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
 @media (max-width: 720px) {
   .markdown-body .highlights ul li span:first-child {
     display: none;
@@ -84,8 +120,24 @@
   margin-top: 0.5rem;
 }
 
+/* In a task list the checkbox is the marker, in the place of the bullet. */
+.markdown-body li:has(> input[type=checkbox], > p > input[type=checkbox]) {
+  list-style: none;
+}
+
+.markdown-body li>input[type=checkbox],
+.markdown-body li>p>input[type=checkbox] {
+  margin: 0 0.2em 0.25em -1.4em;
+  vertical-align: middle;
+}
+
 .markdown-body video {
   width: 100%;
+}
+
+/* The language icons are made for dark editors, too pale on a light code block. */
+html:not(.dark) .language svg {
+  filter: brightness(0.62) saturate(1.4);
 }
 
 .markdown-body div.highlight pre {
@@ -153,6 +205,11 @@
   line-height: 1.2;
 }
 
+/* Larger than body text, which is 1.0625rem. */
+.markdown-body h4 {
+  font-size: 1.125rem;
+}
+
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
@@ -160,7 +217,7 @@
 }
 
 figure,
-.markdown-body>.highlight,
+.markdown-body>pre,
 .markdown-body>video,
 .markdown-body>iframe {
   margin-block: 2rem;

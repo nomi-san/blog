@@ -1,4 +1,4 @@
-import { onMount, VoidComponent } from 'solid-js'
+import { onSettled, VoidComponent } from 'solid-js'
 
 const ImageView: VoidComponent = () => {
   let view!: HTMLDivElement
@@ -21,9 +21,7 @@ const ImageView: VoidComponent = () => {
     }
   }
 
-  onMount(() => {
-    if (!view) return
-
+  onSettled(() => {
     const content = document.querySelector('.markdown-body')
     if (content != null) {
       const images = content.querySelectorAll('figure img')
@@ -34,6 +32,11 @@ const ImageView: VoidComponent = () => {
       })
 
       view.addEventListener('click', () => hideImage(view))
+    }
+
+    // Leaving the page with the viewer open must not keep the scroll lock.
+    return () => {
+      document.documentElement.style.overflowY = ''
     }
   })
 

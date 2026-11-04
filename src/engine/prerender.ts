@@ -2,6 +2,10 @@ import fs from 'node:fs/promises'
 import path, { join } from 'node:path'
 import url from 'node:url'
 import { createServer } from 'vite'
+import { fillTemplate, stripAssetLinks } from './template'
+
+// The output ships to readers, so render with Solid's production builds.
+process.env.NODE_ENV = 'production'
 
 const root = process.cwd()
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
@@ -15,14 +19,18 @@ const vite = await createServer({
   appType: 'custom',
   mode: 'production',
   server: { middlewareMode: true },
+  // Nothing here runs in a browser, so there is nothing to pre-bundle for one.
+  optimizeDeps: { noDiscovery: true },
   build: {
     ssr: true,
     minify: 'terser',
   }
 })
 
-const template = await fs.readFile(path.join(root, 'dist/index.html'), 'utf-8')
-const manifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/ssr-manifest.json'), 'utf-8')) as Record<string, string[]>
+const template = stripAssetLinks(await fs.readFile(path.join(root, 'dist/index.html'), 'utf-8'))
+const ssrManifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/ssr-manifest.json'), 'utf-8')) as Record<string, string[]>
+// Solid needs the client manifest to find the chunks of lazy() components.
+const clientManifest = JSON.parse(await fs.readFile(path.join(root, 'dist/.vite/manifest.json'), 'utf-8'))
 
 // load server entry module
 const { render, getPrerenderRoutes } = (await vite.ssrLoadModule(join(__dirname, './entry-server'))) as typeof import('./entry-server')
@@ -36,20 +44,19 @@ for (const url of routes) {
   // template = await vite.transformIndexHtml(url, template)
   // render = (await vite.ssrLoadModule('/src/engine/entry-server.tsx')).render
 
-  const [appHtml, appHead, context] = await render(url, manifest)
+  const [appHtml, appHead, context] = await render(url, ssrManifest, clientManifest)
 
-  const html = template
-    .replace(`<!--app-head-->`, appHead)
-    .replace(`<!--app-html-->`, appHtml)
+  const html = fillTemplate(template, appHead, appHtml)
 
-  const file = `dist/${url}/index.html`
+  // Static hosts look for /404.html when they serve an unknown url.
+  const file = url === '/404' ? 'dist/404.html' : `dist/${url}/index.html`
   const filePath = path.join(root, file).replace(/\\/g, '/')
 
   await fs.mkdir(path.dirname(filePath), { recursive: true })
   await fs.writeFile(filePath, html)
 
   if (context) {
-    const ctxFile = `dist/${url}/index$ctx.js`
+    const ctxFile = `dist/${url}/index.ctx.js`
     await fs.writeFile(path.join(root, ctxFile), context)
   }
 

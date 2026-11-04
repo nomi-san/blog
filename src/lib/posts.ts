@@ -19,12 +19,26 @@ export type PostData = PostHeader & {
 }
 
 const _postCache = new Map<string, PostData>()
+let _loading: Promise<void> | undefined
 
-async function fetchPosts() {
-  if (_postCache.size > 0) {
-    return
+function fetchPosts() {
+  _loading ??= loadPosts()
+  return _loading
+}
+
+function assertPost(data: PostData | null, path: string) {
+  if (!data) {
+    throw new Error(`Missing frontmatter: ${path}`)
   }
+  if (!data.title) {
+    throw new Error(`Missing title: ${path}`)
+  }
+  if (Number.isNaN(new Date(data.date).getTime())) {
+    throw new Error(`Missing or invalid date: ${path}`)
+  }
+}
 
+async function loadPosts() {
   const root = join(process.cwd(), 'posts')
   const entries = await fs.readdir(root, { withFileTypes: true })
 
@@ -38,6 +52,7 @@ async function fetchPosts() {
 
       const raw = await fs.readFile(path, 'utf-8')
       const { data, content } = matter<PostData>(raw)
+      assertPost(data, path)
 
       data.id = dir.name
       data.path = `/posts/${data.id}`

@@ -1,18 +1,18 @@
 import { marked } from 'marked'
 import { Show, VoidComponent } from 'solid-js'
-import { renderToString } from 'solid-js/web'
+import { renderHtml } from './render'
 import { __base } from '.'
 
 const ImageTag: VoidComponent<{
   src: string; height: string; wide?: boolean; caption?: string
 }> = (props) => {
   return (
-    <figure class={`flex flex-col ${props.wide && 'lg:mx-[-8rem]'}`}>
+    <figure class={`flex flex-col ${props.wide ? 'lg:mx-[-8rem]' : ''}`}>
       <img
         class='object-contain cursor-zoom-in'
         loading='lazy'
         decoding='async'
-        alt=''
+        alt={props.caption?.replace(/<[^>]+>/g, '') ?? ''}
         src={props.src}
         style={{ height: props.height }}
       />
@@ -40,7 +40,7 @@ marked.use({
         src = `${base}/${src.substring(2)}`
       }
 
-      return renderToString(() => (
+      return renderHtml(() => (
         <ImageTag
           src={src}
           height={height}

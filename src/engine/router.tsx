@@ -1,6 +1,5 @@
 import { Component, lazy } from 'solid-js'
-import { Params, RouteDefinition } from '@solidjs/router'
-import { createMatcher, normalizePath } from '~/node_modules/@solidjs/router/dist/utils'
+import { createRouter, Params } from '@solidjs/router'
 
 type PageExport = {
   path?: string
@@ -17,7 +16,6 @@ const _pages = import.meta.glob<PageExport>([
 
 const _routes = Array<{
   path: string
-  match: ReturnType<typeof createMatcher>
   preload: (params: Params) => Promise<any | undefined>
   prerender: () => Promise<Params[] | undefined>
   component: ReturnType<typeof lazy>
@@ -49,35 +47,24 @@ for (const key in _pages) {
 
   _routes.push({
     path,
-    match: createMatcher(path),
     preload: (params) => page().then(m => m.preload?.(params)),
     prerender: () => page().then(m => m.prerender?.()),
     component: lazy(page),
   })
 }
 
-_routes.sort((a, b) => {
-  const awc = a.path.includes('*')
-  const bwc = b.path.includes('*')
-  if (awc && !bwc) return 1
-  if (!awc && bwc) return -1
-  return b.path.charCodeAt(0) - a.path.charCodeAt(0)
-})
-
-export const getRoutes = (): RouteDefinition[] => {
-  return _routes.map(r => ({
+export const AppRouter = createRouter({
+  routes: _routes.map(r => ({
     path: r.path,
     component: r.component,
-  }))
-}
+    info: { preload: r.preload },
+  })),
+})
 
 export const getPreloader = (url: string) => {
-  for (const route of _routes) {
-    const match = route.match(url)
-    if (match) {
-      return () => route.preload(match.params)
-    }
-  }
+  const match = AppRouter.match(url).at(-1)
+  const preload = match?.info?.preload
+  return preload && (() => preload(match!.params))
 }
 
 export const getPrerenderRoutes = async () => {
@@ -128,5 +115,5 @@ function buildPath(pattern: string, params: Params): string {
     }
   }
 
-  return normalizePath(path)
+  return `/${path.split('/').filter(Boolean).join('/')}`
 }

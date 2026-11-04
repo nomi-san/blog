@@ -1,22 +1,23 @@
-import { For, lazy, onMount, Show } from 'solid-js'
+import { createEffect, For, lazy, Show } from 'solid-js'
 import { useDataAsync } from '@engine/client'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
+import { drawDiagrams } from '$lib/diagrams'
 import type { PostData } from '$lib/posts'
-import { useIsDark } from '$lib/theme'
+import { isDark } from '$lib/theme'
 import conf from '$blog-config'
 
 const ImageView = lazy(() => import('$components/ImageView'))
 const TocView = lazy(() => import('$components/TocView'))
 
 export const preload = async (params: { id: string }) => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { getPost } = await import('$lib/posts')
   return await getPost(params.id)
 }
 
 export const prerender = async () => {
-  'use server'
+  if (!import.meta.env.SSR) return
   const { listPosts } = await import('$lib/posts')
   const posts = await listPosts()
   return posts.map(post => ({ id: post.id }))
@@ -26,15 +27,19 @@ export default function PostPage() {
 
   const post = useDataAsync<PostData>()
 
-  onMount(() => {
-    import('mermaid').then((m) => {
-      const mermaid = m.default
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: useIsDark()() ? 'dark' : 'default',
-      })
-      mermaid.contentLoaded()
-    })
+  // Runs for each post shown here and each change of theme.
+  createEffect(() => [post(), isDark()] as const, {
+    effect: ([value, dark]) => {
+      if (!value) {
+        return
+      }
+
+      const controller = new AbortController()
+      drawDiagrams(dark, controller.signal)
+      return () => controller.abort()
+    },
+    // A failed load is the page boundary's to show. Without this, Solid logs it here too.
+    error: () => {},
   })
 
   return (
