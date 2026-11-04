@@ -1,7 +1,6 @@
 import { Component, For, Show, VoidComponent } from 'solid-js'
 import { A } from '@solidjs/router'
 import { useDataAsync } from '@engine/client'
-import { useIsDark } from '$lib/theme'
 import type { PostHeader } from '$lib/posts'
 import TimeTag from '$components/TimeTag'
 import MetaTags from '$components/MetaTags'
@@ -17,7 +16,6 @@ export const preload = async () => {
 
 export default function HomePage() {
 
-  const isDark = useIsDark()
   const posts = useDataAsync<PostHeader[]>()
 
   const social = Object.entries(conf.author.social)
@@ -31,9 +29,9 @@ export default function HomePage() {
     <div class='max-w-screen-md px-4 pt-16 mx-auto'>
       <MetaTags />
 
-      <Show when={isDark() && conf.highlight_color}>
+      <Show when={conf.highlight_color}>
         <div
-          class="pointer-events-none absolute start-0 top-0 z-[-1] h-screen w-full opacity-25"
+          class="pointer-events-none absolute start-0 top-0 z-[-1] hidden h-screen w-full opacity-25 dark:block"
           style={`background-image:linear-gradient(${conf.highlight_color},transparent); --highlightColor: ${conf.highlight_color};`}>
         </div>
       </Show>
