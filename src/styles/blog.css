@@ -22,6 +22,23 @@
   /* margin: 2em 0; */
 }
 
+/* The muted color of a quote is too dim on the background of inline code. */
+.markdown-body blockquote code {
+  color: var(--color-fg-default);
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 0.2em 0.4em;
+  font-size: 85%;
+  line-height: 1;
+  white-space: nowrap;
+  background-color: var(--color-canvas-subtle);
+  border: 1px solid var(--color-border-default);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+}
+
 .markdown-body table {
   display: table;
   width: 100%;

@@ -126,7 +126,6 @@ html.dark {
   font-weight: 500;
   font-style: italic;
   border-inline-start-width: .25rem;
-  border-inline-start-color: inherit;
   quotes: "“" "”" "‘" "’";
   margin-top: 1.6em;
   margin-bottom: 1.6em;
