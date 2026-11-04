@@ -20,7 +20,7 @@ if (!isServer && typeof window === 'object') {
 
   window.addEventListener('load', () => {
     query.onchange = (e: any) => {
-      if (userPreference === 'auto') {
+      if (userPreference === 'auto' || userPreference == null) {
         setDark(dark => {
           setClass((dark = e.matches))
           return dark
