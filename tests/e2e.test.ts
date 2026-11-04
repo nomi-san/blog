@@ -36,10 +36,16 @@ async function open(t: TestContext, options: BrowserContextOptions = {}) {
 
   const page = await context.newPage()
   const errors: string[] = []
+  const logged: string[] = []
   const requests: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
+  page.on('console', (message) => {
+    if (message.type() === 'error' && !message.text().startsWith('Failed to load resource')) {
+      logged.push(message.text())
+    }
+  })
   page.on('request', (request) => requests.push(request.url().replace(site.origin, '')))
-  return { page, errors, requests }
+  return { page, errors, logged, requests }
 }
 
 async function visit(page: Page, path: string) {
@@ -239,7 +245,7 @@ describe('navigation', () => {
   })
 
   it('shows the 404 view for a link to a missing post, then recovers', async (t) => {
-    const { page, errors } = await open(t)
+    const { page, errors, logged } = await open(t)
     await visit(page, `/posts/${withoutDiagram}/`)
 
     await addLink(page, '/posts/missing-post')
@@ -247,6 +253,7 @@ describe('navigation', () => {
     await page.locator('h1', { hasText: '404' }).waitFor()
     await progressGone(page)
     assert.deepEqual(errors, [])
+    assert.equal(logged.length, 1, 'the failure should be logged once')
 
     await page.locator('main a[href="/"]').first().click()
     await page.locator('main a[href^="/posts/"]').first().waitFor()

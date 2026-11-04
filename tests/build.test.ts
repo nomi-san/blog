@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { execSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { before, describe, it } from 'node:test'
@@ -12,11 +12,19 @@ function readData(...path: string[]) {
   return JSON.parse(source.slice('export default '.length, source.lastIndexOf(';')))
 }
 
+let output = ''
+
 before(() => {
-  execSync('pnpm build', { stdio: 'pipe' })
+  const build = spawnSync('pnpm build', { shell: true, encoding: 'utf8' })
+  output = build.stdout + build.stderr
+  assert.equal(build.status, 0, output)
 }, { timeout: 300_000 })
 
 describe('prerendered site', () => {
+  it('builds without tool warnings', () => {
+    assert.doesNotMatch(output, /Your Vite config uses|externalized for browser|lightningcss minify/)
+  })
+
   it('lists every post on the home page', () => {
     const home = read('index.html')
     for (const id of postIds) {
