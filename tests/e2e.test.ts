@@ -73,7 +73,9 @@ async function addLink(page: Page, href: string) {
 const diagramsRendered = (page: Page) =>
   page.waitForFunction(() => {
     const diagrams = document.querySelectorAll('.mermaid')
-    return diagrams.length > 0 && document.querySelectorAll('.mermaid svg').length === diagrams.length
+    // Mermaid adds the svg first and sets its viewBox once the diagram is laid out.
+    const svgs = Array.from(document.querySelectorAll<SVGSVGElement>('.mermaid svg'))
+    return diagrams.length > 0 && svgs.length === diagrams.length && svgs.every((svg) => svg.viewBox.baseVal.width > 0)
   }, null, { timeout: 20_000 })
 
 const themeState = (page: Page) =>
@@ -206,6 +208,39 @@ describe('diagrams', () => {
     await visit(page, `/posts/${withDiagram}/`)
     await diagramsRendered(page)
     assert.deepEqual(errors, [])
+  })
+
+  it('sets diagram labels in the article font and inside their boxes', async (t) => {
+    const { page } = await open(t)
+    // Boxes are sized from the measured text, which a late font would outgrow.
+    await page.route('**/*.woff2', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await route.fallback()
+    })
+    await visit(page, `/posts/${withDiagram}/`)
+    await diagramsRendered(page)
+
+    const labels = await page.evaluate(() => {
+      const article = getComputedStyle(document.querySelector('.markdown-body')!)
+      return Array.from(document.querySelectorAll('.mermaid foreignObject p')).map((label) => {
+        const style = getComputedStyle(label)
+        const text = document.createRange()
+        text.selectNodeContents(label)
+        const { width, height } = text.getBoundingClientRect()
+        const box = label.closest('foreignObject')!.getBoundingClientRect()
+        return {
+          label: label.textContent,
+          font: style.fontFamily === article.fontFamily,
+          size: style.fontSize === getComputedStyle(label.closest('svg')!).fontSize,
+          fits: width <= box.width + 1 && height <= box.height + 1,
+        }
+      })
+    })
+
+    assert.ok(labels.length > 0)
+    for (const { label, ...checks } of labels) {
+      assert.deepEqual(checks, { font: true, size: true, fits: true }, label ?? '')
+    }
   })
 
   it('renders diagrams when opened from the home page', async (t) => {

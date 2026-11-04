@@ -29,16 +29,27 @@ export default function PostPage() {
   // Runs for each post shown here, mermaid is only loaded when one has a diagram.
   createEffect(post, {
     effect: (value) => {
-      if (!value || !document.querySelector('.mermaid')) {
+      const diagrams = Array.from(document.querySelectorAll('.mermaid'))
+      if (!value || !diagrams.length) {
         return
       }
 
-      import('mermaid').then((m) => {
+      // Mermaid's default font lacks Vietnamese letters, so use the article's font.
+      const fontFamily = getComputedStyle(diagrams[0]).fontFamily
+      // Boxes are sized from the measured text, so the font has to load first.
+      const fontLoaded = document.fonts
+        .load(`1em ${fontFamily}`, diagrams.map((diagram) => diagram.textContent).join(''))
+        .catch(() => {})
+
+      import('mermaid').then(async (m) => {
         const mermaid = m.default
+        // Right after the import, or mermaid starts by itself on window load.
         mermaid.initialize({
           startOnLoad: false,
           theme: useIsDark()() ? 'dark' : 'default',
+          fontFamily,
         })
+        await fontLoaded
         mermaid.run({ querySelector: '.mermaid', suppressErrors: true })
       })
     },

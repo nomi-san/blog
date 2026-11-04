@@ -70,6 +70,11 @@
   padding: 2rem 0;
 }
 
+/* Labels are paragraphs, keep them at the size of the diagram. */
+.markdown-body .mermaid p {
+  font-size: inherit;
+}
+
 @media (max-width: 720px) {
   .markdown-body .highlights ul li span:first-child {
     display: none;
