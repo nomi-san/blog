@@ -28,10 +28,16 @@ export default function ThemeButton() {
       )}px at ${e.clientX}px ${e.clientY}px)`
     ]
 
-    await document.startViewTransition(async () => {
-      toggleTheme()
-      await Promise.resolve()
-    }).ready
+    try {
+      await document.startViewTransition(async () => {
+        toggleTheme()
+        await Promise.resolve()
+      }).ready
+    }
+    catch {
+      // A newer click skipped this transition and animates instead.
+      return
+    }
 
     document.documentElement.animate(
       { clipPath: isDark() ? clipPath.reverse() : clipPath },
