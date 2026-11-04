@@ -1,6 +1,6 @@
 ## [nomi.dev](https://nomi.dev/)
 
-A markdown blog on a small handmade engine built with [SolidJS](https://www.solidjs.com/) and
+A markdown blog on a small handmade engine built with [SolidJS](https://www.solidjs.com/) 2.0 and
 [Vite](https://vite.dev/), with no meta-framework. Every page is prerendered to static HTML and
 hydrated in the browser, so the output can be served from any static host.
 
@@ -9,7 +9,7 @@ and a prerender script.
 
 ### Getting started
 
-Requires Node `^20.19.0 || >=22.12.0` and pnpm 9.
+Requires Node `>=22.12.0` and pnpm 9.
 
 ```sh
 pnpm i
@@ -20,6 +20,9 @@ pnpm preview   # serve dist/
 
 `pnpm dev` renders on the client only. It never hydrates, so check hydration changes with
 `pnpm build && pnpm preview` or `pnpm test:e2e`.
+
+The Solid packages are pinned to exact 2.0 release candidates, because behavior can change between
+prereleases. Run `pnpm test` and `pnpm test:e2e` when bumping them.
 
 ### Project layout
 
@@ -42,7 +45,8 @@ Import aliases: `$lib`, `$components`, `$blog-config` and `@engine`.
    server code reached a client chunk.
 2. `src/engine/prerender.ts` starts Vite in middleware mode and loads the server entry. For each
    route it renders the page, fills `index.html` and writes `dist/<route>/index.html`, plus the
-   page's data as `dist/<route>/index.ctx.js`.
+   page's data as `dist/<route>/index.ctx.js`. Solid reads Vite's client manifest to link the
+   chunks each page needs, and the build fails if a page throws while rendering.
 3. In the browser, `entry-client.tsx` hydrates the page from the data serialized into its HTML.
    Client-side navigation imports the next page's `index.ctx.js` instead.
 
