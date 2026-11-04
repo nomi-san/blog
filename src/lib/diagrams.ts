@@ -24,6 +24,8 @@ async function draw(dark: boolean, signal: AbortSignal) {
   mermaid.initialize({
     startOnLoad: false,
     theme: dark ? 'dark' : 'default',
+    // The dark theme's default is too light for the text on it.
+    themeVariables: dark ? { edgeLabelBackground: '#4f4f4f' } : {},
     fontFamily,
   })
   await fontLoaded

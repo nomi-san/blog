@@ -1,8 +1,8 @@
 :root {
   --color-canvas-default-transparent: rgba(255, 255, 255, 0);
-  --color-prettylights-syntax-comment: #6e7781;
+  --color-prettylights-syntax-comment: #616a74;
   --color-prettylights-syntax-constant: #0550ae;
-  --color-prettylights-syntax-entity: #8250df;
+  --color-prettylights-syntax-entity: #7d4bd9;
   --color-prettylights-syntax-storage-modifier-import: #24292f;
   --color-prettylights-syntax-entity-tag: #116329;
   --color-prettylights-syntax-keyword: #cf222e;
@@ -28,7 +28,7 @@
 
 html.dark {
   --color-canvas-default-transparent: rgba(13, 17, 23, 0);
-  --color-prettylights-syntax-comment: #8b949e;
+  --color-prettylights-syntax-comment: #9ba4ad;
   --color-prettylights-syntax-constant: #79c0ff;
   --color-prettylights-syntax-entity: #d2a8ff;
   --color-prettylights-syntax-storage-modifier-import: #c9d1d9;
@@ -48,7 +48,7 @@ html.dark {
   --color-canvas-subtle: #24292e;
   --color-border-default: #30363d;
   --color-border-muted: rgba(255, 255, 255, .15);
-  --color-neutral-muted: rgba(110, 118, 129, .4);
+  --color-neutral-muted: rgba(110, 118, 129, .3);
   --color-accent-fg: #58a6ff;
   --color-accent-emphasis: #1f6feb;
   --color-danger-fg: #f85149
