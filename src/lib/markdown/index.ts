@@ -2,6 +2,7 @@ import { marked } from 'marked'
 import { parse } from 'yaml'
 
 export let __base = ''
+export const __slugs = new Map<string, number>()
 
 import './md-code'
 import './md-images'
@@ -33,6 +34,7 @@ export function matter<T>(content: string) {
 
 export async function toHtml(markdown: string, base: string) {
   __base = base
+  __slugs.clear()
   return await marked.parse(markdown, {
     async: true,
     gfm: true,
