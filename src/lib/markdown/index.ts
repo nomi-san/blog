@@ -9,7 +9,7 @@ import './md-images'
 import './md-links'
 
 export function matter<T>(content: string) {
-  const pattern = /^﻿?---\r?\n([\s\S]+?)\r?\n---[ \t]*(?:\r?\n|$)/
+  const pattern = /^\uFEFF?---\r?\n([\s\S]+?)\r?\n---[ \t]*(?:\r?\n|$)/
   const match = content.match(pattern)
 
   if (match && match[1]) {

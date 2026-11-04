@@ -43,7 +43,7 @@ describe('matter', () => {
   })
 
   it('handles a byte order mark', () => {
-    const { data, content } = matter('﻿---\ntitle: A\n---\nbody')
+    const { data, content } = matter('\uFEFF---\ntitle: A\n---\nbody')
     assert.equal(data.title, 'A')
     assert.equal(content, 'body')
   })
@@ -100,11 +100,11 @@ describe('heading ids', () => {
   })
 
   it('keeps letters of any script', async () => {
-    assert.deepEqual(headingIds(await render('## Nghiên cứu')), ['nghiên-cứu'])
+    assert.deepEqual(headingIds(await render('## Nghi\u00EAn c\u1EE9u')), ['nghi\u00EAn-c\u1EE9u'])
   })
 
   it('keeps combining marks', async () => {
-    assert.deepEqual(headingIds(await render('## Cà')), ['cà'])
+    assert.deepEqual(headingIds(await render('## Ca\u0300')), ['ca\u0300'])
   })
 
   it('makes repeated headings unique', async () => {
