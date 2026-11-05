@@ -18,11 +18,16 @@ function readIcon(lang: string) {
     return
   }
 
-  return readFileSync(join(dirname(MANIFEST), path), 'utf8')
-    .replace('<svg', '<svg width="16" height="16"')
+  const id = `icon-${name}`
+  const symbol = readFileSync(join(dirname(MANIFEST), path), 'utf8')
     // Several icons can end up in one page, so their ids have to stay apart.
-    .replace(/\sid="/g, ` id="${name}-`)
-    .replace(/(url\(#|href="#)/g, `$1${name}-`)
+    .replace(/\sid="/g, ` id="${id}-`)
+    .replace(/(url\(#|href="#)/g, `$1${id}-`)
+    .replace(' xmlns="http://www.w3.org/2000/svg"', '')
+    .replace('<svg', `<symbol id="${id}"`)
+    .replace(/<\/svg>\s*$/, '</symbol>')
+
+  return `<svg width="16" height="16">${symbol}<use href="#${id}"/></svg>`
 }
 
 // The icon of a code fence language as inline svg, if the theme has one.
@@ -31,4 +36,17 @@ export function languageIcon(lang: string) {
     icons.set(lang, readIcon(ALIASES[lang] ?? lang))
   }
   return icons.get(lang)
+}
+
+// Keeps the first definition of each icon in a post, where its other uses find it.
+export function shareIcons(html: string) {
+  const defined = new Set<string>()
+
+  return html.replace(/<symbol id="(icon-[^"]+)".*?<\/symbol>/gs, (symbol, id) => {
+    if (defined.has(id)) {
+      return ''
+    }
+    defined.add(id)
+    return symbol
+  })
 }

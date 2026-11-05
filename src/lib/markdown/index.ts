@@ -1,5 +1,6 @@
 import { marked } from 'marked'
 import { parse } from 'yaml'
+import { shareIcons } from './language-icons'
 
 export let __base = ''
 export const __slugs = new Map<string, number>()
@@ -32,9 +33,9 @@ export function matter<T>(content: string) {
 export async function toHtml(markdown: string, base: string) {
   __base = base
   __slugs.clear()
-  return await marked.parse(markdown, {
+  return shareIcons(await marked.parse(markdown, {
     async: true,
     gfm: true,
     breaks: false
-  })
+  }))
 }

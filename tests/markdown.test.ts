@@ -259,11 +259,33 @@ describe('code block language', () => {
 
     assert.ok(references.length > 0)
     for (const id of [...ids, ...references]) {
-      assert.ok(id.startsWith('kotlin-'), id)
+      assert.ok(id.startsWith('icon-kotlin'), id)
     }
     for (const reference of references) {
       assert.ok(ids.includes(reference), reference)
     }
+  })
+
+  const count = (html: string, pattern: RegExp) => html.match(pattern)?.length ?? 0
+
+  it('defines an icon once in a post and refers to it from every block', async () => {
+    const html = await render([fence('c', 'a'), fence('cpp', 'b'), fence('c', 'c'), fence('c', '+d')].join('\n\n'))
+    assert.equal(count(html, /<symbol id="icon-c"/g), 1)
+    assert.equal(count(html, /<symbol id="icon-cpp"/g), 1)
+    assert.equal(count(html, /<use href="#icon-c"/g), 3)
+    assert.equal(count(html, /<use href="#icon-cpp"/g), 1)
+    assert.ok(html.indexOf('<symbol id="icon-c"') < html.indexOf('<use href="#icon-c"'))
+  })
+
+  it('shares an icon between languages that use the same one', async () => {
+    const html = await render([fence('bash', 'a'), fence('batch', 'b')].join('\n\n'))
+    assert.equal(count(html, /<symbol /g), 1)
+    assert.equal(count(html, /<use /g), 2)
+  })
+
+  it('defines the icons again for the next post', async () => {
+    await render(fence('c', 'a'))
+    assert.equal(count(await render(fence('c', 'b')), /<symbol id="icon-c"/g), 1)
   })
 })
 

@@ -401,6 +401,32 @@ describe('post styles', () => {
     }
   })
 
+  it('draws every icon of a post from a single definition', async (t) => {
+    const { page } = await open(t)
+    const check = async (how: string) => {
+      const { uses, symbols, targets } = await page.evaluate(() => {
+        const uses = Array.from(document.querySelectorAll<SVGUseElement>('.language use'))
+        return {
+          uses: uses.map((use) => use.getBBox().width > 0),
+          symbols: Array.from(document.querySelectorAll('.language symbol')).map((symbol) => symbol.id),
+          targets: uses.map((use) => use.getAttribute('href')!.slice(1)),
+        }
+      })
+
+      assert.ok(uses.length > new Set(targets).size, `${how}: no icon is used twice here, so this checked nothing`)
+      assert.ok(uses.every(Boolean), `${how}: an icon is not drawn`)
+      assert.deepEqual([...symbols].sort(), [...new Set(targets)].sort(), `${how}: icons are not defined once`)
+    }
+
+    await visit(page, demoPost)
+    await check('opened directly')
+
+    await visit(page, '/')
+    await openPost(page, 'the-first-post')
+    await page.waitForSelector('.language use')
+    await check('opened from the home page')
+  })
+
   it('sets h4 larger than body text', async (t) => {
     const { page } = await open(t)
     await visit(page, `/posts/${postIds.find((id) => /^#### /m.test(source(id)))}/`)
